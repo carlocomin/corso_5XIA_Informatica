@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez1_6 · Livello logico vs livello fisico</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez1_5.html"; }
+    function nextSlide(){ window.location.href = "lez1_7.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 1 — Modello Relazionale</h2>
+    <ul>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
+      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Livello logico vs livello fisico</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Obiettivo</h2>
+        <ul>
+          <li>Distinguere in modo rigoroso <strong>schema logico</strong> e <strong>schema fisico</strong>.</li>
+          <li>Definire l'<strong>indipendenza dei dati</strong> (logica e fisica) e le sue conseguenze pratiche.</li>
+          <li>Collegare il modello relazionale a scelte implementative: indici, file organization, piani di esecuzione.</li>
+        </ul>
+
+        <h2>Architettura ANSI/SPARC (3 livelli)</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Esterno</span>: viste e interfacce utente/applicazione (sottoinsiemi/riformulazioni dello schema concettuale).</li>
+            <li><span class="def">Concettuale</span> (logico): schemi di relazione, domini, vincoli (PK, FK, ecc.).</li>
+            <li><span class="def">Interno</span> (fisico): strutture di memorizzazione, pagine, indici, partizioni, compressione.</li>
+          </ul>
+          <p class="note">Il modello relazionale vive al <strong>livello concettuale</strong>; le query sono dichiarative e <em>indipendenti</em> dal livello interno.</p>
+        </div>
+
+        <h2>Indipendenza dei dati</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Indipendenza fisica</span>: cambi al livello <em>interno</em> (es. aggiungere un indice, cambiare organizzazione a pagine) non richiedono modifiche a schemi e query logiche.</li>
+            <li><span class="def">Indipendenza logica</span>: cambi compatibili al livello <em>concettuale</em> (es. aggiungere un attributo o scindere una tabella) non rompono le interfacce esterne; si preservano con <strong>viste</strong> e regole di compatibilità all’indietro.</li>
+          </ul>
+          <p class="warn">Rinominare attributi senza mantenere viste o compatibilità rompe l’indipendenza logica.</p>
+        </div>
+
+        <h2>Logico: cosa definisce</h2>
+        <ul>
+          <li>Schemi di relazione: intestazioni, domini, vincoli (integrità di dominio, entità, referenziale, regole aggiuntive).</li>
+          <li>Semantica delle operazioni (algebra relazionale, calcolo relazionale): <strong>nessun riferimento</strong> a strutture fisiche.</li>
+          <li>Identità: chiavi primarie/candidate e loro significato.</li>
+        </ul>
+
+        <h2>Fisico: cosa riguarda</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Organizzazione dei file</strong>: heap, clustered, append-only.</li>
+            <li><strong>Indici</strong>: B-Tree/B+Tree, Hash, bitmap; indici <em>clustered</em> vs <em>nonclustered</em>, indici di copertura.</li>
+            <li><strong>Layout</strong>: pagine, fillfactor, compressione, partizionamento (range/hash/list), replica.</li>
+            <li><strong>Identificatori fisici</strong>: RID/ctid/rowid non fanno parte del modello logico.</li>
+          </ul>
+          <p class="note">Una <strong>chiave</strong> è logica; un <strong>indice</strong> è fisico. Molti DB implementano PK con un indice <em>UNIQUE</em>, ma concettualmente sono distinti.</p>
+        </div>
+
+        <h2>Ottimizzazione delle query</h2>
+        <div class="box">
+          <ul>
+            <li>L’utente scrive SQL dichiarativo; l’ottimizzatore genera un <strong>piano</strong> fisico equivalente (scan, index scan, join, sort, ecc.).</li>
+            <li>Il piano dipende da statistiche e indici disponibili, non dalla <em>forma</em> sintattica della query (entro certi limiti).</li>
+          </ul>
+          <div style="margin-top:.6rem"><button id="btnPLAN1" onclick="toggleBox('btnPLAN1','ansPLAN1')">Mostra esempio di costi ▼</button></div>
+          <div id="ansPLAN1" style="display:none; margin-top:.5rem">
+            <pre><code class="language-sql">-- Stessa logica, fisica diversa a seconda degli indici disponibili
+-- Caso A: nessun indice su Iscrizioni(Matr)
+EXPLAIN SELECT *
+FROM Iscrizioni i JOIN Studenti s ON i.Matr = s.Matr
+WHERE s.Matr = 101;
+-- Piano tipico: Seq Scan Iscrizioni → Hash Join → Filter
+
+-- Caso B: indice su Iscrizioni(Matr) e PK indicizzata su Studenti(Matr)
+EXPLAIN SELECT *
+FROM Iscrizioni i JOIN Studenti s ON i.Matr = s.Matr
+WHERE s.Matr = 101;
+-- Piano tipico: Index Seek/Scan → Nested Loop → molto più veloce
+</code></pre>
+          </div>
+        </div>
+
+        <h2>Esempi di scelte fisiche</h2>
+        <div class="box">
+          <div style="margin-bottom:.35rem" class="note">Linee guida sintetiche</div>
+          <ul>
+            <li>Indici B-Tree per ricerche per uguaglianza e per intervallo; Hash per uguaglianze pure (dove supportati); bitmap per colonne a bassa cardinalità (DW).</li>
+            <li>Partizionare tabelle molto grandi per migliorare manutenzione e pruning delle scansioni.</li>
+            <li>Valutare indici di copertura per query di lettura frequenti; evitare over-indexing che rallenta le scritture.</li>
+            <li>Preferire PK <em>immutabili</em>; <code>ON UPDATE CASCADE</code> diventa raro e i piani restano stabili.</li>
+          </ul>
+        </div>
+
+        <h2>Compatibilità e migrazioni</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Compatibilità logica</strong>: usare <em>view</em> per mantenere API stabili quando lo schema concettuale evolve.</li>
+            <li><strong>Compatibilità fisica</strong>: cambiare indici o partizioni non dovrebbe toccare le query; valutare re-build/analisi statistiche.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <strong>Domanda-guida</strong>: perché una <em>chiave primaria</em> non coincide con un <em>indice</em>?
+          <div style="margin-top:.6rem"><button id="btnDG6" onclick="toggleBox('btnDG6','ansDG6')">Mostra ▼</button></div>
+          <div id="ansDG6" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Natura</strong>: la PK è un <em>vincolo logico</em> (identità e unicità); l’indice è una <em>struttura fisica</em> per accelerare accessi.</li>
+              <li><strong>Implementazione</strong>: un DB spesso usa un indice UNIQUE per far rispettare la PK, ma può farlo con altre tecniche; l’esistenza dell’indice è una scelta di implementazione.</li>
+              <li><strong>Conseguenze</strong>: puoi cambiare/ricreare indici senza toccare la semantica dello schema; la PK invece fa parte dello schema e delle sue dipendenze (FK).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SQL illustrativo -->
+        <pre><code class="language-sql">-- Vincolo logico vs struttura fisica
+CREATE TABLE Studenti (
+  Matr   INTEGER NOT NULL,
+  Nome   VARCHAR(50) NOT NULL,
+  Email  VARCHAR(100) NOT NULL,
+  CONSTRAINT PK_Studenti PRIMARY KEY (Matr)
+);
+
+-- Unicità logica su Email (vincolo), realizzata tipicamente con indice UNIQUE
+ALTER TABLE Studenti ADD CONSTRAINT UQ_Studenti_Email UNIQUE (Email);
+
+-- Struttura fisica aggiuntiva per performance (nessun effetto sulla semantica)
+CREATE INDEX IX_Iscrizioni_Matr ON Iscrizioni(Matr);
+</code></pre>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

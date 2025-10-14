@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez1_1 · Modello Relazionale: Obiettivi & Contesto Storico</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "../programma.html"; }
+    function nextSlide(){ window.location.href = "lez1_2.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 1 — Modello Relazionale</h2>
+    <ul>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
+      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Modello Relazionale: Obiettivi & Contesto Storico</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Obiettivi della lezione</h2>
+        <ul>
+          <li>Comprendere <strong>perché</strong> nasce il modello relazionale e quali problemi risolve.</li>
+          <li>Fissare i <strong>concetti formali di base</strong> (domini, attributi, relazione, tupla).</li>
+          <li>Inquadrare i <strong>vincoli di integrità</strong> (dominio, entità) e le <strong>chiavi</strong>.</li>
+          <li>Introduzione alle <strong>chiavi esterne</strong> e all’<strong>integrità referenziale</strong>.</li>
+        </ul>
+
+        <h2>Contesto storico (anni ’60–’90)</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Anni ’60 – Pre-relazionale</strong>:
+              <ul>
+                <li><em>Gerarchico</em> (es. IBM IMS): accessi lungo percorsi padre→figlio.</li>
+                <li><em>Reticolare</em> (CODASYL DBTG): set e puntatori; navigazione procedurale.</li>
+                <li>Conseguenze: <span class="warn">forte dipendenza</span> da struttura fisica, scarsa portabilità e manutenzione onerosa.</li>
+              </ul>
+            </li>
+            <li><strong>1970 – E. F. Codd</strong> pubblica <em>A Relational Model of Data for Large Shared Data Banks</em>:
+              <ul>
+                <li>Base teorica in <em>insiemistica</em> e <em>logica</em>; dati come <strong>relazioni</strong> (insiemi di tuple).</li>
+                <li>Separazione netta tra <strong>schema logico</strong> e <strong>organizzazione fisica</strong> (indipendenza dei dati).</li>
+              </ul>
+            </li>
+            <li><strong>Metà ’70 – Prototipi</strong>:
+              <ul>
+                <li><strong>System R</strong> (IBM): dimostra praticabilità del modello; nasce <em>SEQUEL</em> → <strong>SQL</strong>.</li>
+                <li><strong>Ingres</strong> (UCB): linea accademica parallela; influenzerà Postgres.</li>
+              </ul>
+            </li>
+            <li><strong>Fine ’70 / primi ’80 – Industrializzazione</strong>:
+              <ul>
+                <li>Nascita dei primi RDBMS commerciali (es. Oracle, IBM DB2).</li>
+                <li>SQL converge come <strong>linguaggio dichiarativo</strong> standard de facto.</li>
+              </ul>
+            </li>
+            <li><strong>Metà ’80 – Regole di Codd</strong>:
+              <ul>
+                <li>Serie di <strong>12 regole</strong> (più la regola 0) per valutare quanto un DBMS sia realmente “relazionale”.</li>
+                <li>Obiettivo: evitare implementazioni solo nominalmente relazionali.</li>
+              </ul>
+            </li>
+            <li><strong>Standardizzazione</strong>:
+              <ul>
+                <li><strong>ANSI SQL-86</strong> e <strong>ISO SQL-87</strong>, poi evoluzioni (SQL-89, SQL-92...).</li>
+                <li>Architettura <em>ANSI/SPARC</em> a tre livelli (concettuale, logico esterno, fisico) come riferimento per l’indipendenza.</li>
+              </ul>
+            </li>
+            <li><strong>Impatto duraturo</strong>: modello semplice e rigoroso, ottimizzazione delle query, portabilità tra fornitori, adozione universale in ambito enterprise e accademico.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <strong>Timeline sintetica</strong>
+          <div style="margin-top:.6rem">
+            <button id="btnTL1" onclick="toggleBox('btnTL1','ansTL1')">Mostra ▼</button>
+          </div>
+          <div id="ansTL1" style="display:none; margin-top:.5rem">
+            <table>
+              <thead>
+                <tr><th>Anno</th><th>Evento</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1968–69</td><td>Sistemi gerarchici (IMS) e reticolari (CODASYL) predominanti.</td></tr>
+                <tr><td>1970</td><td>Codd propone il <em>Relational Model</em>.</td></tr>
+                <tr><td>1974–76</td><td>System R (IBM), linguaggio SEQUEL → SQL.</td></tr>
+                <tr><td>1974–80</td><td>Ingres (UCB) cresce come piattaforma accademica.</td></tr>
+                <tr><td>1979–83</td><td>Prime release commerciali (es. Oracle; IBM DB2).</td></tr>
+                <tr><td>1985</td><td>Le 12 regole di Codd (più regola 0) per i DBMS relazionali.</td></tr>
+                <tr><td>1986–87</td><td>ANSI SQL-86 e ISO SQL-87 (inizio standardizzazione formale).</td></tr>
+                <tr><td>1992</td><td>SQL-92 (consolidamento e maggiore portabilità).</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Perché il modello relazionale?</h2>
+        <ul>
+          <li><strong>Semplicità concettuale</strong>: le relazioni sono insiemi di tuple; operazioni algebriche ben definite.</li>
+          <li><strong>Indipendenza logica/fisica</strong>: le applicazioni non dipendono dalla memorizzazione fisica.</li>
+          <li><strong>Integrità e coerenza</strong>: vincoli dichiarativi direttamente a livello di schema.</li>
+          <li><strong>Standardizzazione</strong>: linguaggi dichiarativi (SQL) e ottimizzazione delle query.</li>
+        </ul>
+
+        <h2>Micro-nota</h2>
+        <p class="note">In questo corso distingueremo con rigore tra <em>schema</em> (intestazione) e <em>istanza</em> (insieme di tuple in un dato istante), mantenendo una prospettiva insiemistica coerente con Codd.</p>
+
+        <h2>Riferimenti essenziali</h2>
+        <ul>
+          <li>Codd, E. F. (1970). <em>A Relational Model of Data for Large Shared Data Banks</em>.</li>
+          <li>Storia dei prototipi: <em>System R</em> (IBM), <em>Ingres</em> (UCB), nascita di <em>SQL</em>.</li>
+        </ul>
+
+        <div class="box">
+          <strong>Domanda-guida</strong>: quali caratteristiche dei modelli precedenti (gerarchico/reticolare) rendono difficile l’evoluzione di un’applicazione rispetto al relazionale?
+          <div style="margin-top:.6rem">
+            <button id="btnDG1" onclick="toggleBox('btnDG1','ansDG1')">Mostra ▼</button>
+          </div>
+          <div id="ansDG1" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Accoppiamento fisico</strong>: schema e accesso ai dati dipendono da percorsi e puntatori fisici → ogni variazione fisica richiede modifiche applicative.</li>
+              <li><strong>Navigazione procedurale</strong>: query basate su percorsi (padre-figlio, set CODASYL) invece di espressioni dichiarative → scarsa flessibilità e riuso.</li>
+              <li><strong>Ridondanza strutturale</strong>: duplicazione di dati per modellare relazioni molte-a-molte → rischio di inconsistenze.</li>
+              <li><strong>Vincoli deboli</strong>: integrità spesso gestita a livello applicativo, non dichiarata nello schema → maggiore probabilità di errori.</li>
+              <li><strong>Scarsa indipendenza logica/fisica</strong>: evoluzioni dello storage o degli indici rompono le applicazioni esistenti.</li>
+              <li><strong>Modello relazionale</strong>: separa livello logico e fisico, offre algebra e vincoli dichiarativi, favorendo evoluzione e manutenzione.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Esempio di blocco codice dimostrativo (placeholder, non obbligatorio in questa slide) -->
+        <pre><code class="language-sql">-- Esempio di blocco codice per verificare l'highlight SQL.
+-- Useremo semplici query come esempi dimostrativi.
+SELECT 'Relazionale: base insiemistica' AS nota;
+</code></pre>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

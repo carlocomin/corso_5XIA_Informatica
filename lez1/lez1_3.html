@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez1_3 · Integrità di dominio & entità (definizioni formali)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez1_2.html"; }
+    function nextSlide(){ window.location.href = "lez1_4.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 1 — Modello Relazionale</h2>
+    <ul>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
+      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Integrità di dominio & entità (definizioni formali)</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Richiamo di notazione</h2>
+        <ul>
+          <li>Schema di relazione <code>R(A<sub>1</sub>:D<sub>1</sub>, &hellip;, A<sub>n</sub>:D<sub>n</sub>)</code> con heading <code>H = {A<sub>1</sub>,&hellip;,A<sub>n</sub>}</code>.</li>
+          <li>Istanza <code>R ⊆ ∏<sub>i=1</sub><sup>n</sup> D<sub>i</sub></code>; per tupla <code>t ∈ R</code>, <code>t[A]</code> è il valore della tupla sull'attributo <code>A</code>.</li>
+        </ul>
+
+        <h2>Integrità di dominio (definizione formale)</h2>
+        <div class="box">
+          <p>
+            Per ogni attributo <code>A<sub>i</sub></code> con dominio <code>D<sub>i</sub></code>, l'<strong>integrità di dominio</strong> richiede:
+          </p>
+          <p class="ok"><code>∀  t ∈ R:  t[A<sub>i</sub>] ∈ D<sub>i</sub></code></p>
+          <p>
+            Opzionalmente, si possono imporre <em>vincoli di dominio più restrittivi</em> tramite predicati unari <code>P<sub>i</sub> ⊆ D<sub>i</sub></code> (es. formato e-mail, intervalli ammessi), chiedendo anche <code>P<sub>i</sub>(t[A<sub>i</sub>])</code> per ogni tupla.
+          </p>
+        </div>
+
+        <h3>Esempio (dominio & sotto-dominio)</h3>
+        <div class="box">
+          <code>Studenti(Matr: N<sup>+</sup>, Email: STRING, Eta: INT)</code>
+          <ul>
+            <li>Dominio di <code>Matr</code>: <code>N<sup>+</sup></code> (interi positivi); di <code>Email</code>: <code>STRING</code>; di <code>Eta</code>: <code>INT</code>.</li>
+            <li>Sotto-dominio per <code>Email</code>: stringhe con simbolo <code>@</code> (<em>predicato unario</em>).</li>
+          </ul>
+          <div style="margin-top:.6rem">
+            <button id="btnD1" onclick="toggleBox('btnD1','ansD1')">Mostra esempi di violazione ▼</button>
+          </div>
+          <div id="ansD1" style="display:none; margin-top:.5rem">
+            <table>
+              <thead><tr><th>Matr</th><th>Email</th><th>Eta</th><th>Esito</th></tr></thead>
+              <tbody>
+                <tr><td>-5</td><td>ada@example.org</td><td>19</td><td class="warn">Violazione: <code>Matr</code> ∉ N<sup>+</sup></td></tr>
+                <tr><td>101</td><td>alan.example.org</td><td>20</td><td class="warn">Violazione: <code>Email</code> senza <code>@</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Integrità di entità (definizione formale)</h2>
+        <div class="box">
+          <p>Data una <strong>chiave primaria</strong> <code>K ⊆ H</code> per <code>R</code>, l'integrità di entità richiede due condizioni:</p>
+          <ol>
+            <li><span class="def">Unicità</span>: <code>∀  t,t' ∈ R:  t[K] = t'[K] ⇒ t = t'</code> (la proiezione su <code>K</code> è <em>iniettiva</em>).</li>
+            <li><span class="def">Non-null</span>: <code>∀  t ∈ R,  ∀  A ∈ K:  t[A] ≠ NULL</code>.</li>
+          </ol>
+        </div>
+
+        <div class="box">
+          <div class="note" style="margin-bottom:.5rem">Equivalente</div>
+          <p>Unicità è equivalente all'asserzione che non esistono due tuple distinte con la stessa chiave:</p>
+          <p class="ok"><code>¬  ∃  t ≠ t' ∈ R:  t[K] = t'[K]</code></p>
+        </div>
+
+        <h3>Esempio (entità) su <code>Studenti(Matr, Nome, Email)</code></h3>
+        <div class="box">
+          <div class="note" style="margin-bottom:.4rem">Scelta di chiave primaria</div>
+          <p><code>K = {Matr}</code>. Allora:</p>
+          <ul>
+            <li>Unicità: non possono esistere due tuple con la stessa <code>Matr</code>.</li>
+            <li>Non-null: ogni tupla deve avere <code>Matr ≠ NULL</code>.</li>
+          </ul>
+          <div style="margin-top:.6rem">
+            <button id="btnE1" onclick="toggleBox('btnE1','ansE1')">Mostra esempi di violazione ▼</button>
+          </div>
+          <div id="ansE1" style="display:none; margin-top:.5rem">
+            <table>
+              <thead><tr><th>Matr</th><th>Nome</th><th>Email</th><th>Esito</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Ada</td><td>ada@example.org</td><td class="ok">Valida</td></tr>
+                <tr><td>101</td><td>Alan</td><td>alan@example.org</td><td class="warn">Violazione: duplicato di chiave (<code>Matr=101</code>)</td></tr>
+                <tr><td><em>NULL</em></td><td>Grace</td><td>grace@example.org</td><td class="warn">Violazione: <code>Matr</code> NULL</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Vincoli come predicati sulle istanze</h2>
+        <div class="box">
+          <ul>
+            <li>Un <strong>vincolo</strong> è un predicato <code>Φ(R)</code> che è <strong>vero</strong> per le istanze ammissibili di <code>R</code>.</li>
+            <li>Un'istanza di database è <strong>legale</strong> se soddisfa tutti i vincoli di dominio ed entità (oltre agli altri vincoli di schema).</li>
+            <li class="note">Questa prospettiva è coerente con la logica del primo ordine <em>tipata</em> sui domini.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <strong>Domanda-guida</strong>: perché gli attributi della <em>chiave primaria</em> non possono essere NULL?
+          <div style="margin-top:.6rem">
+            <button id="btnDG3" onclick="toggleBox('btnDG3','ansDG3')">Mostra ▼</button>
+          </div>
+          <div id="ansDG3" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Un NULL rompe l'<strong>iniettività</strong> della proiezione su <code>K</code> (non si distingue più l'identità dell'entità).</li>
+              <li>Le <strong>chiavi esterne</strong> non potrebbero referenziare in modo deterministico un'entità con chiave NULL.</li>
+              <li>La <strong>coerenza</strong> tra istanze nel tempo (storico, aggiornamenti) richiede un identificatore sempre presente.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Facoltativo: esempi di sintassi SQL per collegare concetti; non è un requisito del modello -->
+        <pre><code class="language-sql">-- Esempio illustrativo (non normativo rispetto al modello):
+CREATE TABLE Studenti (
+  Matr    INTEGER      NOT NULL,
+  Nome    VARCHAR(50)  NOT NULL,
+  Email   VARCHAR(100) CHECK (position('@' in Email) &gt; 1),
+  CONSTRAINT PK_Studenti PRIMARY KEY (Matr)
+);
+</code></pre>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

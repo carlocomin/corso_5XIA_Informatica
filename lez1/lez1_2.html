@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez1_2 · Fondamenti formali: domini, attributi, relazione, tupla</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez1_1.html"; }
+    function nextSlide(){ window.location.href = "lez1_3.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 1 — Modello Relazionale</h2>
+    <ul>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
+      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Fondamenti formali: domini, attributi, relazione, tupla</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Definizioni formali</h2>
+        <ul>
+          <li><span class="def">Dominio</span>: un insieme non vuoto di valori ammissibili per un attributo (es. <code>INT</code>, {"CS", "MAT", "BIO"}, date valide).</li>
+          <li><span class="def">Attributo</span>: nome simbolico associato a un dominio. Un <em>intestazione</em> (heading) &egrave; un insieme finito di attributi distinti per <strong>nome</strong>.</li>
+          <li><span class="def">Schema di relazione</span>: una specifica formale <code>R(A<sub>1</sub>:D<sub>1</sub>, &hellip;, A<sub>n</sub>:D<sub>n</sub>)</code> dove:<br>
+              <ul>
+                <li>l'<em>intestazione</em> (heading) &egrave; l'insieme finito <code>H = {A<sub>1</sub>,&hellip;,A<sub>n</sub>}</code> di <strong>nomi distinti</strong> di attributo;</li>
+                <li>esiste una funzione di <strong>assegnazione dei domini</strong> <code>dom: H &rarr; {D<sub>1</sub>,&hellip;,D<sub>n</sub>}</code> tale che <code>dom(A<sub>i</sub>) = D<sub>i</sub></code>;</li>
+                <li>un'<strong>istanza</strong> (al tempo t) &egrave; una relazione <code>R<sup>(t)</sup> &sube; &prod;<sub>i=1</sub><sup>n</sup> D<sub>i</sub></code>;</li>
+                <li>ogni <strong>tupla</strong> pu&ograve; essere vista come funzione <code>t: H &rarr; &bigcup;<sub>i=1</sub><sup>n</sup> D<sub>i</sub></code>, con <code>t(A<sub>i</sub>) &in; D<sub>i</sub></code>.</li>
+              </ul>
+            </li>
+          <li><span class="def">Tupla</span>: n-pla ordinata di valori conforme all'intestazione; per ogni i, il valore su <code>A<sub>i</sub></code> appartiene a <code>D<sub>i</sub></code>. Si indica con <code>t[A]</code> la proiezione della tupla <code>t</code> sugli attributi <code>A</code>.</li>
+          <li><span class="def">Relazione</span>: un <strong>sottoinsieme</strong> del prodotto cartesiano dei domini: <br>
+            <div class="box">R &sube; D<sub>1</sub> &times; ... &times; D<sub>n</sub></div>
+            Ogni elemento di <code>R</code> &egrave; una tupla compatibile con l'intestazione.</li>
+        </ul>
+
+        <h2>Propriet&agrave; strutturali</h2>
+        <ul>
+          <li><span class="def">Assenza di duplicati</span>: essendo un insieme, una relazione non contiene due tuple identiche.</li>
+          <li><span class="def">Ariet&agrave; (grado)</span>: numero di attributi dell'intestazione (n).</li>
+          <li><span class="def">Cardinalit&agrave;</span>: numero di tuple nell'istanza (<code>|R|</code>).</li>
+          <li><span class="def">Dominio attivo</span>: insieme dei valori effettivamente presenti nelle tuple (sottoinsiemi dei domini dichiarati).</li>
+          <li><span class="def">Ordinamento</span>: gli attributi sono identificati per <strong>nome</strong>; l'ordine fisico delle colonne &egrave; irrilevante a livello logico.</li>
+        </ul>
+
+        <h2>Notazione e convenzioni</h2>
+        <div class="box">
+          <ul>
+            <li>Si usa <code>attr(R)</code> per indicare l'insieme degli attributi (heading) di <code>R</code>.</li>
+            <li>Una tupla è una funzione <code>t: attr(R) &rarr; &bigcup; D_i</code>; per un sottoinsieme <code>X ⊆ attr(R)</code>, <code>t[X]</code> è la sua <em>proiezione</em> su <code>X</code>.</li>
+            <li>Due tuple <code>t</code> e <code>t'</code> sono uguali sse <code>&forall; A &in; attr(R): t[A] = t'[A]</code>.</li>
+            <li>Le relazioni nel modello sono <strong>insiemi</strong> (niente duplicati). In SQL spesso si adotta la semantica di <em>multinsieme</em> (bag); la distinzione è didatticamente rilevante.</li>
+          </ul>
+        </div>
+
+        <h2>Schema vs istanza</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Schema</strong>: definizione intensionale, stabile nel tempo (nomi attributi, domini, vincoli).</li>
+            <li><strong>Istanza</strong>: estensione contingente in un certo istante (insieme di tuple).</li>
+            <li class="note">Le operazioni algebriche agiscono sulle <em>istanze</em>, rispettando vincoli dettati dallo <em>schema</em>.</li>
+          </ul>
+        </div>
+
+        <h2>Esempio (relazione come sottoinsieme del prodotto)</h2>
+        <div class="box">
+          <div class="note" style="margin-bottom:.5rem">Schema</div>
+          <code>Studenti(Matr: INT, Nome: STRING, Corso: {CS, MAT, BIO})</code>
+          <br/>
+		  <div class="note" style="margin:.6rem 0 .3rem 0">Prodotto cartesiano</div>
+          <code>INT &times; STRING &times; {CS, MAT, BIO}</code>
+		  <br/>
+          <div class="note" style="margin:.6rem 0 .3rem 0">Istanza (tabellare)</div>
+          <table>
+            <thead>
+              <tr><th>Matr</th><th>Nome</th><th>Corso</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>101</td><td>Ada</td><td>CS</td></tr>
+              <tr><td>102</td><td>Alan</td><td>MAT</td></tr>
+              <tr><td>103</td><td>Grace</td><td>CS</td></tr>
+            </tbody>
+          </table>
+          <p class="ok">L'insieme delle tre tuple &egrave; un sottoinsieme del prodotto cartesiano.</p>
+          <div style="margin-top:.6rem">
+            <button id="btnSET1" onclick="toggleBox('btnSET1','ansSET1')">Mostra notazione insiemistica ▼</button>
+          </div>
+          <div id="ansSET1" style="display:none; margin-top:.5rem">
+            <pre><code class="language-text">R = { (101, "Ada", CS), (102, "Alan", MAT), (103, "Grace", CS) }
+R ⊆ INT × STRING × {CS, MAT, BIO}
+            </code></pre>
+            <p class="note">Ogni tupla &egrave; una 3-pla; l'ordine &egrave; logico ma gli attributi si identificano per <strong>nome</strong> (<code>Matr</code>, <code>Nome</code>, <code>Corso</code>).</p>
+          </div>
+          <div style="margin-top:.6rem">
+            <button id="btnSET2" onclick="toggleBox('btnSET2','ansSET2')">Mostra controesempio (multinsieme) ▼</button>
+          </div>
+          <div id="ansSET2" style="display:none; margin-top:.5rem">
+            <table>
+              <thead><tr><th>Matr</th><th>Nome</th><th>Corso</th></tr></thead>
+              <tbody>
+                <tr><td>101</td><td>Ada</td><td>CS</td></tr>
+                <tr><td>101</td><td>Ada</td><td>CS</td></tr>
+              </tbody>
+            </table>
+            <p class="warn">Questa tabella contiene <strong>duplicati</strong>. È un <em>multinsieme</em>, non una relazione nel senso del modello (insieme di tuple).</p>
+          </div>
+        </div>
+
+        <h2>Schema di database</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Schema di database</span>: un insieme finito di <strong>schemi di relazione</strong> con nomi distinti (es. <code>Studenti</code>, <code>Corsi</code>, <code>Iscrizioni</code>) e un insieme di <strong>vincoli globali</strong>.</li>
+            <li><span class="def">Vincoli globali</span> (esempi):
+              <ul>
+                <li><em>Chiavi primarie</em> per ogni relazione (integrit&agrave; di entit&agrave;).</li>
+                <li><em>Chiavi esterne</em> tra relazioni (integrit&agrave; referenziale).</li>
+                <li><em>Vincoli di dominio</em> e <em>assertion</em> inter-relazionali (se ammessi dal formalismo).</li>
+              </ul>
+            </li>
+            <li><span class="def">Istanza di database</span>: una famiglia <code>{R<sub>1</sub><sup>(t)</sup>,&hellip;,R<sub>k</sub><sup>(t)</sup>}</code> (una istanza per ciascuno schema di relazione) che soddisfa <strong>tutti</strong> i vincoli dello schema.</li>
+            <li class="note">La specifica di database definisce l'<em>universo logico</em> su cui le istanze ammissibili devono rispettare <strong>tutti</strong> i vincoli.</li>
+          </ul>
+        </div>
+
+        <h2>Nota su NULL (prospettiva del modello)</h2>
+        <p class="warn">NULL rappresenta un valore <em>sconosciuto</em> o <em>non applicabile</em>. 
+		Nel modello relazionale puro il suo uso &egrave; delicato: le definizioni formali (chiavi, uguaglianza) vanno trattate con attenzione.</p>
+
+        <div style="margin:.6rem 0">
+          <button id="btnNULL1" onclick="toggleBox('btnNULL1','ansNULL1')">Approfondisci su NULL ▼</button>
+          <div id="ansNULL1" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Significati diversi</strong>: sconosciuto, non applicabile, non disponibile &rarr; trattarli allo stesso modo può essere fuorviante.</li>
+              <li><strong>Logica a tre valori</strong>: molte definizioni diventano non-classiche; è preferibile minimizzare l'uso di NULL e modellare assenze con relazioni opzionali.</li>
+              <li><strong>Coerenza con le chiavi</strong>: gli attributi della chiave primaria non devono mai essere NULL (integrità di entità).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="box">
+          <strong>Domanda-guida</strong>: perch&eacute; &egrave; importante che l'identificazione degli attributi avvenga per <em>nome</em> e non per posizione?
+          <div style="margin-top:.6rem">
+            <button id="btnDG2" onclick="toggleBox('btnDG2','ansDG2')">Mostra ▼</button>
+          </div>
+          <div id="ansDG2" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Garantisce <strong>indipendenza logica</strong> rispetto al layout fisico delle colonne.</li>
+              <li>Evita ambiguit&agrave; nelle operazioni (proiezione, join) dove l'ordine pu&ograve; cambiare.</li>
+              <li>Favorisce l'<strong>evolvibilit&agrave;</strong> dello schema: &egrave; possibile riordinare/estendere senza rompere le query correttamente nominate.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Placeholder tecnico per verificare highlight; qui non &egrave; fondamentale il codice -->
+        <pre><code class="language-sql">-- Esempio puramente illustrativo
+-- Una proiezione di attributi identificati per nome
+SELECT Matr, Nome FROM Studenti;
+</code></pre>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

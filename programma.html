@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Programma del corso</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./default.css" />
+  <script src="./highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ if (history.length > 1) { history.back(); } }
+    function nextSlide(){ window.location.href = "lez1/lez1_1.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media(max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Programma del corso</h2>
+    <ul>
+      <li><a href="#mod1">Modulo 1 — Modello Relazionale</a>
+        <ul>
+          <li><a href="lez1/lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+          <li><a href="lez1/lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+          <li><a href="lez1/lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+          <li><a href="lez1/lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+          <li><a href="lez1/lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+          <li><a href="lez1/lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Programma del corso (ITST – 5ª)</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Panoramica</h2>
+        <ul>
+          <li><strong>Obiettivo generale</strong>: padroneggiare il modello relazionale e applicarlo alla programmazione backend con persistenza su RDBMS.</li>
+          <li><strong>Metodo</strong>: rigore formale, esempi guidati, micro-esercizi con feedback immediato.</li>
+          <li><strong>Output atteso</strong>: capacità di modellare, vincolare, interrogare e integrare un database in un'applicazione web.</li>
+        </ul>
+
+        <h2 id="mod1">Modulo 1 — Modello Relazionale</h2>
+        
+          <div class="box">
+            <h3>Lezione 1 — Struttura</h3>
+            <ul>
+              <li><a href="lez1/lez1_1.html">1.1 Obiettivi & contesto storico</a></li>
+              <li><a href="lez1/lez1_2.html">1.2 Fondamenti formali</a></li>
+              <li><a href="lez1/lez1_3.html">1.3 Integrità di dominio & entità</a></li>
+              <li><a href="lez1/lez1_4.html">1.4 Chiavi: superchiavi, candidate, primaria</a></li>
+              <li><a href="lez1/lez1_5.html">1.5 Chiavi esterne & referenziale</a></li>
+              <li><a href="lez1/lez1_6.html">1.6 Livello logico vs fisico</a></li>
+              <li><a href="lez1/lez1_7.html">1.7 Modellazione di esempio</a></li>
+              <li><a href="lez1/lez1_8.html">1.8 Riepilogo & micro-verifica</a></li>
+            </ul>
+          </div>
+        
+        
+        <h2>Legenda e convenzioni del materiale</h2>
+        <div class="box">
+          <ul>
+            <li><span class="ok">Box verdi</span>: esempi corretti o esiti validi.</li>
+            <li><span class="warn">Box arancioni</span>: avvertenze, errori tipici, controesempi.</li>
+            <li><span class="note">Box blu</span>: note operative, suggerimenti, definizioni rapide.</li>
+            <li>Pulsanti <em>Mostra/Nascondi</em> per approfondimenti o soluzioni a comparsa.</li>
+          </ul>
+        </div>
+
+        
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

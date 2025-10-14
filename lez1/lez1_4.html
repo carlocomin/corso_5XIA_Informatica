@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez1_4 · Chiavi: superchiavi, candidate, primaria (definizioni formali)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez1_3.html"; }
+    function nextSlide(){ window.location.href = "lez1_5.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 1 — Modello Relazionale</h2>
+    <ul>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
+      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
+      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Chiavi: superchiavi, candidate, primaria (definizioni formali)</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Notazione</h2>
+        <ul>
+          <li>Per una relazione <code>R(A<sub>1</sub>:D<sub>1</sub>, …, A<sub>n</sub>:D<sub>n</sub>)</code> indichiamo con <code>attr(R)</code> l'insieme degli attributi <code>{A<sub>1</sub>, …, A<sub>n</sub>}</code>.</li>
+          <li>Per una tupla <code>t ∈ R</code> e un insieme di attributi <code>X ⊆ attr(R)</code>, <code>t[X]</code> è la proiezione di <code>t</code> su <code>X</code>.</li>
+        </ul>
+
+        <h2>Definizioni formali</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Superchiave</span> (di <code>R</code>): un insieme <code>S ⊆ attr(R)</code> tale che valga l'<strong>unicità</strong> su <code>S</code>:
+              <div class="ok" style="display:block; margin-top:.35rem"><code>∀ t ≠ t' ∈ R: t[S] ≠ t'[S]</code></div>
+              Equivalente: la funzione <code>φ<sub>S</sub> : R → ∏<sub>A∈S</sub> D<sub>A</sub></code> è <em>iniettiva</em>.
+            </li>
+            <li><span class="def">Chiave candidata</span>: una superchiave <strong>minimale</strong> per inclusione; cioè nessun sottoinsieme proprio di <code>S</code> è ancora superchiave.
+              <div class="ok" style="display:block; margin-top:.35rem"><code>∀ A ∈ S: S \ {A} non è una superchiave</code></div>
+            </li>
+            <li><span class="def">Chiave primaria</span>: una delle chiavi candidate scelta come identificatore <em>designato</em> dell'entità rappresentata da <code>R</code>.</li>
+          </ul>
+        </div>
+
+        <h2>Proprietà immediate</h2>
+        <ul>
+          <li><code>attr(R)</code> è sempre una <strong>superchiave</strong> (unicità banale su tutte le colonne).</li>
+          <li>Ogni superset di una superchiave è ancora una superchiave.</li>
+          <li>Poiché <code>attr(R)</code> è finito, esistono sempre una o più <strong>chiavi candidate</strong> (minimalità per inclusione).</li>
+          <li>Gli attributi della <strong>chiave primaria</strong> non possono essere NULL (integrità di entità).</li>
+        </ul>
+
+        <h2>Esempio base su <code>Studenti(Matr, Email, Nome)</code></h2>
+        <div class="box">
+          <p class="note" style="margin-bottom:.35rem">Ipotesi</p>
+          <ul>
+            <li><code>Matr</code> è assegnato in modo univoco a ciascuno studente.</li>
+            <li><code>Email</code> è unica nel database.</li>
+          </ul>
+          <div class="note" style="margin:.6rem 0 .3rem 0">Superchiavi</div>
+          <ul>
+            <li><code>{Matr}</code>, <code>{Email}</code>.</li>
+            <li>Ogni superset (p.es. <code>{Matr, Email}</code>, <code>{Matr, Nome}</code>) è ancora superchiave.</li>
+          </ul>
+          <div class="note" style="margin:.6rem 0 .3rem 0">Chiavi candidate</div>
+          <ul>
+            <li><code>{Matr}</code> e <code>{Email}</code> (non hanno sottoinsiemi non vuoti che siano superchiavi).</li>
+          </ul>
+          <div class="note" style="margin:.6rem 0 .3rem 0">Scelta di chiave primaria</div>
+          <ul>
+            <li>Si può designare <code>PK = {Matr}</code> (stabile, corto, semantica di identificatore amministrativo).</li>
+          </ul>
+          <div style="margin-top:.6rem">
+            <button id="btnK1" onclick="toggleBox('btnK1','ansK1')">Mostra esempi di (non) minimalità ▼</button>
+          </div>
+          <div id="ansK1" style="display:none; margin-top:.5rem">
+            <table>
+              <thead><tr><th>Insieme</th><th>Superchiave?</th><th>Minimale?</th><th>Note</th></tr></thead>
+              <tbody>
+                <tr><td>{Matr}</td><td class="ok">Sì</td><td class="ok">Sì</td><td>Chiave candidata</td></tr>
+                <tr><td>{Matr, Nome}</td><td class="ok">Sì</td><td class="warn">No</td><td>Contiene <code>{Matr}</code></td></tr>
+                <tr><td>{Nome}</td><td class="warn">No</td><td>—</td><td>Non garantisce unicità</td></tr>
+                <tr><td>{Email}</td><td class="ok">Sì</td><td class="ok">Sì</td><td>Chiave candidata</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Come provare che S è una chiave candidata</h2>
+        <div class="box">
+          <ol>
+            <li><strong>Unicità</strong>: mostra che <code>∀ t ≠ t' ∈ R: t[S] ≠ t'[S]</code> (per dati reali: nessun duplicato su <code>S</code>).</li>
+            <li><strong>Minimalità</strong>: per qualche attributo <code>A ∈ S</code>, dimostra che <code>S \ {A}</code> <em>non</em> è superchiave (esiste almeno una coppia distinta con stessa proiezione su <code>S \ {A}</code>).</li>
+          </ol>
+        </div>
+
+<div class="box">
+  <strong>Domanda-guida</strong>: quali criteri pratici usi per scegliere tra più chiavi candidate quale <em>chiave primaria</em>?
+  <div style="margin-top:.6rem">
+    <button id="btnDG4" onclick="toggleBox('btnDG4','ansDG4')">Mostra ▼</button>
+  </div>
+  <div id="ansDG4" style="display:none; margin-top:.5rem">
+    <ul>
+      <li><strong>Stabilità nel tempo</strong>
+        <ul>
+          <li>Preferisci una <em>chiave surrogata</em> (es. <code>INT</code> auto-increment o <code>UUID</code>) che non cambia mai lungo il ciclo di vita.</li>
+          <li>Evita chiavi naturali soggette a variazioni (email, telefono, indirizzo, codice corso che può essere rinominato).</li>
+          <li>Considera casi di <em>merge/split</em> entità: una PK immutabile semplifica fusioni e scissioni.</li>
+        </ul>
+      </li>
+      <li><strong>Semplicità e portabilità</strong>
+        <ul>
+          <li>Poche colonne, tipi primitivi e compatti (<code>INTEGER</code> o <code>UUID</code>): più facili da indicizzare e scambiare.</li>
+          <li>Evita PK “pesanti” (testi lunghi, campi calcolati) o dipendenti dal formato locale.</li>
+        </ul>
+      </li>
+      <li><strong>Privacy e semantica</strong>
+        <ul>
+          <li>Non usare dati personali diretti (CF, e-mail) come PK: rischi legali e vincoli di riservatezza.</li>
+          <li>Lascia tali attributi come <em>candidate keys</em> con vincoli <code>UNIQUE</code> separati.</li>
+        </ul>
+      </li>
+      <li><strong>Prestazioni e operatività</strong>
+        <ul>
+          <li>La PK è indicizzata: tipi corti e monocolonna velocizzano join e foreign key.</li>
+          <li>Distribuzione dei valori: evita PK con clusterizzazione “cattiva” (p.es. stringhe crescenti non uniformi); per sistemi distribuiti valuta <code>UUID v4/v7</code>.</li>
+          <li>Scritture concorrenti e sharding: PK surrogate riducono contese e collisioni rispetto a chiavi naturali composite.</li>
+        </ul>
+      </li>
+      <li><strong>Vincoli legali / di dominio</strong>
+        <ul>
+          <li>Se esiste un identificatore <em>istituzionale</em> obbligatorio e immutabile (es. ID ministeriale), può essere una buona PK.</li>
+          <li>In caso contrario: PK surrogata + vincolo <code>UNIQUE</code> sull’identificatore naturale richiesto dal dominio.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="note">Regola d’oro: usa una <strong>PK surrogata</strong> interna (INT/UUID) e applica <strong>UNIQUE</strong> sulle chiavi naturali utili (email, codice, ecc.).</div>
+    <div class="warn">Evita PK <strong>composite</strong> salvo necessarie per modellare identità composta; in alternativa valuta PK surrogata + <strong>UNIQUE</strong> sulla combinazione naturale.</div>
+    <div class="ok">Obiettivo: PK <em>immutabile</em>, <em>semplice</em>, <em>performante</em>, che non espone dati sensibili.</div>
+  </div>
+</div>
+
+        <!-- Facoltativo: SQL illustrativo -->
+        <pre><code class="language-sql">-- Illustrazione (non normativa rispetto al modello)
+CREATE TABLE Studenti (
+  Matr    INTEGER     NOT NULL,
+  Email   VARCHAR(100) NOT NULL,
+  Nome    VARCHAR(50)  NOT NULL,
+  CONSTRAINT PK_Studenti PRIMARY KEY (Matr),
+  CONSTRAINT UQ_Studenti_Email UNIQUE (Email)
+);
+</code></pre>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
