@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez2_4 · Entità deboli e identificazione</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez2_3.html"; }
+    function nextSlide(){ window.location.href = "lez2_5.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
+    <ul>
+      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
+      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
+      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
+      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
+      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
+      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
+      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
+      <li><a href="lez2_8.html">Lez2.8: Esercitazione e micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Entità deboli e identificazione</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Entità forte e entità debole</h2>
+        <div class="box">
+          <p>
+            Un’<strong>entità forte</strong> possiede una <em>chiave primaria autonoma</em> che identifica univocamente
+            ciascuna istanza del suo insieme.
+          </p>
+          <p>
+            Un’<strong>entità debole</strong> (<em>weak entity</em>) invece non può essere identificata univocamente solo
+            dai propri attributi: la sua identificazione dipende da un’altra entità, detta <strong>entità proprietaria</strong>
+            o <strong>identificante</strong>.
+          </p>
+          <p>
+            Formalmente: se <code>Ew</code> è l’insieme delle entità deboli e <code>Es</code> quello delle entità forti
+            che le identificano, allora:
+          </p>
+          <p class="ok"><code>∀ e<sub>w</sub> ∈ Ew, ∃ e<sub>s</sub> ∈ Es : (e<sub>s</sub>, e<sub>w</sub>) ∈ R</code></p>
+          <p>dove <code>R</code> è una relazione di identificazione obbligatoria e 1:N da <code>Es</code> a <code>Ew</code>.</p>
+        </div>
+
+        <h2>Chiave parziale e relazione identificante</h2>
+        <div class="box">
+          <p>
+            Ogni entità debole possiede una <strong>chiave parziale</strong>, cioè un insieme di attributi
+            che la distingue <em>solo all’interno</em> del contesto della sua entità identificante.
+          </p>
+          <p>
+            La coppia formata da:
+          </p>
+          <ul>
+            <li>la chiave primaria dell’entità forte, e</li>
+            <li>la chiave parziale dell’entità debole</li>
+          </ul>
+          <p>costituisce una <strong>chiave completa</strong> per identificare univocamente le istanze dell’entità debole.</p>
+
+          <p class="note">Nel diagramma E-R, le entità deboli sono rappresentate con <strong>rettangoli doppi</strong>
+            e la relazione di identificazione con un <strong>rombo doppio</strong>.</p>
+
+          <svg width="600" height="200" viewBox="0 0 600 200">
+            <!-- Entità forte -->
+            <rect x="80" y="70" width="140" height="50" rx="8" ry="8"
+                  fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+            <text x="150" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">ORDINE</text>
+
+            <!-- Relazione identificante -->
+            <polygon points="300,80 350,50 400,80 350,110"
+                     fill="#fff7ed" stroke="#f59e0b" stroke-width="4"/>
+            <text x="350" y="82" font-size="14" text-anchor="middle" fill="#78350f">CONTIENTE</text>
+
+            <!-- Entità debole -->
+            <rect x="460" y="70" width="140" height="50" rx="8" ry="8"
+                  fill="#f0f9ff" stroke="#2563eb" stroke-width="4"/>
+            <text x="530" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">DETTAGLIO</text>
+
+            <!-- Collegamenti -->
+            <line x1="220" y1="95" x2="300" y2="85" stroke="#2563eb" stroke-width="2"/>
+            <line x1="400" y1="85" x2="460" y2="95" stroke="#2563eb" stroke-width="2"/>
+          </svg>
+
+          <p class="ok">
+            Esempio: un <code>DETTAGLIO</code> d’ordine non esiste senza il suo <code>ORDINE</code>.  
+            La chiave di <code>DETTAGLIO</code> = (NumeroOrdine, NumeroRiga).
+          </p>
+        </div>
+
+        <h2>Formalizzazione</h2>
+        <div class="box">
+          <pre><code class="language-text">
+Sia:
+  ORDINE(Oid, Data)
+  DETTAGLIO(NumeroRiga, Quantità, Prezzo)
+
+Relazione di identificazione:
+  CONTIENTE ⊆ ORDINE × DETTAGLIO
+
+Vincoli:
+  ∀ d ∈ DETTAGLIO, ∃! o ∈ ORDINE : (o, d) ∈ CONTIENTE
+  Chiave(DETTAGLIO) = Oid ∪ {NumeroRiga}
+          </code></pre>
+          <p class="note">La chiave dell’entità debole incorpora la chiave della sua entità forte.</p>
+        </div>
+
+        <h2>Cardinalità tipica</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Da forte a debole:</strong> 1 → N (un ordine ha molti dettagli).</li>
+            <li><strong>Da debole a forte:</strong> ogni entità debole appartiene esattamente a una entità forte (partecipazione totale).</li>
+          </ul>
+        </div>
+		
+		<h2>Notazione grafica di Chen per entità deboli</h2>
+<div class="box">
+  <p>
+    Nel modello originale di <strong>Peter Chen (1976)</strong>, le entità deboli e le loro relazioni identificanti
+    hanno una rappresentazione grafica specifica:
+  </p>
+  <ul>
+    <li><strong>Entità debole</strong>: rettangolo con doppio bordo.</li>
+    <li><strong>Relazione identificante</strong>: rombo con doppio bordo.</li>
+    <li><strong>Chiave parziale</strong>: attributo indicato con linea tratteggiata o sottolineatura parziale.</li>
+    <li><strong>Partecipazione totale</strong> dell’entità debole: linea doppia che la collega alla relazione.</li>
+  </ul>
+
+  <svg width="650" height="260" viewBox="0 0 650 260">
+    <!-- Entità forte -->
+    <rect x="70" y="100" width="140" height="50" rx="8" ry="8"
+          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="140" y="130" font-size="15" text-anchor="middle" fill="#1e3a8a">ORDINE</text>
+
+    <!-- Relazione identificante (rombo doppio) -->
+    <polygon points="290,110 340,80 390,110 340,140"
+             fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
+    <polygon points="295,115 340,87 385,115 340,143"
+             fill="none" stroke="#f59e0b" stroke-width="2"/>
+    <text x="340" y="112" font-size="14" text-anchor="middle" fill="#78350f">CONTIENTE</text>
+
+    <!-- Entità debole (rettangolo doppio) -->
+    <rect x="450" y="100" width="140" height="50" rx="8" ry="8"
+          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="456" y="106" width="128" height="38" rx="6" ry="6"
+          fill="none" stroke="#2563eb" stroke-width="2"/>
+    <text x="520" y="130" font-size="15" text-anchor="middle" fill="#1e3a8a">DETTAGLIO</text>
+
+    <!-- Collegamenti -->
+    <line x1="210" y1="125" x2="290" y2="115" stroke="#2563eb" stroke-width="2"/>
+    <line x1="390" y1="115" x2="450" y2="125" stroke="#2563eb" stroke-width="4"/>
+
+    <!-- Attributo chiave parziale -->
+    <ellipse cx="520" cy="200" rx="70" ry="25"
+             fill="#ecfdf5" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="520" y="205" text-anchor="middle" font-size="13" fill="#166534">NumeroRiga (chiave parziale)</text>
+    <line x1="520" y1="150" x2="520" y2="175" stroke="#2563eb" stroke-width="2"/>
+
+    <!-- Didascalie -->
+    <text x="90" y="90" font-size="13" fill="#1e3a8a">Entità forte</text>
+    <text x="460" y="90" font-size="13" fill="#1e3a8a">Entità debole</text>
+    <text x="340" y="60" font-size="13" fill="#78350f">Relazione identificante</text>
+    <text x="520" y="235" font-size="12" fill="#166534">(attributo chiave parziale tratteggiato)</text>
+  </svg>
+
+  <p class="ok" style="margin-top:.6rem">
+    Questo schema riproduce la notazione classica di Chen, in cui la debolezza semantica è visibile
+    nel doppio contorno e nella relazione identificante obbligatoria.
+  </p>
+</div>
+
+
+        <h2>Domanda-guida</h2>
+        <div class="box">
+          <p><strong>Perché nel modello E-R è necessaria la distinzione tra entità forte e debole?</strong></p>
+          <button id="btnDG24" onclick="toggleBox('btnDG24','ansDG24')">Mostra ▼</button>
+          <div id="ansDG24" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Perché alcune entità non hanno un’identità autonoma e dipendono logicamente da altre.</li>
+              <li>Serve a rappresentare correttamente vincoli di esistenza e identificazione nel dominio reale.</li>
+              <li>La distinzione prepara la traduzione corretta verso il modello relazionale (chiavi parziali → FK + PK composite).</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
