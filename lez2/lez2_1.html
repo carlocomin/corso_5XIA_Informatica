@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez2_1 · Introduzione al modello Entità-Relazione (Chen)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "../lez1/lez1_8.html"; }
+    function nextSlide(){ window.location.href = "lez2_2.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
+    <ul>
+      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
+      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
+      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
+      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
+      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
+      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
+      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
+      <li><a href="lez2_8.html">Lez2.8: Esercitazione e micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Introduzione e motivazioni al modello Entità-Relazione (Chen)</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Contesto storico</h2>
+        <div class="box">
+          <p>
+            Il <strong>modello Entità-Relazione</strong> (E-R) fu proposto da <strong>Peter Chen</strong> nel 1976
+            per introdurre un linguaggio concettuale universale nella progettazione delle basi di dati.
+          </p>
+          <p>
+            Prima di Chen, la progettazione dei dati avveniva direttamente nei termini di tabelle, record e puntatori.
+            Il modello E-R mira invece a descrivere la realtà con un livello di astrazione indipendente
+            dalla tecnologia di memorizzazione.
+          </p>
+          <p class="note">Scopo: fornire una rappresentazione <em>concettuale</em> del dominio, utile per la comunicazione tra analisti e progettisti.</p>
+        </div>
+
+        <h2>Motivazioni principali</h2>
+        <div class="box">
+          <ul>
+            <li>Separare la <strong>fase concettuale</strong> (modellazione) da quella logica e fisica.</li>
+            <li>Esplicitare i <strong>concetti fondamentali</strong> del dominio: entità, attributi e relazioni.</li>
+            <li>Rendere la struttura dei dati <strong>comprensibile</strong> anche ai non tecnici.</li>
+            <li>Costituire la base per la <strong>trasformazione automatica</strong> in schema relazionale.</li>
+          </ul>
+        </div>
+
+        <h2>I tre livelli di astrazione dei dati</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>Livello</th><th>Descrizione</th><th>Esempio</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Concettuale</strong></td>
+                <td>Definisce il significato dei dati indipendentemente dal DBMS.</td>
+                <td>Diagramma E-R</td>
+              </tr>
+              <tr>
+                <td><strong>Logico</strong></td>
+                <td>Traduce il modello concettuale in strutture relazionali (tabelle, chiavi, vincoli).</td>
+                <td>Schema relazionale</td>
+              </tr>
+              <tr>
+                <td><strong>Fisico</strong></td>
+                <td>Definisce come i dati sono memorizzati e indicizzati su disco.</td>
+                <td>Implementazione nel DBMS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Analogia intuitiva</h2>
+        <div class="box">
+          <p>
+            Il modello E-R svolge per i dati lo stesso ruolo che un <strong>disegno tecnico</strong> ha per un edificio:
+            rappresenta la struttura logica prima della costruzione fisica.
+          </p>
+          <p class="ok">Permette di ragionare su cosa rappresentare, non ancora su come implementarlo.</p>
+        </div>
+
+        <h2>Domanda-guida</h2>
+        <div class="box">
+          <p><strong>In che senso il modello E-R è indipendente dalla tecnologia?</strong></p>
+          <button id="btnDG21" onclick="toggleBox('btnDG21','ansDG21')">Mostra ▼</button>
+          <div id="ansDG21" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Perché descrive concetti <strong>semantici</strong> (entità, attributi, relazioni), non strutture fisiche.</li>
+              <li>Lo stesso diagramma può essere implementato su diversi DBMS (relazionali, a oggetti, documentali).</li>
+              <li>Il modello E-R è una <strong>fase di analisi</strong>, non di implementazione.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

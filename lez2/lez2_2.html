@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez2_2 · Concetti fondamentali del modello E-R (Chen)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez2_1.html"; }
+    function nextSlide(){ window.location.href = "lez2_3.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
+    <ul>
+      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
+      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
+      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
+      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
+      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
+      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
+      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
+      <li><a href="lez2_8.html">Lez2.8: Esercitazione e micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Concetti fondamentali del modello Entità-Relazione</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Entità</h2>
+        <div class="box">
+          <p>
+            Un'<strong>entità</strong> rappresenta una classe di oggetti o concetti della realtà di interesse
+            (fisici, astratti o concettuali) che condividono le stesse proprietà significative.
+          </p>
+          <p>
+            Formalmente, se <code>E</code> è un tipo di entità, allora <code>E</code> denota un <em>insieme</em>
+            di istanze <code>e₁, e₂, …, eₙ</code>, ciascuna caratterizzata da un insieme di attributi comuni.
+          </p>
+          <div class="note">Nel diagramma E-R di Chen, le entità sono rappresentate da <strong>rettangoli</strong>.</div>
+
+          <svg width="250" height="100">
+            <rect x="30" y="25" width="180" height="50" rx="8" ry="8" fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+            <text x="120" y="55" font-size="16" text-anchor="middle" fill="#1e3a8a">STUDENTE</text>
+          </svg>
+
+          <p class="ok">
+            Esempio: l'entità <code>STUDENTE</code> rappresenta tutti gli studenti, ognuno dei quali è un'istanza distinta
+            identificabile (Ada, Alan, Grace, ...).
+          </p>
+        </div>
+
+        <h2>Attributi</h2>
+        <div class="box">
+          <p>
+            Gli <strong>attributi</strong> descrivono le proprietà di un'entità o di una relazione.  
+            Ogni attributo è una <em>funzione</em> che associa a ogni istanza di entità un valore appartenente al proprio dominio:
+          </p>
+
+          <p class="ok"><code>f<sub>A</sub> : E → Dom(A)</code></p>
+
+          <p>
+            Esempio formale per l’entità <code>STUDENTE</code>:
+          </p>
+          <pre><code class="language-text">
+STUDENTE = { (Matr, Nome, Cognome, Email) }
+Domini:
+  Matr ∈ N⁺
+  Nome, Cognome, Email ∈ STRING
+          </code></pre>
+
+          <div class="note">Nel diagramma E-R gli attributi sono rappresentati da <strong>ovali</strong> collegati all'entità o alla relazione.</div>
+
+          <svg width="600" height="180" viewBox="0 0 600 180">
+  <!-- Entità STUDENTE -->
+  <rect x="240" y="65" width="120" height="45" rx="8" ry="8"
+        fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="300" y="93" font-size="15" text-anchor="middle" fill="#1e3a8a">STUDENTE</text>
+
+  <!-- Attributi -->
+  <ellipse cx="100" cy="40" rx="60" ry="25"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="100" y="45" text-anchor="middle" font-size="13" fill="#166534">Matr</text>
+
+  <ellipse cx="100" cy="120" rx="60" ry="25"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="100" y="125" text-anchor="middle" font-size="13" fill="#166534">Nome</text>
+
+  <ellipse cx="500" cy="40" rx="60" ry="25"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="500" y="45" text-anchor="middle" font-size="13" fill="#166534">Cognome</text>
+
+  <ellipse cx="500" cy="120" rx="60" ry="25"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="500" y="125" text-anchor="middle" font-size="13" fill="#166534">Email</text>
+
+  <!-- Collegamenti -->
+  <line x1="240" y1="80" x2="160" y2="50" stroke="#2563eb" stroke-width="2"/>
+  <line x1="240" y1="100" x2="160" y2="120" stroke="#2563eb" stroke-width="2"/>
+  <line x1="360" y1="80" x2="440" y2="40" stroke="#2563eb" stroke-width="2"/>
+  <line x1="360" y1="100" x2="440" y2="120" stroke="#2563eb" stroke-width="2"/>
+</svg>
+
+
+          <div style="margin-top:.6rem">
+            <button id="btnATT" onclick="toggleBox('btnATT','ansATT')">Mostra classificazione ▼</button>
+          </div>
+          <div id="ansATT" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Semplici</strong>: un solo valore per istanza (es. Nome).</li>
+              <li><strong>Composti</strong>: composti da sotto-attributi (es. Indirizzo = {Via, Città, CAP}).</li>
+              <li><strong>Multivalore</strong>: più valori possibili (es. Telefono).</li>
+              <li><strong>Derivati</strong>: calcolabili da altri (es. Età da DataNascita).</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Chiavi</h2>
+        <div class="box">
+          <p>
+            Una <strong>superchiave</strong> è un insieme di attributi <code>S ⊆ A</code> tale che
+            <code>∀ e, e' ∈ E, e[S] = e'[S] ⇒ e = e'</code>.  
+            Cioè, due istanze non possono avere gli stessi valori su <code>S</code>.
+          </p>
+
+          <p>
+            Una <strong>chiave candidata</strong> è una superchiave <em>minimale per inclusione</em>:  
+            un insieme <code>K ⊆ A</code> tale che:
+          </p>
+          <ul>
+            <li><strong>Unicità</strong>: <code>∀ e, e' ∈ E, e[K] = e'[K] ⇒ e = e'</code>.</li>
+            <li><strong>Minimalità</strong>: non esiste <code>K' ⊂ K</code> che verifichi la stessa proprietà.</li>
+          </ul>
+
+          <p>
+            Tra le chiavi candidate si sceglie una <strong>chiave primaria</strong> (PK) per l’identificazione canonica delle istanze.
+            Nel diagramma E-R di Chen, gli attributi della chiave primaria sono <strong>sottolineati</strong>.
+          </p>
+
+          <p class="ok">
+            Esempio: per <code>STUDENTE(Matr, Nome, Cognome, Email)</code>,  
+            <code>{Matr}</code> è chiave candidata e designata come <u>chiave primaria</u>.
+          </p>
+
+          <div class="note">
+            La distinzione tra superchiave, chiave candidata e chiave primaria è essenziale per comprendere
+            la traduzione verso il modello relazionale (Lez2.7).
+          </div>
+        </div>
+
+        <h2>Domanda-guida</h2>
+        <div class="box">
+          <p><strong>Perché nel modello E-R è importante distinguere tra entità e attributi?</strong></p>
+          <button id="btnDG22" onclick="toggleBox('btnDG22','ansDG22')">Mostra ▼</button>
+          <div id="ansDG22" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Le <strong>entità</strong> rappresentano oggetti o concetti con esistenza autonoma nel dominio.</li>
+              <li>Gli <strong>attributi</strong> sono proprietà descrittive, prive di autonomia semantica.</li>
+              <li>Se un concetto può avere relazioni indipendenti o vincoli propri, deve essere modellato come <strong>entità</strong>, non come attributo.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
