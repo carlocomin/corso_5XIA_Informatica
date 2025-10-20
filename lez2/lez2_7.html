@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez2_7 · Traduzione E-R → Relazionale (regole di trasformazione)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez2_6.html"; }
+    function nextSlide(){ window.location.href = "lez2_8.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
+    <ul>
+      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
+      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
+      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
+      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
+      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
+      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
+      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
+      <li><a href="lez2_8.html">Lez2.8: Esercitazione e micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Traduzione E-R → Relazionale (regole di trasformazione)</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivo e ipotesi</h2>
+        <div class="box">
+          <ul>
+            <li>Dato un diagramma E-R (Chen), produrre uno <strong>schema relazionale</strong> con <em>relazioni</em> (tabelle), <em>chiavi</em>, <em>vincoli</em> di dominio e <em>referenziali</em>.</li>
+            <li>La traduzione preserva l’<strong>informazione</strong> e i <strong>vincoli semantici</strong> (per quanto esprimibili a livello relazionale).</li>
+            <li><strong>Notazione</strong> usata per lo schema relazionale (senza SQL):
+              <div class="note"><code>R(Attributi) — PK{…} — FK: A → S(K) — UNIQUE{…} — CHECK predicati</code></div>
+            </li>
+          </ul>
+        </div>
+
+        <h2>Entità forti → Relazioni</h2>
+        <div class="box">
+          <ul>
+            <li>Ciascuna <strong>entità forte</strong> <code>E</code> diventa una relazione: <code>E(A₁, …, Aₙ)</code>.</li>
+            <li>La <strong>chiave primaria</strong> della tabella è una delle <em>chiavi candidate</em> di <code>E</code> (scelta progettuale). <span class="note">Minimalità e stabilità prima di tutto.</span></li>
+            <li><strong>Attributi composti</strong> si scompongono nei componenti: es. <code>Indirizzo</code> → <code>Via, Città, CAP</code>.</li>
+            <li><strong>Attributi multivalore</strong> non restano nella tabella dell’entità (vedi sezione dedicata).</li>
+          </ul>
+          <pre><code class="language-text">Esempio
+Entità: STUDENTE(Matr, Nome, Cognome, DataNascita, Email)
+Relazione: STUDENTE(Matr, Nome, Cognome, DataNascita, Email) — PK{Matr} — UNIQUE{Email}</code></pre>
+        </div>
+		
+		<h2>Partecipazione totale (richiamo)</h2>
+<div class="box">
+  <p>
+    In una relazione E-R, la <strong>partecipazione totale</strong> di un insieme di entità <code>E</code> a una relazione <code>R</code>
+    significa che <em>ogni istanza</em> di <code>E</code> partecipa ad almeno una istanza di <code>R</code> (cardinalità minima ≥ 1).
+    Nella notazione di Chen si indica con una <strong>linea doppia</strong> tra l’entità e il rombo della relazione
+    (una sola linea = partecipazione <em>parziale</em>, minima 0).
+  </p>
+
+  <pre><code class="language-text">Formalizzazione (relazione binaria):
+Sia R ⊆ E × F.
+Totale su E ⇔ ∀ e ∈ E, ∃ f ∈ F : (e, f) ∈ R
+Parziale su E ⇔ ∃ e ∈ E : ¬∃ f ∈ F : (e, f) ∈ R
+
+Relazione n-aria R ⊆ E₁ × … × Eₙ:
+Totale su Eᵢ ⇔ ∀ x ∈ Eᵢ, ∃ (e₁,…,eₙ) ∈ R con eᵢ = x</code></pre>
+
+  <h3 style="margin:.5rem 0 .2rem">Traduzione ed enforcement nel modello relazionale</h3>
+  <ul>
+    <li>
+      <strong>1 : N</strong> — totale sul lato <em>N</em>:
+      rendi la <strong>FK NOT NULL</strong> nel lato N (ogni tupla del lato N deve riferire una tupla del lato 1).
+    </li>
+    <li>
+      <strong>1 : N</strong> — totale sul lato <em>1</em>:
+      richiede “almeno una occorrenza nel lato N per ogni tupla del lato 1”; questo <strong>non è esprimibile</strong>
+      con sole PK/FK standard. Servono <em>vincoli estesi</em> (trigger, procedure, o assertion se supportata).
+    </li>
+    <li>
+      <strong>1 : 1</strong> — totale su <em>A</em>:
+      metti in <em>A</em> una <strong>FK NOT NULL + UNIQUE</strong> verso <em>B</em>. Totale su entrambi i lati:
+      FKs <strong>NOT NULL + UNIQUE</strong> su entrambi i lati oppure <em>merge</em> delle tabelle se semanticamente lecito.
+    </li>
+    <li>
+      <strong>N : M</strong> — totale su <em>E</em>:
+      ogni tupla di <em>E</em> deve comparire almeno una volta nella tabella associativa; anche qui non bastano PK/FK:
+      usare <em>trigger</em> (es. bloccare DELETE/INSERT che violano la copertura) o job di validazione.
+    </li>
+    <li>
+      <strong>Entità debole</strong>:
+      la partecipazione totale alla relazione identificante si implementa con <strong>FK NOT NULL</strong> dalla tabella
+      debole all’owner; la PK della debole include <em>PK(owner)</em> ∪ <em>chiave parziale</em>.
+    </li>
+  </ul>
+
+  <div class="note">
+    “Totale” significa <em>almeno uno</em>, non “esattamente uno”. La cardinalità massima (1, N) va gestita con
+    <strong>UNIQUE</strong> (per i casi 1:1) o con la struttura della tabella associativa (per N:M).
+  </div>
+</div>
+
+
+        <h2>Entità deboli → Relazioni con PK composta</h2>
+        <div class="box">
+          <ul>
+            <li>Per una <strong>entità debole</strong> <code>Dw</code> con <em>chiave parziale</em> <code>P</code> e <em>owner</em> <code>E</code> (PK <code>K</code>):</li>
+            <li><code>Dw</code> diventa una relazione <code>DW( K, P, … )</code> con <strong>PK{K ∪ P}</strong>.</li>
+            <li>Si aggiunge <strong>FK</strong> totale: <code>K → E(K)</code> (partecipazione totale della debole alla relazione identificante).</li>
+          </ul>
+          <pre><code class="language-text">Esempio
+DETTAGLIO(NumeroRiga, Quantità, Prezzo) dipende da ORDINE(Oid)
+Relazioni:
+  ORDINE(Oid, Data) — PK{Oid}
+  DETTAGLIO(Oid, NumeroRiga, Quantità, Prezzo) — PK{Oid, NumeroRiga} — FK: Oid → ORDINE(Oid)</code></pre>
+        </div>
+
+        <h2>Attributi: semplici, composti, multivalore, derivati</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Semplici</strong> → una colonna ciascuno.</li>
+            <li><strong>Composti</strong> → più colonne; il nome composto non appare come colonna.</li>
+            <li><strong>Multivalore</strong> su <code>E</code> con dominio <code>D</code> → nuova relazione <code>E_A( K(E), A )</code>:
+              <ul>
+                <li><strong>PK</strong>{K(E), A} garantisce <em>unicità interna</em>.</li>
+                <li>Se serve ordinare/prioritizzare: aggiungere attributo <code>Ordine</code> o <code>Priorità</code> e adattare PK/UNIQUE.</li>
+              </ul>
+            </li>
+            <li><strong>Derivati</strong> → non si materializzano (regola generale). Se materializzati: specificare fonte e regola di aggiornamento.</li>
+          </ul>
+          <pre><code class="language-text">Esempio (multivalore)
+Telefono* su STUDENTE:
+  STUDENTE(Matr, …) — PK{Matr}
+  TELEFONO_STUDENTE(Matr, Telefono) — PK{Matr, Telefono} — FK: Matr → STUDENTE(Matr)</code></pre>
+        </div>
+
+        <h2>Relazioni binarie 1:1, 1:N, N:M</h2>
+        <div class="box">
+          <h3 style="margin:.2rem 0">1 : 1</h3>
+          <ul>
+            <li>Implementazione tipica: una <strong>FK con UNIQUE</strong> su uno dei due lati.</li>
+            <li><em>Scelta del lato</em>:
+              <ul>
+                <li>Se partecipazione totale su <code>A</code> e parziale su <code>B</code>, mettere la FK in <code>A</code> (NOT NULL) verso <code>B</code>.</li>
+                <li>Se totale su entrambi, è lecito <em>fondere</em> le tabelle (solo se non si perdono attributi opzionali/semantica).</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h3 style="margin:.6rem 0 .2rem">1 : N</h3>
+          <ul>
+            <li><strong>FK sul lato N</strong> verso il lato 1.</li>
+            <li>Partecipazione totale sul lato N → FK <em>NOT NULL</em>. Partecipazione parziale → FK ammessa NULL.</li>
+            <li><em>Attributi della relazione</em>: se la relazione ha attributi, possono stare sul lato N (sono funzionalmente dipendenti dalla PK del lato N).</li>
+          </ul>
+
+          <h3 style="margin:.6rem 0 .2rem">N : M</h3>
+          <ul>
+            <li>Nuova relazione <strong>associativa</strong> <code>R( K(A), K(B), …attr di R… )</code>.</li>
+            <li><strong>PK</strong> composta da entrambe le FKs (o da una surrogate + UNIQUE sulle FKs).</li>
+            <li><strong>FK</strong> verso le entità partecipanti; gli attributi di <code>R</code> diventano colonne della tabella associativa.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <div class="note" style="margin-bottom:.5rem">Dettagli operativi</div>
+          <button id="btnRB" onclick="toggleBox('btnRB','ansRB')">Mostra scelte pratiche ▼</button>
+          <div id="ansRB" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>1:1</strong>: se entrambi totali, valutare merge per ridurre join; altrimenti FK+UNIQUE sul lato scelto.</li>
+              <li><strong>1:N</strong>: FK nel lato N; se spesso si filtra per il “lato 1”, considerare indice sul FK.</li>
+              <li><strong>N:M</strong>: PK = {FK_A, FK_B}; aggiungere <code>UNIQUE{FK_A, FK_B}</code> anche con surrogate PK per evitare duplicati.</li>
+              <li><strong>n-arie (n ≥ 3)</strong>: tabella che contiene le FKs verso tutte le entità e gli eventuali attributi di relazione; PK = un sottoinsieme che garantisca univocità delle tuple (tipicamente l’insieme di tutte le FKs).</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Relazioni n-arie (n ≥ 3)</h2>
+        <div class="box">
+          <ul>
+            <li>Una relazione <code>R ⊆ E₁ × E₂ × … × Eₙ</code> diventa una relazione <code>R( K(E₁), …, K(Eₙ), …attr )</code>.</li>
+            <li><strong>PK</strong>: spesso l’unione di tutte le FKs. Se il modello impone vincoli addizionali (es. “per ogni (E₁,E₂) al massimo un E₃”), allora la PK può essere più piccola + <code>UNIQUE</code> su combinazioni rilevanti.</li>
+          </ul>
+          <pre><code class="language-text">Esempio ternaria: ASSEGNAZIONE(Studente, Corso, Docente, Aula)
+Relazione:
+  ASSEGNAZIONE(Matr, CodCorso, IdDoc, Aula, …)
+    — PK{Matr, CodCorso, IdDoc}
+    — FK: Matr → STUDENTE
+    — FK: CodCorso → CORSO
+    — FK: IdDoc → DOCENTE
+    — UNIQUE{Matr, CodCorso}  (se la semantica lo richiede)</code></pre>
+        </div>
+
+        <h2>Specializzazione (ISA) → strategie</h2>
+        <div class="box">
+          <p><strong>Tre strategie</strong> principali; in tutte, le chiavi dei sottotipi sono le stesse del supertipo.</p>
+
+          <div style="margin-top:.4rem">
+            <button id="btnISA1" onclick="toggleBox('btnISA1','ansISA1')">Tabella unica (per gerarchia) ▼</button>
+          </div>
+          <div id="ansISA1" style="display:none; margin-top:.5rem">
+            <p><strong>Un’unica relazione</strong> con tutte le colonne del supertipo e dei sottotipi + un <em>discriminante di tipo</em>.</p>
+            <pre><code class="language-text">PERSONA*(Id, …comuni…, Matricola?, Dipartimento?, Tipo ∈ {Studente, Docente})
+— PK{Id}
+Pro: meno join, semplice.
+Contro: molti NULL se T ma D, difficile imporre disgiunzione/copertura senza vincoli estesi.</code></pre>
+          </div>
+
+          <div style="margin-top:.4rem">
+            <button id="btnISA2" onclick="toggleBox('btnISA2','ansISA2')">Tabella per sottotipo (condividono PK) ▼</button>
+          </div>
+          <div id="ansISA2" style="display:none; margin-top:.5rem">
+            <p><strong>Una tabella per S</strong> e <strong>una per ciascun Sᵢ</strong>, con stessa PK e FK dai sottotipi al supertipo.</p>
+            <pre><code class="language-text">PERSONA(Id, …) — PK{Id}
+STUDENTE(Id, Matricola, …) — PK{Id} — FK: Id → PERSONA
+DOCENTE(Id, Dipartimento, …) — PK{Id} — FK: Id → PERSONA
+Pro: chiaro, vincoli localizzati, pochi NULL.
+Contro: join per accedere a proprietà comuni.</code></pre>
+            <p class="note">Disgiunzione (D) si può rendere con <em>vincoli di sovrapposizione esclusiva</em> (es. UNIQUE condizionali); Copertura (T) con vincoli che impongono appartenenza ad almeno un sottotipo (spesso serve logica applicativa).</p>
+          </div>
+
+          <div style="margin-top:.4rem">
+            <button id="btnISA3" onclick="toggleBox('btnISA3','ansISA3')">Tabella per classe concreta ▼</button>
+          </div>
+          <div id="ansISA3" style="display:none; margin-top:.5rem">
+            <p><strong>Solo i sottotipi</strong> diventano relazioni; il supertipo non ha una tabella propria.</p>
+            <pre><code class="language-text">STUDENTE(Id, …) — PK{Id}
+DOCENTE(Id, …) — PK{Id}
+Pro: niente join su S.
+Contro: difficile gestire proprietà/relazioni comuni a S; D/T da curare a livello applicativo.</code></pre>
+          </div>
+        </div>
+
+        <h2>Cardinalità e partecipazione → vincoli</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Partecipazione totale</strong> (min ≥ 1) su lato con FK → FK <em>NOT NULL</em>.</li>
+            <li><strong>1:1</strong> → FK + <em>UNIQUE</em> per limitare la molteplicità.</li>
+            <li><strong>Unicità interna</strong> per multivalore/associativa → PK composta o <em>UNIQUE</em> sulle FKs.</li>
+            <li><strong>Domini</strong> → <em>CHECK</em> (predicati) sui singoli attributi.</li>
+          </ul>
+          <div class="warn">Alcune proprietà (es. disgiunzione/copertura ISA, cardinalità min su N:M) richiedono vincoli compositi o logica applicativa.</div>
+        </div>
+
+        <h2>Scelte di chiave: naturali vs surrogate</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Naturali</strong> (derivano dal dominio): pro → leggibili, garantiscono significato; contro → possono cambiare.</li>
+            <li><strong>Surrogate</strong> (senza semantica): pro → stabili, corte; contro → richiedono <em>UNIQUE</em> sulle candidate naturali per preservare integrità semantica.</li>
+          </ul>
+          <div style="margin-top:.6rem">
+            <button id="btnKEY" onclick="toggleBox('btnKEY','ansKEY')">Criteri pratici ▼</button>
+          </div>
+          <div id="ansKEY" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Preferisci chiavi <strong>stabili</strong> nel tempo (immutabilità).</li>
+              <li>Mantieni la <strong>minimalità</strong> (poche colonne) e l’<strong>univocità</strong>.</li>
+              <li>Se usi surrogate, aggiungi <strong>UNIQUE</strong> sulle chiavi naturali rilevanti.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Esempio completo (dalla E-R allo schema relazionale)</h2>
+        <div class="box">
+          <p><strong>Scenario scuola (estratto)</strong>: <em>STUDENTE</em>, <em>CORSO</em>, relazione N:M <em>ISCRIZIONE</em> con attributi (Anno, Semestre, Voto), <em>DOCENTE</em>, relazione 1:N <em>INSEGNA</em> (Docente→Corso, con Attribuzione).</p>
+          <button id="btnEX" onclick="toggleBox('btnEX','ansEX')">Mostra schema risultante ▼</button>
+          <div id="ansEX" style="display:none; margin-top:.5rem">
+            <pre><code class="language-text">Entità forti:
+  STUDENTE(Matr, Nome, Email) — PK{Matr} — UNIQUE{Email}
+  DOCENTE(IdDoc, Nome, Email) — PK{IdDoc} — UNIQUE{Email}
+  CORSO(CodCorso, Titolo, CFU) — PK{CodCorso}
+
+Relazioni:
+  INSEGNA(IdDoc, CodCorso, Anno, Semestre)
+    — 1:N (Docente:CorsoOfferto) reso come tabella associativa perché ha attributi propri
+    — PK{IdDoc, CodCorso, Anno, Semestre}
+    — FK: IdDoc → DOCENTE(IdDoc)
+    — FK: CodCorso → CORSO(CodCorso)
+
+  ISCRIZIONE(Matr, CodCorso, Anno, Semestre, Voto?)
+    — N:M tra STUDENTE e CORSO, con attributi
+    — PK{Matr, CodCorso, Anno, Semestre}
+    — FK: Matr → STUDENTE(Matr)
+    — FK: CodCorso → CORSO(CodCorso)
+    — CHECK su Voto ∈ {NULL} ∪ [18..30] ∪ {31 (lode)}
+
+Attributi multivalore:
+  EMAIL_DOCENTE(IdDoc, EmailAlt) — PK{IdDoc, EmailAlt} — FK: IdDoc → DOCENTE(IdDoc)</code></pre>
+            <p class="ok">Tutte le cardinalità e gli attributi di relazione sono rispettati; le chiavi primarie riproducono le chiavi candidate/minimali del modello.</p>
+          </div>
+        </div>
+
+        <h2>Domanda-guida</h2>
+        <div class="box">
+          <p><strong>Quando una relazione 1:N con attributi deve diventare tabella propria e quando i suoi attributi possono essere collocati sul lato N?</strong></p>
+          <button id="btnDG27" onclick="toggleBox('btnDG27','ansDG27')">Mostra ▼</button>
+          <div id="ansDG27" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Stanno sul lato N</strong> se ogni istanza del lato N partecipa ad <em>al più</em> una istanza della relazione (per definizione 1:N) e gli attributi dipendono funzionalmente dalla <strong>PK del lato N</strong>.</li>
+              <li><strong>Diventano tabella propria</strong> se:
+                <ul>
+                  <li>la relazione ha <strong>propria identità</strong> e molti attributi non banali;</li>
+                  <li>servono <strong>vincoli specifici</strong> o storicizzazione (es. storico assegnazioni);</li>
+                  <li>devono esistere record della relazione anche quando il lato N è opzionale o soggetto a variazioni indipendenti.</li>
+                </ul>
+              </li>
+              <li class="note">Criterio tecnico: se l’attributo è funzione della sola PK del lato N, può vivere lì; se è funzione della coppia (lato 1, lato N) come primaria, una tabella dedicata è più chiara.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
