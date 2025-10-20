@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez2_5 · Attributi derivati, multivalore e composti</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez2_4.html"; }
+    function nextSlide(){ window.location.href = "lez2_6.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
+    <ul>
+      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
+      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
+      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
+      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
+      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
+      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
+      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
+      <li><a href="lez2_8.html">Lez2.8: Esercitazione e micro-verifica</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Attributi derivati, multivalore e composti</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Definizioni formali</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Attributo (semplice)</strong>: funzione <code>f<sub>A</sub> : E → Dom(A)</code> che associa a ogni istanza dell’entità <code>E</code> un valore nel dominio <code>Dom(A)</code>. Se opzionale: funzione parziale.</li>
+            <li><strong>Attributo composto</strong>: funzione <code>f<sub>C</sub> : E → Dom(A₁) × … × Dom(Aₖ)</code>. I componenti <code>A₁,…,Aₖ</code> sono attributi semplici collegati all’ovale “padre”.</li>
+            <li><strong>Attributo multivalore</strong>: funzione a valori-insieme <code>f<sub>M</sub> : E → 𝒫(Dom(A))</code> (sottoinsiemi del dominio). L’ordine non conta; le ripetizioni non hanno senso.</li>
+            <li><strong>Attributo derivato</strong>: definito da un’espressione <code>g</code> sugli altri attributi/relazioni: <code>f<sub>D</sub>(e) = g(f<sub>A</sub>(e), …)</code>. È <em>logicamente determinato</em>, di norma non memorizzato.</li>
+          </ul>
+        </div>
+
+        <h2>Notazione grafica (Chen)</h2>
+        <div class="box">
+          <ul>
+            <li>Attributo semplice: <strong>ovale singolo</strong>.</li>
+            <li>Attributo composto: ovale “padre” collegato a sotto-ovali.</li>
+            <li>Attributo multivalore: <strong>ovale doppio</strong>.</li>
+            <li>Attributo derivato: ovale <strong>tratteggiato</strong>.</li>
+          </ul>
+
+<!-- SVG RESPONSIVA E CON MARGINI AMPI (CONNESSIONI PRECISISSIME SUGLI OVALI) -->
+<svg viewBox="0 0 820 300" width="100%" height="320" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto">
+  <!-- Entità centrale -->
+  <rect x="350" y="120" width="120" height="50" rx="8" ry="8"
+        fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="410" y="148" font-size="15" text-anchor="middle" fill="#1e3a8a">STUDENTE</text>
+
+  <!-- Attributo composto: Indirizzo (ovale padre) -->
+  <ellipse cx="180" cy="70" rx="75" ry="28"
+           fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <text x="180" y="75" text-anchor="middle" font-size="13" fill="#166534">Indirizzo</text>
+
+  <!-- Sotto-attributi di Indirizzo -->
+  <ellipse cx="110" cy="140" rx="55" ry="22"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="110" y="144" text-anchor="middle" font-size="12" fill="#166534">Via</text>
+
+  <ellipse cx="180" cy="175" rx="55" ry="22"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="180" y="179" text-anchor="middle" font-size="12" fill="#166534">Città</text>
+
+  <ellipse cx="250" cy="140" rx="55" ry="22"
+           fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="250" y="144" text-anchor="middle" font-size="12" fill="#166534">CAP</text>
+
+  <!-- Attributo multivalore: Telefono (ovale doppio) -->
+  <ellipse cx="640" cy="70" rx="75" ry="28"
+           fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+  <ellipse cx="640" cy="70" rx="83" ry="36"
+           fill="none" stroke="#16a34a" stroke-width="2"/>
+  <text x="640" y="75" text-anchor="middle" font-size="13" fill="#166534">Telefono</text>
+
+  <!-- Attributo derivato: Età (tratteggiato) -->
+  <ellipse cx="640" cy="230" rx="62" ry="24"
+           fill="#ffffff" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="640" y="235" text-anchor="middle" font-size="13" fill="#166534">Età</text>
+
+  <!-- Collegamenti: entità -> attributi principali (puntano al BORDO degli ovali) -->
+  <!-- Verso Indirizzo -->
+  <line x1="350" y1="145" x2="228.448" y2="91.374" stroke="#2563eb" stroke-width="2"/>
+  <!-- Verso Telefono (inner oval) -->
+  <line x1="470" y1="145" x2="591.552" y2="91.374" stroke="#2563eb" stroke-width="2"/>
+  <!-- Verso Età -->
+  <line x1="470" y1="145" x2="602.045" y2="211.023" stroke="#2563eb" stroke-width="2"/>
+
+  <!-- Collegamenti: Indirizzo (padre) -> sotto-attributi (bordo→bordo, no sovrapposizioni) -->
+  <!-- Indirizzo → Via -->
+  <line x1="153.768" y1="96.232" x2="130.426" y2="119.574" stroke="#2563eb" stroke-width="2"/>
+  <!-- Indirizzo → Città -->
+  <line x1="180.000" y1="98.000" x2="180.000" y2="153.000" stroke="#2563eb" stroke-width="2"/>
+  <!-- Indirizzo → CAP -->
+  <line x1="206.232" y1="96.232" x2="229.574" y2="119.574" stroke="#2563eb" stroke-width="2"/>
+</svg>
+
+          <p class="note">Layout centrato, con margini adeguati: niente tagli né sovrapposizioni anche su schermi stretti.</p>
+        </div>
+
+        <h2>Esempi e formalizzazione</h2>
+        <div class="box">
+          <pre><code class="language-text">Entità STUDENTE(Matr, Nome, Cognome, DataNascita, Indirizzo, Telefono*)
+Dove:
+  Indirizzo = (Via, Città, CAP)         ← attributo composto
+  Telefono*  = insieme di valori        ← attributo multivalore
+  Età        = oggi − DataNascita       ← attributo derivato (non memorizzato)
+
+Funzioni:
+  f_Via : STUDENTE → STRING
+  f_Città : STUDENTE → STRING
+  f_CAP : STUDENTE → STRING
+  f_Telefono : STUDENTE → 𝒫(STRING)
+  f_Età : STUDENTE → N (definita come g(DataNascita, data_corrente))
+          </code></pre>
+          <ul>
+            <li><strong>Semantica del multivalore</strong>: <code>f_Telefono(e)</code> è un insieme; non si rappresenta con liste separate da virgole.</li>
+            <li><strong>Semantica del derivato</strong>: <code>Età</code> dipende dal tempo; memorizzarla può generare inconsistenze.</li>
+          </ul>
+        </div>
+
+
+<h2>Vincoli e buone pratiche</h2>
+<div class="box">
+  <ul>
+    <li>
+      <strong>Dominio e validazione</strong>:
+      <ul>
+        <li><em>Dominio</em> = insieme dei valori ammessi per un attributo. Deve essere espresso come <strong>predicato</strong> chiaro (vero/falso) e non come descrizione vaga.</li>
+        <li>Esempi di predicati:
+          <ul>
+            <li><code>CAP ∈ {00000…99999}</code> con lunghezza esattamente 5 (zero iniziali ammessi).</li>
+            <li><code>Email</code>: contiene “@” e non inizia/termina con “@”.</li>
+            <li><code>Telefono</code>: cifre + opzionale “+” iniziale; spazi e trattini normalizzati prima del controllo.</li>
+          </ul>
+        </li>
+        <li><em>Normalizzazione del formato</em> prima della validazione (spazi, maiuscole/minuscole, accenti) per evitare falsi negativi/duplicati semantici.</li>
+        <li>Scrivi sempre il vincolo come formula: <code>∀ e ∈ STUDENTE: f_CAP(e) ∈ Σ⁵</code>, <code>∀ e: contieneChiocciola(f_Email(e))</code>.</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Cardinalità del multivalore</strong>:
+      <ul>
+        <li>Specifica <em>min/max</em>: es. <code>Telefono</code> ha <code>0..*</code> (facoltativo) oppure <code>1..3</code> (almeno uno, al massimo tre).</li>
+        <li><em>Unicità interna</em>: valori distinti all’interno dello stesso insieme (<code>∀ e: |f_Tel(e)| = |set(f_Tel(e))|</code>).</li>
+        <li><em>Assenza di ordine</em>: l’insieme non è una lista; se serve un ordinamento o una priorità, introduce un attributo aggiuntivo (es. <code>Priorità ∈ {primario, secondario}</code>).</li>
+        <li>Se i valori hanno proprietà proprie (tipo, note, validità), <em>promuovili</em> a nuova entità (<code>EmailDocente</code>) collegata 1:N.</li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Derivati</strong>:
+      <ul>
+        <li>Un derivato è determinato dagli altri dati: <code>f_D(e) = g(f_1(e), …)</code>. In generale <em>non si memorizza</em>.</li>
+        <li>Se dipende dal tempo (es. <code>Età</code>), memorizzarlo genera inconsistenze; calcolarlo al volo o tramite <em>vista</em>.</li>
+        <li>Se si decide di materializzarlo (motivi di performance), definire:
+          <ul>
+            <li><em>Regola di aggiornamento</em> (quando/come ricalcolarlo).</li>
+            <li><em>Fonte autorevole</em> (quali attributi lo determinano).</li>
+            <li><em>Invarianze</em> (es. “Età” cambia ogni anno → evitare materializzazione).</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <strong>Composti</strong>:
+      <ul>
+        <li>Un attributo composto (<code>Indirizzo = (Via, Città, CAP)</code>) è utile se i componenti hanno semantica/ricerca/vincoli propri.</li>
+        <li>Esplicita i componenti come attributi semplici separati se:
+          <ul>
+            <li>servono <em>query mirate</em> (filtrare per CAP, ordinare per Città),</li>
+            <li>hanno <em>domini specifici</em> (CAP numerico a 5 cifre),</li>
+            <li>richiedono <em>vincoli incrociati</em> (CAP compatibile con Città/Provincia).</li>
+          </ul>
+        </li>
+        <li>Evita “blob testuali” (un solo campo libero) perché indeboliscono i vincoli e complicano le ricerche.</li>
+        <li>Consenti <em>parzialità controllata</em> solo se ha senso (es. Via nota ma CAP sconosciuto), documentando quali componenti possono essere NULL e perché.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div style="margin-top:.6rem">
+    <button id="btnVBP" onclick="toggleBox('btnVBP','ansVBP')">Esempi di specifiche rigorose ▼</button>
+  </div>
+  <div id="ansVBP" style="display:none; margin-top:.5rem">
+    <pre><code class="language-text">Esempio (STUDENTE)
+Domini:
+  CAP ∈ Σ⁵ con Σ = {0..9}
+  Telefono ∈ { "+"? · [0-9]{6..15} } normalizzato togliendo spazi e '-'
+  Email soddisfa: contieneChiocciola(email) ∧ nonIniziaConChiocciola(email) ∧ nonFinisceConChiocciola(email)
+
+Vincoli:
+  ∀ e: |Telefono(e)| ≤ 3              -- al più tre numeri
+  ∀ e: |Telefono(e)| = |set(Telefono(e))|  -- tutti distinti
+  ∀ e: Età(e) = oggi − DataNascita(e)       -- derivato, non memorizzato
+  ∀ e: CAP(e) ⇔ (len=5 ∧ cifre)             -- dominio forte su CAP
+</code></pre>
+  </div>
+</div>
+
+
+        <h2>Implicazioni per la traduzione (preview Lez2.7)</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Composti →</strong> diventano più colonne nell’entità corrispondente (Via, Città, CAP).</li>
+            <li><strong>Multivalore →</strong> nuova entità e relazione 1:N (o tabella associativa) <em>TelefonoDi(Studente, Tel)</em>.</li>
+            <li><strong>Derivati →</strong> non si materializzano; si calcolano nelle query o come vista.</li>
+          </ul>
+          <div class="note">Le regole precise sono nella Lez2.7 (trasformazione E-R → relazionale).</div>
+        </div>
+
+        <h2>Errori comuni</h2>
+        <div class="box">
+          <ul>
+            <li><span class="warn">Salvare Età</span> invece di DataNascita → incoerenze nel tempo.</li>
+            <li><span class="warn">Lista CSV</span> di telefoni in un’unica cella → perde semantica di insieme, impossibile vincolare/ricercare bene.</li>
+            <li><span class="warn">Indirizzo “blob”</span> non scomponibile → query e vincoli più deboli.</li>
+          </ul>
+        </div>
+
+        <h2>Domanda-guida</h2>
+        <div class="box">
+          <p><strong>Quando conviene trasformare un attributo multivalore in una nuova entità?</strong></p>
+          <button id="btnDG25" onclick="toggleBox('btnDG25','ansDG25')">Mostra ▼</button>
+          <div id="ansDG25" style="display:none; margin-top:.5rem">
+            <ul>
+              <li>Quando serve <strong>ricercare</strong> o <strong>vincolare</strong> i singoli valori (unicità, formato, frequenza).</li>
+              <li>Quando i valori hanno <strong>proprietà proprie</strong> (es. TipoTelefono, Note, Priorità).</li>
+              <li>Quando la <strong>cardinalità</strong> è variabile e potenzialmente grande.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2>Esercizio rapido</h2>
+        <div class="box">
+          <p><strong>Scenario</strong>: nell’entità <code>DOCENTE</code> abbiamo <em>Email*</em> (multivalore), <em>Ufficio</em> (composto: Edificio, Piano, Stanza), e <em>Anzianità</em> (derivato da DataAssunzione).</p>
+          <button id="btnEX25" onclick="toggleBox('btnEX25','ansEX25')">Mostra soluzione ▼</button>
+          <div id="ansEX25" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Email*</strong> → nuova entità <em>EmailDocente</em> con relazione 1:N; vincolo di formato e unicità per docente.</li>
+              <li><strong>Ufficio</strong> → scomporre in tre attributi (Edificio, Piano, Stanza); opzionalmente vincoli su dominio (range Piano, pattern Stanza).</li>
+              <li><strong>Anzianità</strong> → non memorizzare; calcolare come differenza tra data corrente e <em>DataAssunzione</em>.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
