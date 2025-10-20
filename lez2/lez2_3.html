@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
+    <style>
+    .cardinality-table {
+      width: 80%;
+      border-collapse: collapse;
+    }
+
+    .cardinality-table th,
+    .cardinality-table td {
+      border: 1px solid #2563eb;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+
+    .cardinality-table thead th {
+      background-color: #e0f2fe;
+    }
+  </style>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
     function prevSlide(){ window.location.href = "lez2_2.html"; }
@@ -118,7 +135,7 @@
             Sono espresse come coppie <code>(min, max)</code> su ciascun lato del collegamento.
           </p>
 
-          <table>
+           <table class="cardinality-table">
             <thead><tr><th>Tipo</th><th>Forma</th><th>Significato</th></tr></thead>
             <tbody>
               <tr><td>1 : 1</td><td>Uno a uno</td><td>Ogni istanza di A è associata a una sola istanza di B e viceversa.</td></tr>
