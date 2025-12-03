@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_1 · Obiettivi e percorso PHP + MySQL + HTML/CSS</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "../programma.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-2"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="piano.html#lez3-2">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="piano.html#lez3-3">Lez3.3: Setup ambiente</a></li>
+      <li><a href="piano.html#lez3-4">Lez3.4: Primo script PHP</a></li>
+      <li><a href="piano.html#lez3-5">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="piano.html#lez3-6">Lez3.6: Controllo di flusso e funzioni</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Obiettivi e percorso — PHP + MySQL + HTML/CSS</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Perché questo modulo</h2>
+        <div class="box">
+          <p>Integrare <strong>PHP</strong>, <strong>MySQL</strong> e <strong>HTML/CSS</strong> per costruire un flusso completo: richiesta del browser, elaborazione lato server, lettura/scrittura su database, risposta in pagina.</p>
+          <p class="note">Obiettivo: collegare i concetti teorici del modello relazionale a un'implementazione web concreta.</p>
+        </div>
+
+        <h2>Cosa porterai a casa</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Backend</strong>: saper ricevere dati da form, validarli e persisterli in MySQL con prepared statements.</li>
+            <li><strong>Frontend</strong>: impaginare tabelle e form con HTML/CSS mantenendo pulizia e usabilità.</li>
+            <li><strong>Linguaggio</strong>: padroneggiare i costrutti fondamentali di PHP, con focus particolare su <strong>array</strong> e <strong>mappe associative</strong>.</li>
+            <li><strong>Sicurezza di base</strong>: sanitizzazione input, escaping output, gestione credenziali.</li>
+          </ul>
+        </div>
+
+        <h2>Prerequisiti minimi</h2>
+        <div class="box">
+          <ul>
+            <li>Concetti di <strong>HTTP</strong> e differenza tra client e server.</li>
+            <li>Ripasso rapido di <strong>HTML</strong> (form, tabelle, classi CSS) e del <strong>modello relazionale</strong> (tabelle, chiavi, vincoli).</li>
+            <li>Ambiente locale funzionante (PHP + MySQL) o stack equivalente <span class="note">(XAMPP/LAMP/WAMP/Containers)</span>.</li>
+          </ul>
+        </div>
+
+        <h2>Struttura della sequenza</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Bootstrap rapido</strong>: setup, primo script PHP, flusso richiesta/risposta.</li>
+            <li><strong>Basi del linguaggio</strong>: sintassi, tipi, controllo di flusso, funzioni.</li>
+            <li><strong>Array e mappe</strong>: creazione, iterazione, ricerca, filtri e trasformazioni (pezzo centrale della lezione).</li>
+            <li><strong>Interfacciamento al DB</strong>: connessione, query parametrizzate, gestione errori.</li>
+            <li><strong>Integrazione front-end</strong>: render di risultati in HTML, styling essenziale con CSS.</li>
+          </ul>
+          <p class="ok">Ogni step include esempi brevi + micro-esercizi per fissare i concetti.</p>
+        </div>
+
+        <h2>Deliverable della lezione</h2>
+        <div class="box">
+          <ul>
+            <li>Un <strong>mini-progetto</strong> che mostra dati da MySQL e inserisce record da form.</li>
+            <li>Snippet riutilizzabili per <strong>array/indexati</strong> e <strong>array associativi</strong> (mappe) con funzioni utili.</li>
+            <li>Checklist di <strong>sicurezza base</strong> per PHP + MySQL + HTML/CSS.</li>
+          </ul>
+          <p class="warn">Nota: questa slide introduce il percorso. I dettagli operativi sono nelle slide successive.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
