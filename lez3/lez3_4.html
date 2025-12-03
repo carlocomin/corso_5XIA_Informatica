@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_4 · Primo script PHP</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_3.html"; }
+    function nextSlide(){ window.location.href = "lez3_5.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="piano.html#lez3-6">Lez3.6: Controllo di flusso e funzioni</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Primo script PHP</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivi veloci</h2>
+        <div class="box">
+          <ul>
+            <li>Scrivere un file <strong>.php</strong> con tag <code>&lt;?php ... ?&gt;</code> mescolato ad HTML.</li>
+            <li>Mostrare output dinamico con <code>echo</code> e variabili.</li>
+            <li>Capire dove girano i controlli: <em>server</em> esegue PHP, <em>browser</em> vede solo HTML.</li>
+          </ul>
+          <p class="note">Questo è il primo passo concreto per collegare logica server e interfaccia web.</p>
+        </div>
+
+        <h2>Struttura minima di un file PHP</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;!DOCTYPE html&gt;
+&lt;html lang="it"&gt;
+&lt;head&gt;...&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Ciao dal server!&lt;/h1&gt;
+  &lt;p&gt;Oggi è: &lt;?php echo date('d/m/Y'); ?&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          <ul>
+            <li>Il server interpreta il blocco PHP e rimpiazza il tag con l'output.</li>
+            <li>Il browser riceve solo HTML/CSS: niente codice PHP visibile lato client.</li>
+          </ul>
+          <p class="ok">Salva come <code>index.php</code> nella document root e apri <code>http://localhost</code>.</p>
+        </div>
+
+        <h2>Output dinamico e variabili</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$nome = "Alice";
+$ruolo = "studente";
+
+echo "Benvenuta $nome!";          // interpolazione
+// alternativa compatta (short echo tag):
+?&gt;
+&lt;p&gt;Ruolo: &lt;?= htmlspecialchars($ruolo) ?&gt;&lt;/p&gt;</code></pre>
+          <ul>
+            <li><code>echo</code> stampa stringhe; <code><?= ... ?></code> è shorthand sicuro per singoli valori.</li>
+            <li><code>htmlspecialchars()</code> converte caratteri speciali in entità HTML (es. <code>&lt;</code> → <code>&amp;lt;</code>, <code>&gt;</code> → <code>&amp;gt;</code>, <code>&amp;</code> → <code>&amp;amp;</code>, doppi apici → <code>&amp;quot;</code>).</li>
+            <li>Serve a prevenire XSS quando stampi contenuti provenienti dall'esterno: il browser li mostrerà come testo e non li eseguirà.</li>
+          </ul>
+          <p class="note">Esempio: se l'utente inserisce <code>&lt;script&gt;alert('ciao')&lt;/script&gt;</code>, <code>htmlspecialchars</code> lo renderà innocuo come testo visibile.</p>
+        </div>
+
+        <h2>Integrare PHP e HTML</h2>
+        <div class="box">
+          <ul>
+            <li>Puoi aprire e chiudere più blocchi PHP nello stesso file.</li>
+            <li>Logica minimale all'inizio, markup più leggibile in basso.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+$studenti = ["Anna", "Marco", "Luca"];
+?&gt;
+&lt;ul&gt;
+  &lt;?php foreach ($studenti as $s): ?&gt;
+    &lt;li&gt;&lt;?= $s ?&gt;&lt;/li&gt;
+  &lt;?php endforeach; ?&gt;
+&lt;/ul&gt;</code></pre>
+          <p class="note">Mantieni il PHP per la logica e lascia che l'HTML descriva la struttura della pagina.</p>
+        </div>
+
+        <h2>Debug rapido</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$variabile = [1, 2, 3];
+var_dump($variabile);    // stampa tipo e contenuto
+// die("stop");          // blocca l'esecuzione per ispezionare l'output
+?&gt;</code></pre>
+          <ul>
+            <li>Attiva gli errori solo in locale. In produzione usa log file, non <code>display_errors</code>.</li>
+            <li><code>var_dump</code>/<code>print_r</code> sono utili per capire cosa stai passando a HTML o al DB.</li>
+          </ul>
+        </div>
+
+        <h2>Cosa porti a casa</h2>
+        <div class="box">
+          <ul>
+            <li>Sai creare un file PHP eseguibile dal server e vederne l'output in browser.</li>
+            <li>Hai usato <code>echo</code> (e shorthand) per inserire valori dinamici in HTML.</li>
+            <li>Hai attivato un primo set di strumenti di debug per controllare cosa succede nel codice.</li>
+          </ul>
+          <p class="ok">Prossimo passo: approfondire sintassi, tipi e controllo di flusso (Lez3.5–3.6).</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

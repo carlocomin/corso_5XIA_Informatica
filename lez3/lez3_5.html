@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_5 · Sintassi base e tipi</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_4.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-6"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="piano.html#lez3-6">Lez3.6: Controllo di flusso e funzioni</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Sintassi base e tipi</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivi</h2>
+        <div class="box">
+          <ul>
+            <li>Prendere confidenza con variabili, commenti e regole di base della sintassi PHP.</li>
+            <li>Conoscere i tipi primitivi principali (stringhe, numeri, boolean, null) e come li usi.</li>
+            <li>Evitare errori comuni: concatenazione, comparazioni deboli vs strette, interpolazione.</li>
+          </ul>
+          <p class="note">Questa base è indispensabile prima di affrontare controlli di flusso e strutture dati.</p>
+        </div>
+
+        <h2>Sintassi minima: variabili e commenti</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$nome = "Giulia";       // variabile: il simbolo $ è obbligatorio
+$eta  = 18;              // numeri senza virgolette
+
+// commento su una linea
+/* commento su più linee */
+
+// case-sensitive su variabili: $Nome è diverso da $nome
+?&gt;</code></pre>
+          <ul>
+            <li>Le istruzioni terminano con <code>;</code>.</li>
+            <li>Usa nomi chiari (snake_case o camelCase) e indenta il codice come negli esempi.</li>
+          </ul>
+        </div>
+
+        <h2>Stringhe: singoli vs doppi apici</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$nome = "Giulia";
+
+$double = "Ciao $nome";           // interpolazione variabili
+$single = 'Ciao $nome';            // stringa letterale
+$concat = "Ciao " . $nome . "!"; // concatenazione con .
+
+echo $double;  // Ciao Giulia
+?&gt;</code></pre>
+          <ul>
+            <li>I doppi apici espandono variabili; i singoli mantengono il testo letterale.</li>
+            <li><code>.</code> è l'operatore di concatenazione (non <code>+</code>).</li>
+            <li>Per sicurezza lato HTML, combina con <code>htmlspecialchars()</code> prima di mostrare input utente.</li>
+          </ul>
+        </div>
+
+        <h2>Numeri e booleani</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$intero = 42;         // int
+$decimale = 3.14;     // float
+$vero = true;         // boolean
+$falso = false;
+
+// attenzione alle comparazioni deboli vs strette
+var_dump(0 == false);   // true (confronto debole)
+var_dump(0 === false);  // false (tipi diversi, confronto stretto)
+?&gt;</code></pre>
+          <ul>
+            <li>Preferisci gli operatori stretti <code>===</code> e <code>!==</code> quando confronti valori user-facing.</li>
+            <li><code>var_dump()</code> mostra tipo e valore: utile per debug.</li>
+          </ul>
+        </div>
+
+        <h2>Null, coalescenza e default</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$telefono = null;
+$telefono = $_POST['telefono'] ?? null; // prende POST se esiste, altrimenti null
+
+// valori di default con l'operatore ??
+$ruolo = $_POST['ruolo'] ?? 'studente';
+?&gt;</code></pre>
+          <ul>
+            <li><code>null</code> rappresenta l'assenza di valore.</li>
+            <li>L'operatore di coalescenza <code>??</code> evita notice su indici non definiti e imposta default leggibili.</li>
+          </ul>
+        </div>
+
+        <h2>Cast e conversioni rapide</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$quantita = "5";         // stringa
+$quantitaInt = (int) $quantita; // 5
+
+$flag = "1";
+if ((bool) $flag) {
+  echo "vero";
+}
+?&gt;</code></pre>
+          <ul>
+            <li>Casting esplicito rende chiaro come vuoi usare il dato (utile prima di salvare su DB).</li>
+            <li>Combina cast + validazione server-side per evitare input non coerenti.</li>
+          </ul>
+        </div>
+
+        <h2>In sintesi</h2>
+        <div class="box">
+          <ul>
+            <li>Usa doppi apici per interpolare, singoli quando vuoi testo letterale.</li>
+            <li>Preferisci <code>===</code>/<code>!==</code> per confronti sicuri tra tipi diversi.</li>
+            <li>Gestisci valori opzionali con <code>??</code> e assegna default espliciti.</li>
+          </ul>
+          <p class="ok">Pronti per Lez3.6: strutture di controllo e funzioni.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

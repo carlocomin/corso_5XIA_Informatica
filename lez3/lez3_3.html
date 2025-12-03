@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_3 · Setup ambiente PHP + MySQL</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_2.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-4"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="piano.html#lez3-4">Lez3.4: Primo script PHP</a></li>
+      <li><a href="piano.html#lez3-5">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="piano.html#lez3-6">Lez3.6: Controllo di flusso e funzioni</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Setup ambiente: PHP + MySQL</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivo della sessione</h2>
+        <div class="box">
+          <ul>
+            <li>Avere un ambiente locale con <strong>server PHP</strong> e <strong>MySQL</strong> funzionanti.</li>
+            <li>Attivare le estensioni necessarie (mysqli/PDO) e verificare che il server risponda.</li>
+            <li>Preparare un utente e un database di test per le prossime lezioni.</li>
+          </ul>
+          <p class="note">Concludi la lezione con un file PHP che conferma la connessione al DB.</p>
+        </div>
+
+        <h2>Cosa installare (per OS)</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Windows</strong>: XAMPP o WAMP (include Apache, PHP, MySQL/MariaDB).</li>
+            <li><strong>macOS</strong>: MAMP oppure Homebrew (<code>brew install php mysql</code>).</li>
+            <li><strong>Linux</strong>: stack LAMP (<code>apache2</code>, <code>php</code>, <code>php-mysql</code>, <code>mysql-server</code>).</li>
+          </ul>
+          <p class="warn">Assicurati di installare PHP ≥ 8.1 e di avere l'estensione <code>pdo_mysql</code> attiva.</p>
+        </div>
+
+        <h2>Configurazione minima</h2>
+        <div class="box">
+          <ul>
+            <li>Avvia i servizi <strong>Apache</strong> (o Nginx) e <strong>MySQL</strong> dal pannello del tuo bundle o tramite <code>systemctl</code>.</li>
+            <li>Identifica la <strong>document root</strong> (es. <code>htdocs/</code> in XAMPP, <code>/var/www/html</code> su Linux).</li>
+            <li>Place i file PHP nella document root e verifica che il browser risponda su <code>http://localhost</code>.</li>
+          </ul>
+          <p class="ok">Se vedi l'index di XAMPP o un "Hello World" PHP, il server web è pronto.</p>
+        </div>
+
+        <h2>Verifica PHP</h2>
+        <div class="box">
+          <ul>
+            <li>Da terminale: <code>php -v</code> per controllare versione e moduli.</li>
+            <li>File di prova <code>info.php</code> nella root:</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+phpinfo();
+?&gt;</code></pre>
+          <p class="warn">Usa <code>phpinfo()</code> solo per test e poi rimuovi il file: espone troppe informazioni.</p>
+        </div>
+
+        <h2>Prepara MySQL</h2>
+        <div class="box">
+          <ul>
+            <li>Accedi a MySQL: <code>mysql -u root -p</code> oppure usa il pannello incluso.</li>
+            <li>Crea database e utente dedicato:</li>
+          </ul>
+          <pre><code class="language-sql">CREATE DATABASE corso_php CHARACTER SET utf8mb4;
+CREATE USER 'studente'@'localhost' IDENTIFIED BY 'password_sicura';
+GRANT ALL PRIVILEGES ON corso_php.* TO 'studente'@'localhost';
+FLUSH PRIVILEGES;</code></pre>
+          <p class="note">Non usare l'utente <code>root</code> nelle app: crea sempre un account a privilegi limitati.</p>
+        </div>
+
+        <h2>Test rapido di connessione (PDO)</h2>
+        <div class="box">
+          <p>Salva <code>db-test.php</code> nella document root e aprilo da browser.</p>
+          <pre><code class="language-php">&lt;?php
+$dsn = 'mysql:host=localhost;dbname=corso_php;charset=utf8mb4';
+$user = 'studente';
+$pass = 'password_sicura';
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    ]);
+    echo "Connessione OK";
+} catch (PDOException $e) {
+    echo "Errore connessione: " . htmlspecialchars($e->getMessage());
+}
+</code></pre>
+          <p class="ok">Se appare "Connessione OK", sei pronto per le query delle prossime lezioni.</p>
+        </div>
+
+        <h2>Checklist finale</h2>
+        <div class="box">
+          <ul>
+            <li>PHP e MySQL installati e avviati; estensione <code>pdo_mysql</code> attiva.</li>
+            <li>Document root individuata e raggiungibile via <code>http://localhost</code>.</li>
+            <li>Database <code>corso_php</code> e utente dedicato funzionanti.</li>
+            <li>File di test rimosso dopo la verifica (<code>info.php</code>).</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

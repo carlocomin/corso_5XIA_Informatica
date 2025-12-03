@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_2 · Ripasso & flusso richiesta/risposta</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_1.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-3"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="piano.html#lez3-3">Lez3.3: Setup ambiente</a></li>
+      <li><a href="piano.html#lez3-4">Lez3.4: Primo script PHP</a></li>
+      <li><a href="piano.html#lez3-5">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="piano.html#lez3-6">Lez3.6: Controllo di flusso e funzioni</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Ripasso e flusso richiesta/risposta</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Ripasso essenziale HTML/CSS</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Form</strong>: elementi <code>&lt;form&gt;</code>, attributi <code>action</code> e <code>method</code>, campi <code>input</code>, <code>select</code>, <code>textarea</code>, pulsanti <code>submit</code>.</li>
+            <li><strong>Tabelle</strong>: uso di <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code>, <code>&lt;td&gt;</code> per visualizzare risultati dal DB.</li>
+            <li><strong>CSS</strong>: classi per layout pulito (padding, margin, border-radius) e palette condivisa del corso.</li>
+          </ul>
+          <p class="note">Obiettivo: sapere dove inserire l'output PHP (es. righe di una query) dentro strutture HTML già note.</p>
+        </div>
+
+        <h2>Client vs server: chi fa cosa</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Client (browser)</strong>: invia richiesta HTTP, mostra la risposta HTML/CSS, esegue JavaScript lato client.</li>
+            <li><strong>Server (PHP)</strong>: riceve la richiesta, legge input (query string, POST), elabora, dialoga con MySQL, genera HTML dinamico.</li>
+            <li><strong>Database (MySQL)</strong>: persiste dati, risponde a query tramite driver PHP (PDO/mysqli).</li>
+          </ul>
+          <p class="warn">Importante: il client non vede né esegue il codice PHP; riceve solo il risultato HTML.</p>
+        </div>
+
+        <h2>Flusso richiesta/risposta (visuale)</h2>
+        <div class="box">
+          <ol>
+            <li>Il browser invia una <strong>richiesta HTTP</strong> (GET/POST) a un file PHP (es. <code>index.php</code> o <code>insert.php</code>).</li>
+            <li>Lo <strong>script PHP</strong> legge parametri (form, query string), valida, eventualmente scrive/legge dati da <strong>MySQL</strong>.</li>
+            <li>PHP compone una <strong>risposta HTML</strong> (con dati dinamici) che torna al browser.</li>
+          </ol>
+          <p class="ok">Pensalo come una pipeline: Browser → PHP → MySQL → PHP → HTML → Browser.</p>
+        </div>
+
+        <h2>Struttura minima del progetto</h2>
+        <div class="box">
+          <ul>
+            <li><code>public/</code> (root del server): file accessibili dal browser (<code>index.php</code>, <code>insert.php</code>, CSS e immagini).</li>
+            <li><code>config/</code>: parametri di connessione (da <strong>non</strong> esporre pubblicamente), costanti.</li>
+            <li><code>src/</code> o <code>lib/</code>: funzioni riutilizzabili (connessione DB, validazioni).</li>
+            <li><code>vendor/</code> (se usi Composer) e una cartella <code>data/</code> per backup/seed SQL.</li>
+          </ul>
+          <button id="btn-structure" class="toggle-btn" onclick="toggleBox('btn-structure','box-structure')">Mostra ▼</button>
+          <div id="box-structure" class="box" style="display:none">
+            <pre><code class="language-bash">project/
+├── public/
+│   ├── index.php
+│   ├── insert.php
+│   └── assets/
+│       ├── style.css
+│       └── logo.png
+├── config/
+│   └── db.php
+├── src/
+│   ├── db.php
+│   └── helpers.php
+└── data/
+    └── schema.sql</code></pre>
+            <p class="note">Mantieni le credenziali in <code>config/db.php</code> fuori dalla root pubblica e includile negli script.</p>
+          </div>
+        </div>
+
+        <h2>Demo: dove vive il PHP nel documento</h2>
+        <div class="box">
+          <p>In un file <code>.php</code> puoi mescolare HTML e blocchi PHP. Il server esegue il PHP e restituisce solo l'HTML risultante.</p>
+          <pre><code class="language-php">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h1&gt;Lista studenti&lt;/h1&gt;
+  &lt;?php
+    $studenti = ["Ada", "Alan", "Grace"];
+    foreach ($studenti as $nome) {
+        echo "&lt;p&gt;$nome&lt;/p&gt;";
+    }
+  ?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          <p class="warn">Il browser vede solo i tag <code>&lt;p&gt;</code> generati, non il ciclo <code>foreach</code>.</p>
+        </div>
+
+        <h2>Checklist per le prossime slide</h2>
+        <div class="box">
+          <ul>
+            <li>Ambiente locale funzionante: server PHP attivo e cartella di lavoro configurata.</li>
+            <li>Chiaro il flusso client→server→DB: sai dove leggere input e dove produrre output.</li>
+            <li>HTML/CSS pronti: form e tabelle base su cui innestare il codice PHP.</li>
+          </ul>
+          <p class="ok">Con queste basi, possiamo iniziare con il setup (Lez3.3) e il primo script PHP (Lez3.4).</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
