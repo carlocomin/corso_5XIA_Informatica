@@ -84,6 +84,60 @@
           <p class="ok">Pensalo come una pipeline: Browser → PHP → MySQL → PHP → HTML → Browser.</p>
         </div>
 
+        <h2>HTTP in 5 minuti: metodo, percorso, headers, body</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Metodo</strong>: azione richiesta (GET per recuperare, POST per inviare/creare, PUT/PATCH per aggiornare, DELETE per cancellare).</li>
+            <li><strong>Percorso</strong>: l'URI della risorsa (es. <code>/api/studenti</code> o <code>/login.php</code>).</li>
+            <li><strong>Headers</strong>: metadati (Content-Type, Authorization, Cookie, ecc.).</li>
+            <li><strong>Body</strong>: dati inviati (presente tipicamente nei POST/PUT). Nelle risposte contiene HTML o JSON.</li>
+          </ul>
+          <p class="note">La coppia metodo + percorso + headers + body definisce <em>cosa</em> chiediamo e <em>come</em> lo chiediamo al server.</p>
+        </div>
+
+        <h2>GET vs POST: quando usare cosa</h2>
+        <div class="box">
+          <ul>
+            <li><strong>GET</strong>: idempotente, senza body applicativo; i parametri viaggiano in query string (<code>?page=2&sort=nome</code>). Usalo per ricerche e letture.</li>
+            <li><strong>POST</strong>: non idempotente; invia dati nel body (form fields, JSON). Usalo per login, inserimenti, operazioni che modificano lo stato.</li>
+            <li><strong>Cache e visibilità</strong>: la query string di un GET resta nella barra degli indirizzi e nei log; il body di un POST no.</li>
+            <li><strong>Sicurezza</strong>: entrambi viaggiano su HTTP/HTTPS; la differenza di sicurezza arriva dal trasporto cifrato (vedi sezione HTTPS).</li>
+          </ul>
+          <p class="warn">Non abusare di GET per inviare password o dati sensibili: rimangono in chiaro nella URL e nei log.</p>
+        </div>
+
+        <h2>HTTP è stateless: cosa significa per noi</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Stateless</strong> = ogni richiesta viene trattata isolatamente, il server non ricorda le precedenti.</li>
+            <li><strong>Conseguenze</strong>: dopo il login il server non "sa" chi sei; servono meccanismi applicativi (sessioni PHP, JWT) per collegare le richieste.</li>
+            <li><strong>Sessioni in PHP</strong>: il server crea un ID univoco, lo invia in un cookie; ad ogni richiesta successiva il browser rimanda il cookie e il server ritrova i dati di sessione.</li>
+            <li><strong>Scalabilità</strong>: lo stateless facilita il bilanciamento, ma le sessioni devono essere condivise (es. memcached/redis) se ci sono più server.</li>
+          </ul>
+          <p class="ok">Pensare "stateless" ci obbliga a progettare API e webapp che includano sempre le informazioni necessarie (token, cookie) in ogni richiesta.</p>
+        </div>
+
+        <h2>HTTP e TCP: come viaggiano i pacchetti</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Livelli</strong>: HTTP è un protocollo applicativo; si appoggia a TCP (trasporto) che garantisce consegna ordinata e affidabile.</li>
+            <li><strong>Connessione</strong>: il browser apre una connessione TCP verso il server (porta 80 o 443), invia i messaggi HTTP dentro il flusso TCP.</li>
+            <li><strong>Keep-alive</strong>: più richieste HTTP possono viaggiare sulla stessa connessione TCP grazie a <code>Connection: keep-alive</code> per ridurre la latenza.</li>
+            <li><strong>Limite</strong>: TCP non cifra i dati; senza HTTPS, chi intercetta il traffico può leggere tutto.</li>
+          </ul>
+        </div>
+
+        <h2>HTTPS: perché la password rimane protetta</h2>
+        <div class="box">
+          <ul>
+            <li><strong>HTTPS</strong> = HTTP + TLS: prima di scambiarsi dati, client e server negoziano chiavi simmetriche tramite certificato digitale.</li>
+            <li><strong>Cifratura end-to-end</strong>: dopo l'handshake TLS, tutto il traffico (headers e body, anche del POST) è cifrato; un eavesdropper vede solo pacchetti indecifrabili.</li>
+            <li><strong>Integrità e autenticazione</strong>: TLS garantisce che i dati non siano modificati e che stiamo parlando col server giusto (certificato valido).</li>
+            <li><strong>Best practice</strong>: usare sempre <code>https://</code>, impostare <code>Secure</code> e <code>HttpOnly</code> nei cookie di sessione, e forzare redirect da HTTP a HTTPS.</li>
+          </ul>
+          <p class="note">La password inviata via POST su HTTPS è cifrata prima di lasciare il browser: anche se qualcuno sniffa i pacchetti, non può leggerla.</p>
+        </div>
+
         <h2>Struttura minima del progetto</h2>
         <div class="box">
           <ul>
