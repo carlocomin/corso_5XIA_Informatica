@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_10 · Funzioni in PHP</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_9.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-11"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_7.html">Lez3.7: Array indicizzati</a></li>
+      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni)</a></li>
+      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali</a></li>
+      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Funzioni in PHP: sintassi e semantica</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <p class="note">In PHP le funzioni sono definite in fase di parse (non esistono prototipi come in C) e sono <strong>case-insensitive</strong> (<code>foo()</code> = <code>Foo()</code>), anche se per coerenza si usa un casing unico. I parametri sono passati per valore tramite <em>copy-on-write</em>; il passaggio per riferimento è esplicito.</p>
+
+        <div class="box">
+          <h2>Sintassi base vs C/Java</h2>
+          <p>Una funzione PHP inizia con <code>function</code> e non richiede dichiarazione preventiva. Il codice viene caricato tutto prima dell'esecuzione, quindi puoi chiamare una funzione dichiarata più in basso nel file.</p>
+          <pre><code class="language-php">&lt;?php
+// file eseguibile direttamente, nessun main obbligatorio
+function saluta(string $nome = "mondo"): string {
+    return "Ciao $nome"; // interpolazione stringhe, niente concatenazione obbligata
+}
+
+echo saluta();          // Ciao mondo
+print_r(saluta("Luca"));
+?&gt;</code></pre>
+          <p class="note">A differenza di Java non esistono overload per firma: due funzioni con lo stesso nome generano errore fatale.</p>
+        </div>
+
+        <div class="box">
+          <h2>Tipizzazione dei parametri e del return</h2>
+          <ul>
+            <li><strong>Type hint</strong> scalari (<code>int</code>, <code>float</code>, <code>string</code>, <code>bool</code>), <code>array</code>, <code>callable</code>, <code>object</code> o classi/interfacce.</li>
+            <li><strong>Union</strong> con <code>|</code> (PHP 8+), nullable con <code>?Tipo</code> o <code>Tipo|null</code>.</li>
+            <li><strong>Return type</strong> dopo i due punti: <code>void</code> (nessun ritorno), <code>never</code> (termina lo script), <code>mixed</code> per compatibilità dinamica.</li>
+            <li><strong>strict_types</strong> opzionale a livello di file: impone controlli di tipo simili a Java, altrimenti PHP effettua coercizioni ampie.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+declare(strict_types=1); // abilita controlli rigorosi per questo file
+
+function somma(int|float ...$numeri): float {
+    return array_sum($numeri); // restituisce float
+}
+
+function descrivi(?string $nome): string {
+    return $nome ? "Utente: $nome" : "Anonimo";
+}
+?&gt;</code></pre>
+          <p class="note">Con <code>strict_types=1</code> una stringa numerica <code>"5"</code> non viene accettata come <code>int</code>; senza strict verrebbe convertita.</p>
+        </div>
+
+        <div class="box">
+          <h2>Parametri, default e variadic</h2>
+          <ul>
+            <li>I parametri con default devono stare dopo quelli obbligatori (come in C++).</li>
+            <li><strong>Variadic</strong> con <code>...$args</code> producono un array; possono avere type hint.</li>
+            <li><strong>Named arguments</strong> (PHP 8+) permettono di specificare i parametri per nome, utile per funzioni con molti default.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+function creaUtente(string $email, string $ruolo = 'user', bool $attivo = true): array {
+    return compact('email', 'ruolo', 'attivo');
+}
+
+function media(float $prima, float $seconda, float ...$altre): float {
+    $tutti = array_merge([$prima, $seconda], $altre);
+    return array_sum($tutti) / count($tutti);
+}
+
+// Chiamata con argomenti nominati
+$u = creaUtente(email: 'anna@example.com', attivo: false);
+$m = media(18, 24, 30, 28);
+?&gt;</code></pre>
+          <p class="note">I nomi nei named arguments devono corrispondere ai parametri della funzione; non dipendono dall'ordine. Evita di cambiare il nome dei parametri pubblici in API stabili: romperebbe le chiamate nominate.</p>
+        </div>
+
+        <div class="box">
+          <h2>Passaggio per riferimento</h2>
+          <p>Per performance PHP usa copy-on-write: la copia effettiva avviene solo se si modifica il parametro. Quando serve modificare il valore chiamante, usa <code>&amp;</code> come in C.</p>
+          <pre><code class="language-php">&lt;?php
+function normalizzaEmail(string &$email): void {
+    $email = strtolower(trim($email));
+}
+
+$e = "  Mario@Example.com  ";
+normalizzaEmail($e);
+// $e diventa "mario@example.com"
+?&gt;</code></pre>
+          <p class="note">Si possono restituire riferimenti con <code>function &amp;get()</code>, ma limita l'uso a casi mirati: rende il flusso più difficile da seguire rispetto a Java/C#.</p>
+        </div>
+
+        <div class="box">
+          <h2>Scope, globali e static</h2>
+          <ul>
+            <li>Ogni funzione ha uno scope proprio: le variabili del file non sono visibili a meno di usare <code>global $x</code> o <code>$GLOBALS['x']</code>.</li>
+            <li><code>static</code> dentro una funzione preserva il valore tra chiamate (come in C ma limitato al contesto della funzione).</li>
+            <li>Le funzioni definite dentro altre funzioni non sono comuni: vengono comunque caricate in modo globale al primo passaggio di parsing.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+$counter = 0;
+
+function nextId(): int {
+    static $id = 0; // vive per tutta la durata della richiesta
+    $id++;
+    return $id;
+}
+
+function usaGlobale(): int {
+    global $counter;
+    $counter++;
+    return $counter;
+}
+?&gt;</code></pre>
+        </div>
+
+        <div class="box">
+          <h2>Funzioni anonime, closure e arrow function</h2>
+          <ul>
+            <li><strong>Closure</strong> possono catturare variabili esterne tramite <code>use</code> (by value) o <code>&amp;</code> (by reference).</li>
+            <li><strong>Arrow function</strong> (<code>fn($x) =&gt; expr</code>) catturano automaticamente per valore e sono utili per callback brevi.</li>
+            <li>In PHP 8.1+ si può ottenere un "first-class callable" con <code>$callable = strlen(...);</code> analogo a <code>std::bind</code>/<code>method reference</code>.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+$moltiplica = function (int $a, int $b) use (&$counter): int {
+    $counter++;        // modifica variabile esterna per riferimento
+    return $a * $b;
+};
+
+$lista = [1, 2, 3, 4];
+$raddoppi = array_map(fn($v) => $v * 2, $lista);
+
+$len = strlen(...);          // callable riutilizzabile
+$lunghezze = array_map($len, ['php', 'funzione']);
+?&gt;</code></pre>
+          <p class="note">Le closure sono oggetti di tipo <code>Closure</code> e possono essere memorizzate o passate come callback a funzioni native come <code>array_map</code>, <code>usort</code>, <code>set_error_handler</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
