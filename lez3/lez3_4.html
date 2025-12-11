@@ -129,17 +129,10 @@ var_dump($variabile);    // stampa tipo e contenuto
           <ul>
             <li>Attiva gli errori solo in locale. In produzione usa log file, non <code>display_errors</code>.</li>
             <li><code>var_dump</code>/<code>print_r</code> sono utili per capire cosa stai passando a HTML o al DB.</li>
+            <li><code>error_reporting</code> + <code>ini_set('display_errors', 1)</code> fanno sì che PHP mostri a schermo warning/notice/fatal: vedrai i messaggi direttamente nel browser, sopra o al posto della pagina renderizzata.</li>
+            <li><code>var_dump</code> e <code>print_r</code> scrivono l'output nel flusso HTML dove li chiami: compaiono nella pagina accanto al resto del markup, utili per tracciare variabili “al volo”.</li>
+            <li><code>die()</code> (o <code>exit()</code>) interrompe l'esecuzione subito e stampa il testo fornito: ideale per fermare il rendering quando vuoi leggere con calma l'output di debug.</li>
           </ul>
-        </div>
-
-        <h2>Cosa porti a casa</h2>
-        <div class="box">
-          <ul>
-            <li>Sai creare un file PHP eseguibile dal server e vederne l'output in browser.</li>
-            <li>Hai usato <code>echo</code> (e shorthand) per inserire valori dinamici in HTML.</li>
-            <li>Hai attivato un primo set di strumenti di debug per controllare cosa succede nel codice.</li>
-          </ul>
-          <p class="ok">Prossimo passo: approfondire sintassi, tipi e controllo di flusso (Lez3.5–3.6).</p>
         </div>
 
       </div>
