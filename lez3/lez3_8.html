@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_7 · Esercizi PHP con soluzioni</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_7.html"; }
+    function nextSlide(){ window.location.href = "lez3_9.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra soluzione ▼' : 'Nascondi soluzione ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_7.html">Lez3.7: Esercizi PHP (soluzioni)</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Esercizi PHP con soluzione a comparsa</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <p class="note">Clicca su “Mostra soluzione” per rivelare il codice di ciascun esercizio. Gli snippet sono auto-contenuti e commentati.</p>
+
+        <div class="box">
+          <h2>1) Disegna una scacchiera 20×20</h2>
+          <p>Alterna celle chiare/scure con un semplice controllo sull'indice di riga e colonna.</p>
+          <button id="btn-1" onclick="toggleBox('btn-1','sol-1')">Mostra soluzione ▼</button>
+          <div id="sol-1" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$size = 20;
+echo "&lt;table style='border-collapse:collapse'&gt;";
+for ($r = 0; $r &lt; $size; $r++) {
+  echo "&lt;tr&gt;";
+  for ($c = 0; $c &lt; $size; $c++) {
+    $isDark = ($r + $c) % 2 === 0;
+    $color = $isDark ? '#222' : '#eee';
+    echo "&lt;td style='width:20px;height:20px;background:$color;border:1px solid #555'&gt;&lt;/td&gt;";
+  }
+  echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>2) Tabella 20×20 con numero che cresce di 3</h2>
+          <p>Parti da 3 e incrementa ogni cella usando un contatore condiviso.</p>
+          <button id="btn-2" onclick="toggleBox('btn-2','sol-2')">Mostra soluzione ▼</button>
+          <div id="sol-2" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$valore = 3;
+echo "&lt;table style='border:3px solid blue;border-collapse:collapse'&gt;";
+for ($r = 0; $r &lt; 20; $r++) {
+  echo "&lt;tr&gt;";
+  for ($c = 0; $c &lt; 20; $c++, $valore += 3) {
+    echo "&lt;td style='width:28px;height:28px;text-align:center;border:1px solid #5faafc'&gt;$valore&lt;/td&gt;";
+  }
+  echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>3) Decrescita da 100 a 0 con passo 5</h2>
+          <p>Usa un ciclo <code>for</code> con decremento costante.</p>
+          <button id="btn-3" onclick="toggleBox('btn-3','sol-3')">Mostra soluzione ▼</button>
+          <div id="sol-3" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+for ($i = 100; $i &gt;= 0; $i -= 5) {
+  echo $i . "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>4) Stampa le lettere della parola «AMICIZIA»</h2>
+          <p>Sfrutta <code>strlen()</code> per percorrere ogni carattere.</p>
+          <button id="btn-4" onclick="toggleBox('btn-4','sol-4')">Mostra soluzione ▼</button>
+          <div id="sol-4" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$parola = "AMICIZIA";
+for ($i = 0; $i &lt; strlen($parola); $i++) {
+  echo $parola[$i] . "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>5) I primi 100 numeri del triangolo di Tartaglia</h2>
+          <p>Genera le righe finché non si superano 100 elementi complessivi.</p>
+          <button id="btn-5" onclick="toggleBox('btn-5','sol-5')">Mostra soluzione ▼</button>
+          <div id="sol-5" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$triangolo = [[1]];
+$numeri = [1];
+while (count($numeri) &lt; 100) {
+  $ultima = end($triangolo);
+  $nuova = [1];
+  for ($i = 0; $i &lt; count($ultima) - 1; $i++) {
+    $nuova[] = $ultima[$i] + $ultima[$i + 1];
+  }
+  $nuova[] = 1;
+  $triangolo[] = $nuova;
+  $numeri = array_merge($numeri, $nuova);
+}
+
+$stampati = 0;
+foreach ($triangolo as $riga) {
+  foreach ($riga as $valore) {
+    if ($stampati++ &gt;= 100) break 2;
+    echo $valore . " ";
+  }
+  echo "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>6) Confronta due stringhe predefinite</h2>
+          <p>Verifica uguaglianza stretta tra <code>"1234567890"</code> e la stringa immessa.</p>
+          <button id="btn-6" onclick="toggleBox('btn-6','sol-6')">Mostra soluzione ▼</button>
+          <div id="sol-6" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$target = "1234567890";
+$input = $_GET['val'] ?? "";
+
+if ($input === "") {
+  echo "Fornisci ?val=... nell'URL";
+} else {
+  if ($input === $target) {
+    echo "Stringhe uguali";
+  } else {
+    echo "Stringhe diverse";
+  }
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>7) Secondi trascorsi da una data</h2>
+          <p>Confronta una data inserita con l'istante attuale usando <code>DateTime</code>.</p>
+          <button id="btn-7" onclick="toggleBox('btn-7','sol-7')">Mostra soluzione ▼</button>
+          <div id="sol-7" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$dataInput = $_GET['data'] ?? '2024-01-01 00:00:00';
+$passata = new DateTime($dataInput);
+$ora = new DateTime();
+$diff = $ora-&gt;getTimestamp() - $passata-&gt;getTimestamp();
+
+echo "Secondi trascorsi dal $dataInput: $diff";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>8) Consumo dell'auto (l/100km)</h2>
+          <p>Chiedi gasolio utilizzato e km percorsi, poi calcola il consumo medio.</p>
+          <button id="btn-8" onclick="toggleBox('btn-8','sol-8')">Mostra soluzione ▼</button>
+          <div id="sol-8" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$litri = (float) ($_GET['litri'] ?? 0);
+$km = (float) ($_GET['km'] ?? 1);
+if ($litri &lt;= 0 || $km &lt;= 0) {
+  echo "Inserisci ?litri=...&amp;km=...";
+  exit;
+}
+$consumo = ($litri / $km) * 100;
+echo "Consumo medio: " . round($consumo, 2) . " L/100km";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>9) Km percorsi noto il consumo medio</h2>
+          <p>Usa la formula inversa: km = (litri / consumo) × 100.</p>
+          <button id="btn-9" onclick="toggleBox('btn-9','sol-9')">Mostra soluzione ▼</button>
+          <div id="sol-9" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$litri = (float) ($_GET['litri'] ?? 0);
+$consumo = (float) ($_GET['consumo'] ?? 0); // L/100km
+if ($litri &lt;= 0 || $consumo &lt;= 0) {
+  echo "Inserisci ?litri=...&amp;consumo=... (L/100km)";
+  exit;
+}
+$km = ($litri / $consumo) * 100;
+echo "Puoi percorrere circa " . round($km, 1) . " km";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>10) Pagina semplice di benvenuto</h2>
+          <p>Script minimale che risponde con un messaggio testuale.</p>
+          <button id="btn-10" onclick="toggleBox('btn-10','sol-10')">Mostra soluzione ▼</button>
+          <div id="sol-10" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+echo "&lt;h1&gt;Benvenuto nel nostro sito&lt;/h1&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>11) Leggi e valida un file HTML</h2>
+          <p>Carica <code>index.html</code>, verifica la presenza di tag base e notifica l'esito.</p>
+          <button id="btn-11" onclick="toggleBox('btn-11','sol-11')">Mostra soluzione ▼</button>
+          <div id="sol-11" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$file = 'index.html';
+$contenuto = file_get_contents($file);
+$valido = str_contains($contenuto, '<html>') &amp;&amp;
+          str_contains($contenuto, '<body>') &amp;&amp;
+          str_contains($contenuto, '</html>');
+
+echo $valido
+  ? "Il file $file contiene i tag principali."
+  : "Attenzione: struttura HTML incompleta.";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>12) Riporta il codice HTML di una pagina</h2>
+          <p>Mostra l'HTML letto dal file in modo sicuro (escape con <code>htmlspecialchars</code>).</p>
+          <button id="btn-12" onclick="toggleBox('btn-12','sol-12')">Mostra soluzione ▼</button>
+          <div id="sol-12" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$pagina = 'index.html';
+$contenuto = file_get_contents($pagina);
+
+echo "&lt;h2&gt;Sorgente di $pagina&lt;/h2&gt;";
+echo "&lt;pre&gt;" . htmlspecialchars($contenuto) . "&lt;/pre&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>13) Pagina HTML con link a data estesa</h2>
+          <p>Pagina principale con link al controller PHP che restituisce la data formattata.</p>
+          <button id="btn-13" onclick="toggleBox('btn-13','sol-13')">Mostra soluzione ▼</button>
+          <div id="sol-13" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+// file pagina_principale.php
+echo "&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;";
+echo "&lt;h1&gt;Homepage&lt;/h1&gt;";
+echo "&lt;footer&gt;&lt;a href='data.php'&gt;Mostra data odierna&lt;/a&gt;&lt;/footer&gt;";
+echo "&lt;/body&gt;&lt;/html&gt;";
+
+// file data.php
+// echo date_i18n richiede l'estensione intl attiva
+echo strftime("%A %d %B %Y, %H:%M:%S");
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>14) 10 nomi con colore casuale</h2>
+          <p>Estrai un colore HEX per ogni nome e applicalo allo stile inline.</p>
+          <button id="btn-14" onclick="toggleBox('btn-14','sol-14')">Mostra soluzione ▼</button>
+          <div id="sol-14" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$nomi = ["Giulia", "Ahmed", "Sara", "Luca", "Elena", "Davide", "Marta", "Paolo", "Noemi", "Diego"];
+foreach ($nomi as $nome) {
+  $colore = sprintf("#%06X", random_int(0, 0xFFFFFF));
+  echo "&lt;div style='color:$colore'&gt;$nome&lt;/div&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
