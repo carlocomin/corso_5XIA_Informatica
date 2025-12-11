@@ -58,10 +58,10 @@
         <div class="box">
           <ul>
             <li>Prendere confidenza con variabili, commenti e regole di base della sintassi PHP.</li>
-            <li>Conoscere i tipi primitivi principali (stringhe, numeri, boolean, null) e come li usi.</li>
-            <li>Evitare errori comuni: concatenazione, comparazioni deboli vs strette, interpolazione.</li>
+            <li>Conoscere i tipi primitivi principali (stringhe, numeri, boolean, null) e come li usi nel codice e nelle pagine HTML.</li>
+            <li>Evitare errori comuni: concatenazione, comparazioni deboli vs strette, interpolazione e gestione degli input mancanti.</li>
           </ul>
-          <p class="note">Questa base è indispensabile prima di affrontare controlli di flusso e strutture dati.</p>
+          <p class="note">Questa base è indispensabile prima di affrontare controlli di flusso e strutture dati: solo con tipi e sintassi chiari puoi leggere e manutenere il codice in modo affidabile.</p>
         </div>
 
         <h2>Sintassi minima: variabili e commenti</h2>
@@ -77,7 +77,8 @@ $eta  = 18;              // numeri senza virgolette
 ?&gt;</code></pre>
           <ul>
             <li>Le istruzioni terminano con <code>;</code>.</li>
-            <li>Usa nomi chiari (snake_case o camelCase) e indenta il codice come negli esempi.</li>
+            <li>Usa nomi chiari (snake_case o camelCase) e indenta il codice come negli esempi: il file sarà leggibile anche a distanza di tempo o da altri compagni.</li>
+            <li>Ricorda che PHP è case-sensitive sulle variabili ma non sui comandi <code>echo</code>/<code>Echo</code>; mantieni comunque uno stile coerente tutto minuscolo.</li>
           </ul>
         </div>
 
@@ -93,9 +94,9 @@ $concat = "Ciao " . $nome . "!"; // concatenazione con .
 echo $double;  // Ciao Giulia
 ?&gt;</code></pre>
           <ul>
-            <li>I doppi apici espandono variabili; i singoli mantengono il testo letterale.</li>
-            <li><code>.</code> è l'operatore di concatenazione (non <code>+</code>).</li>
-            <li>Per sicurezza lato HTML, combina con <code>htmlspecialchars()</code> prima di mostrare input utente.</li>
+            <li>I doppi apici espandono variabili e sequenze speciali (<code>\n</code> per andare a capo); i singoli mantengono tutto letterale, utile per stringhe statiche o query SQL.</li>
+            <li><code>.</code> è l'operatore di concatenazione (non <code>+</code>) e può concatenare anche numeri, che verranno convertiti in stringa.</li>
+            <li>Per sicurezza lato HTML, combina con <code>htmlspecialchars()</code> prima di mostrare input utente così da evitare injection o rotture del layout.</li>
           </ul>
         </div>
 
@@ -112,8 +113,9 @@ var_dump(0 == false);   // true (confronto debole)
 var_dump(0 === false);  // false (tipi diversi, confronto stretto)
 ?&gt;</code></pre>
           <ul>
-            <li>Preferisci gli operatori stretti <code>===</code> e <code>!==</code> quando confronti valori user-facing.</li>
-            <li><code>var_dump()</code> mostra tipo e valore: utile per debug.</li>
+            <li>Preferisci gli operatori stretti <code>===</code> e <code>!==</code> quando confronti valori user-facing, perché controllano sia il valore sia il tipo.</li>
+            <li><code>var_dump()</code> mostra tipo e valore: utile per debug rapido, ma rimuovilo dal codice consegnato.</li>
+            <li>Gli interi e i float vengono convertiti automaticamente quando li sommi o dividi, ma attenzione ai decimali (es. <code>0.1 + 0.2</code>) per gli arrotondamenti binari.</li>
           </ul>
         </div>
 
@@ -127,8 +129,9 @@ $telefono = $_POST['telefono'] ?? null; // prende POST se esiste, altrimenti nul
 $ruolo = $_POST['ruolo'] ?? 'studente';
 ?&gt;</code></pre>
           <ul>
-            <li><code>null</code> rappresenta l'assenza di valore.</li>
-            <li>L'operatore di coalescenza <code>??</code> evita notice su indici non definiti e imposta default leggibili.</li>
+            <li><code>null</code> rappresenta l'assenza di valore: differenzia tra "campo non inviato" e stringa vuota.</li>
+            <li>L'operatore di coalescenza <code>??</code> evita notice su indici non definiti e imposta default leggibili senza dover annidare <code>isset()</code>.</li>
+            <li>Quando ricevi dati da form, usa <code>??</code> per prevenire warning e mostrare messaggi chiari all'utente.</li>
           </ul>
         </div>
 
@@ -144,8 +147,8 @@ if ((bool) $flag) {
 }
 ?&gt;</code></pre>
           <ul>
-            <li>Casting esplicito rende chiaro come vuoi usare il dato (utile prima di salvare su DB).</li>
-            <li>Combina cast + validazione server-side per evitare input non coerenti.</li>
+            <li>Casting esplicito rende chiaro come vuoi usare il dato (utile prima di salvare su DB) e riduce conversioni implicite imprevedibili.</li>
+            <li>Combina cast + validazione server-side per evitare input non coerenti: prima validi, poi casti, poi salvi.</li>            
           </ul>
         </div>
 
@@ -154,7 +157,8 @@ if ((bool) $flag) {
           <ul>
             <li>Usa doppi apici per interpolare, singoli quando vuoi testo letterale.</li>
             <li>Preferisci <code>===</code>/<code>!==</code> per confronti sicuri tra tipi diversi.</li>
-            <li>Gestisci valori opzionali con <code>??</code> e assegna default espliciti.</li>
+            <li>Gestisci valori opzionali con <code>??</code> e assegna default espliciti per evitare notice e comportamenti inattesi.</li>
+            <li>Casta e valida i dati in ingresso prima di usarli: l'applicazione sarà più sicura e prevedibile.</li>
           </ul>
           <p class="ok">Pronti per Lez3.6: strutture di controllo e funzioni.</p>
         </div>
