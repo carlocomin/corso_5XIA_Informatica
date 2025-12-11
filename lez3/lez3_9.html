@@ -53,16 +53,12 @@
           <p>Contiene i parametri passati via URL (es. <code>pagina.php?nome=Anna&eta=17</code>). Non modifica mai lo stato del server ed è usato per filtri, ricerche e navigazione. I valori arrivano come stringhe: valida e sanifica sempre.</p>
           <pre><code class="language-php">&lt;?php
 // pagina.php?nome=Anna&amp;eta=17
-$nome = filter_input(INPUT_GET, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-$eta  = filter_input(INPUT_GET, 'eta', FILTER_VALIDATE_INT);
+$nome = $_GET['nome'] ?? 'ospite';
+$eta  = $_GET['eta'] ?? 'n/d';
 
-if ($nome === null) {
-  echo "Nessun nome fornito";
-} else {
-  $etaDescrizione = $eta === false ? 'età non valida' : $eta . ' anni';
-  echo "Ciao $nome, ho ricevuto $etaDescrizione";
-}
+echo "Ciao $nome, ho ricevuto età: $eta";
 ?&gt;</code></pre>
+          <p class="note">Esempio diretto senza <code>filter_input</code>: è semplice ma espone a XSS/validazioni mancanti. Vedi sotto la sezione di approfondimento per gestire correttamente gli input.</p>
         </div>
 
         <div class="box">
@@ -75,16 +71,51 @@ if ($nome === null) {
 &lt;/form&gt;
 
 &lt;?php // salva-contatto.php
-$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-$msg   = filter_input(INPUT_POST, 'messaggio');
+$email = $_POST['email'] ?? null;
+$msg   = $_POST['messaggio'] ?? null;
 
 if (!$email || !$msg) {
   exit('Dati mancanti');
 }
 
-$msg = htmlspecialchars($msg, ENT_QUOTES, 'UTF-8');
 echo "Grazie, contatteremo $email. Messaggio: $msg";
 ?&gt;</code></pre>
+          <p class="note">Esempio base senza sanificazione: funziona ma non filtra valori non validi e non protegge da HTML indesiderato.</p>
+        </div>
+
+        <div class="box">
+          <h2>filter_input / filter_input_array — sanificazione e validazione</h2>
+          <p>Queste funzioni applicano filtri standard agli input provenienti da <code>$_GET</code>, <code>$_POST</code>, <code>$_COOKIE</code> e <code>$_SERVER</code>. Operano in tre passaggi: scelta della sorgente (<code>INPUT_GET</code>, <code>INPUT_POST</code>, ecc.), selezione del filtro e definizione di opzioni/flag.</p>
+          <ul>
+            <li><strong>Sanitize</strong>: rimuove/escapa caratteri indesiderati (es. <code>FILTER_SANITIZE_SPECIAL_CHARS</code>, <code>FILTER_SANITIZE_EMAIL</code>).</li>
+            <li><strong>Validate</strong>: verifica il formato (es. <code>FILTER_VALIDATE_INT</code>, <code>FILTER_VALIDATE_EMAIL</code>), restituendo <code>false</code> se non valido.</li>
+            <li><strong>Opzioni</strong>: array <code>['options' =&gt; [...], 'flags' =&gt; ...]</code> per impostare vincoli (<code>min_range</code>, <code>max_range</code>, <code>default</code>, <code>FILTER_FLAG_ALLOW_FRACTION</code>, <code>FILTER_FLAG_STRIP_LOW</code>, ecc.).</li>
+            <li><strong>Array di filtri</strong>: con <code>filter_input_array</code> definisci una mappa di filtri per più campi in un'unica chiamata.</li>
+            <li><strong>Fall-back</strong>: se la chiave non esiste, restituisce <code>null</code>; se la validazione fallisce, <code>false</code>. Gestisci entrambi i casi.</li>
+          </ul>
+          <pre><code class="language-php">&lt;?php
+// Versione sicura per $_GET
+$nome = filter_input(INPUT_GET, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
+$eta  = filter_input(INPUT_GET, 'eta', FILTER_VALIDATE_INT, [
+  'options' => ['min_range' => 1, 'max_range' => 120]
+]);
+
+$etaDescrizione = $eta === false ? 'età non valida' : ($eta === null ? 'nessuna età' : $eta . ' anni');
+echo "Ciao $nome, ho ricevuto $etaDescrizione";
+
+// Versione sicura per $_POST
+$input = filter_input_array(INPUT_POST, [
+  'email' => ['filter' => FILTER_VALIDATE_EMAIL],
+  'messaggio' => ['filter' => FILTER_SANITIZE_SPECIAL_CHARS]
+]);
+
+if (!$input['email'] || !$input['messaggio']) {
+  exit('Dati mancanti o invalidi');
+}
+
+echo "Grazie, contatteremo {$input['email']}. Messaggio: {$input['messaggio']}";
+?&gt;</code></pre>
+          <p class="note">Alternativa avanzata: <code>filter_var</code> filtra valori già in memoria; <code>FILTER_DEFAULT</code> restituisce la stringa così com'è ma puoi aggiungere flag per rimuovere tag HTML (<code>FILTER_FLAG_NO_ENCODE_QUOTES</code> o <code>FILTER_SANITIZE_FULL_SPECIAL_CHARS</code>).</p>
         </div>
 
         <div class="box">
