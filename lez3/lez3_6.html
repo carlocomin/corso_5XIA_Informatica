@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_6 · Datatype fondamentali e array</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_5.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-7"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="piano.html#lez3-7">Lez3.7: Array indicizzati</a></li>
+      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
+      <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Datatype fondamentali e array</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivi</h2>
+        <div class="box">
+          <ul>
+            <li>Conoscere i datatype più usati in PHP e quando sceglierli.</li>
+            <li>Creare e leggere array indicizzati e array associativi (mappe) con sintassi moderna.</li>
+            <li>Applicare cast, controlli di tipo e funzioni built-in per ispezionare i dati in sicurezza.</li>
+          </ul>
+          <p class="note">Lavoreremo con esempi minimali ma realistici, commentati riga per riga.</p>
+        </div>
+
+        <h2>Scalari: stringhe, numeri, boolean, null</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$utente = "Giulia";      // string
+$eta = 19;               // integer
+$peso = 54.5;            // float (double)
+$iscritta = true;        // boolean
+$telefono = null;        // assenza di valore
+
+// var_dump mostra tipo e contenuto: utile in debug
+var_dump($utente, $eta, $peso, $iscritta, $telefono);
+
+// controllo sicuro: confronta valore + tipo
+if ($eta === 19) {
+  echo "Benvenuta, $utente";
+}
+?&gt;</code></pre>
+          <ul>
+            <li><code>===</code> e <code>!==</code> evitano sorprese rispetto ai confronti deboli (es. <code>"0" == false</code>).</li>
+            <li><code>null</code> distingue tra campo non impostato e stringa vuota: fondamentale quando validi form.</li>
+            <li><code>var_dump()</code> va tolto dal codice finale, ma durante lo sviluppo rende evidenti i tipi reali.</li>
+          </ul>
+        </div>
+
+        <h2>Costanti e cast espliciti</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+define('IVA', 0.22);        // costante legacy
+const RUOLO_DEFAULT = 'user'; // costante moderna
+
+$quantita = "5";            // stringa arrivata da un form
+$pezzi = (int) $quantita;    // 5, conversione esplicita
+
+$prezzo = 19.99;
+$totale = $pezzi * $prezzo;  // 5 * 19.99 = 99.95
+
+// gestione booleana di input check-box
+$consenso = $_POST['consenso'] ?? '0';
+if ((bool) $consenso === true) {
+  echo "Consenso fornito";
+}
+?&gt;</code></pre>
+          <ul>
+            <li>Le costanti rendono espliciti parametri di dominio (es. IVA): non possono essere ridefinite.</li>
+            <li>Casting prima dei calcoli rende il comportamento prevedibile e riduce warning.</li>
+            <li>Combina cast e validazione (es. <code>filter_var()</code>) prima di salvare su DB.</li>
+          </ul>
+        </div>
+
+        <h2>Array indicizzati: liste ordinate</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$corsi = ["TPSIT", "Sistemi", "Informatica"];
+
+// aggiungere e leggere
+$corsi[] = "Gestione progetto"; // push in coda
+$primo = $corsi[0];             // "TPSIT"
+$ultimo = $corsi[count($corsi)-1];
+
+// iterare con indice + valore
+foreach ($corsi as $indice =&gt; $materia) {
+  echo "$indice: $materia\n";
+}
+?&gt;</code></pre>
+          <ul>
+            <li>Gli array PHP sono dinamici: puoi aggiungere elementi senza dichiararne la dimensione.</li>
+            <li><code>count()</code> restituisce la lunghezza corrente; evita di usare numeri magici.</li>
+            <li>La sintassi <code>[$a, $b]</code> è preferita a <code>array($a, $b)</code> perché più leggibile.</li>
+          </ul>
+        </div>
+
+        <h2>Array associativi: mappe chiave → valore</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$profilo = [
+  'nome' =&gt; 'Giulia',
+  'classe' =&gt; '5XIA',
+  'email' =&gt; 'giulia@example.com'
+];
+
+// lettura sicura con ?? per evitare notice
+$email = $profilo['email'] ?? 'non fornita';
+
+// aggiornamento e aggiunta
+$profilo['email'] = 'g.rossi@example.com';
+$profilo['telefono'] = null; // campo opzionale
+
+// ciclo chiave => valore
+foreach ($profilo as $campo =&gt; $valore) {
+  echo "$campo: " . ($valore ?? '—') . "\n";
+}
+?&gt;</code></pre>
+          <ul>
+            <li>Le mappe associano etichette semantiche ai dati: più leggibili di un array numerico.</li>
+            <li>Usa <code>??</code> quando un campo può mancare (input form opzionali) per evitare warning.</li>
+            <li>Confronta chiavi con <code>array_key_exists()</code> se devi distinguere tra "manca" e "vale null".</li>
+          </ul>
+        </div>
+
+        <h2>Array annidati e uso combinato</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$studenti = [
+  [
+    'nome' =&gt; 'Giulia',
+    'voti' =&gt; [8, 7.5, 9]
+  ],
+  [
+    'nome' =&gt; 'Ahmed',
+    'voti' =&gt; [6, 8, 7]
+  ]
+];
+
+// accesso a dati annidati
+$primoStudente = $studenti[0]['nome']; // Giulia
+$primoVoto = $studenti[0]['voti'][0];  // 8
+
+// calcolo media con funzione built-in
+$mediaGiulia = array_sum($studenti[0]['voti']) / count($studenti[0]['voti']);
+
+echo "$primoStudente ha media $mediaGiulia";
+?&gt;</code></pre>
+          <ul>
+            <li>Combina array indicizzati + associativi per modellare strutture reali (es. tabella studenti).</li>
+            <li>Funzioni utili: <code>array_sum</code>, <code>array_map</code>, <code>array_filter</code>, <code>in_array</code>.</li>
+            <li>Per dati complessi valuta classi/oggetti, ma gli array restano comodi per prototipi e view.</li>
+          </ul>
+        </div>
+
+        <h2>Checklist di buone pratiche</h2>
+        <div class="box">
+          <ul>
+            <li>Decidi il tipo appena ricevi l'input (cast o validazione) così da evitare conversioni implicite.</li>
+            <li>Usa array associativi per strutture eterogenee e dai nomi esplicativi alle chiavi.</li>
+            <li>Proteggi l'output HTML con <code>htmlspecialchars()</code>, specialmente quando stampi stringhe da array di input utente.</li>
+            <li>Documenta con commenti sintetici: spiegano il "perché" del dato, non solo il "cosa".</li>
+          </ul>
+          <p class="ok">Con questi pattern i tuoi script saranno più leggibili e pronti per l'integrazione con database e template HTML.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
