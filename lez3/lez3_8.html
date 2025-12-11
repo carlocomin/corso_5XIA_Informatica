@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_7 · Esercizi PHP con soluzioni</title>
+  <title>ITST – 5ª · Lez3_8 · Esercizi PHP con soluzioni</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_7.html"; }
-    function nextSlide(){ window.location.href = "lez3_9.html"; }
+    function prevSlide(){ window.location.href = "lez3_6.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-9"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
       const box = document.getElementById(boxId);
@@ -33,9 +33,9 @@
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
       <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Esercizi PHP (soluzioni)</a></li>
-      <li><a href="piano.html#lez3-8">Lez3.8: Array associativi (mappe)</a></li>
-      <li><a href="piano.html#lez3-9">Lez3.9: Operazioni sugli array</a></li>
+      <li><a href="lez3_7.html">Lez3.7: Array indicizzati</a></li>
+      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni)</a></li>
+      <li><a href="piano.html#lez3-9">Lez3.9: Array associativi (mappe)</a></li>
       <li><a href="piano.html#lez3-10">Lez3.10: Connessione a MySQL</a></li>
       <li><a href="piano.html#lez3-11">Lez3.11: Query e prepared statements</a></li>
       <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
@@ -57,6 +57,7 @@
 
         <div class="box">
           <h2>1) Disegna una scacchiera 20×20</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Disegnare una scacchiera di 20 × 20 usando i colori bianco e nero.</p>
           <p>Alterna celle chiare/scure con un semplice controllo sull'indice di riga e colonna.</p>
           <button id="btn-1" onclick="toggleBox('btn-1','sol-1')">Mostra soluzione ▼</button>
           <div id="sol-1" style="display:none; margin-top:10px;">
@@ -79,6 +80,7 @@ echo "&lt;/table&gt;";
 
         <div class="box">
           <h2>2) Tabella 20×20 con numero che cresce di 3</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Realizzare una tabella di 20 × 20 con la formula di un numero che cresce di 3.</p>
           <p>Parti da 3 e incrementa ogni cella usando un contatore condiviso.</p>
           <button id="btn-2" onclick="toggleBox('btn-2','sol-2')">Mostra soluzione ▼</button>
           <div id="sol-2" style="display:none; margin-top:10px;">
@@ -99,6 +101,7 @@ echo "&lt;/table&gt;";
 
         <div class="box">
           <h2>3) Decrescita da 100 a 0 con passo 5</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Stampare i numeri da 100 a 0 sottraendo 5.</p>
           <p>Usa un ciclo <code>for</code> con decremento costante.</p>
           <button id="btn-3" onclick="toggleBox('btn-3','sol-3')">Mostra soluzione ▼</button>
           <div id="sol-3" style="display:none; margin-top:10px;">
@@ -112,6 +115,7 @@ for ($i = 100; $i &gt;= 0; $i -= 5) {
 
         <div class="box">
           <h2>4) Stampa le lettere della parola «AMICIZIA»</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Leggere la parola AMICIZIA e stamparne le lettere.</p>
           <p>Sfrutta <code>strlen()</code> per percorrere ogni carattere.</p>
           <button id="btn-4" onclick="toggleBox('btn-4','sol-4')">Mostra soluzione ▼</button>
           <div id="sol-4" style="display:none; margin-top:10px;">
@@ -126,6 +130,7 @@ for ($i = 0; $i &lt; strlen($parola); $i++) {
 
         <div class="box">
           <h2>5) I primi 100 numeri del triangolo di Tartaglia</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere i primi 100 numeri del triangolo di Tartaglia.</p>
           <p>Genera le righe finché non si superano 100 elementi complessivi.</p>
           <button id="btn-5" onclick="toggleBox('btn-5','sol-5')">Mostra soluzione ▼</button>
           <div id="sol-5" style="display:none; margin-top:10px;">
@@ -157,21 +162,18 @@ foreach ($triangolo as $riga) {
 
         <div class="box">
           <h2>6) Confronta due stringhe predefinite</h2>
-          <p>Verifica uguaglianza stretta tra <code>"1234567890"</code> e la stringa immessa.</p>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Usando due stringhe già definite verificare se sono uguali.</p>
+          <p>Confronta con uguaglianza stretta per non perdere le differenze tra maiuscole/minuscole.</p>
           <button id="btn-6" onclick="toggleBox('btn-6','sol-6')">Mostra soluzione ▼</button>
           <div id="sol-6" style="display:none; margin-top:10px;">
             <pre><code class="language-php">&lt;?php
-$target = "1234567890";
-$input = $_GET['val'] ?? "";
+$stringa1 = "1234567890";
+$stringa2 = "1234567890"; // cambia per testare la condizione
 
-if ($input === "") {
-  echo "Fornisci ?val=... nell'URL";
+if ($stringa1 === $stringa2) {
+  echo "Stringhe uguali";
 } else {
-  if ($input === $target) {
-    echo "Stringhe uguali";
-  } else {
-    echo "Stringhe diverse";
-  }
+  echo "Stringhe diverse";
 }
 ?&gt;</code></pre>
           </div>
@@ -179,6 +181,7 @@ if ($input === "") {
 
         <div class="box">
           <h2>7) Secondi trascorsi da una data</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Confrontare la data odierna con una data inserita (es. 15/3/2013) e stabilire quanti secondi sono trascorsi.</p>
           <p>Confronta una data inserita con l'istante attuale usando <code>DateTime</code>.</p>
           <button id="btn-7" onclick="toggleBox('btn-7','sol-7')">Mostra soluzione ▼</button>
           <div id="sol-7" style="display:none; margin-top:10px;">
@@ -195,6 +198,7 @@ echo "Secondi trascorsi dal $dataInput: $diff";
 
         <div class="box">
           <h2>8) Consumo dell'auto (l/100km)</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Chiedere quanto gasolio la macchina consuma e quanta strada ha fatto (consumo in litri/100 km).</p>
           <p>Chiedi gasolio utilizzato e km percorsi, poi calcola il consumo medio.</p>
           <button id="btn-8" onclick="toggleBox('btn-8','sol-8')">Mostra soluzione ▼</button>
           <div id="sol-8" style="display:none; margin-top:10px;">
@@ -213,6 +217,7 @@ echo "Consumo medio: " . round($consumo, 2) . " L/100km";
 
         <div class="box">
           <h2>9) Km percorsi noto il consumo medio</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Noto il consumo medio calcolare i km percorsi.</p>
           <p>Usa la formula inversa: km = (litri / consumo) × 100.</p>
           <button id="btn-9" onclick="toggleBox('btn-9','sol-9')">Mostra soluzione ▼</button>
           <div id="sol-9" style="display:none; margin-top:10px;">
@@ -231,6 +236,7 @@ echo "Puoi percorrere circa " . round($km, 1) . " km";
 
         <div class="box">
           <h2>10) Pagina semplice di benvenuto</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Programma che stampi la scritta "Benvenuto nel nostro sito".</p>
           <p>Script minimale che risponde con un messaggio testuale.</p>
           <button id="btn-10" onclick="toggleBox('btn-10','sol-10')">Mostra soluzione ▼</button>
           <div id="sol-10" style="display:none; margin-top:10px;">
@@ -242,6 +248,7 @@ echo "&lt;h1&gt;Benvenuto nel nostro sito&lt;/h1&gt;";
 
         <div class="box">
           <h2>11) Leggi e valida un file HTML</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere un programma che legge un file HTML e dice se è corretto (usando eventualmente un validatore).</p>
           <p>Carica <code>index.html</code>, verifica la presenza di tag base e notifica l'esito.</p>
           <button id="btn-11" onclick="toggleBox('btn-11','sol-11')">Mostra soluzione ▼</button>
           <div id="sol-11" style="display:none; margin-top:10px;">
@@ -261,6 +268,7 @@ echo $valido
 
         <div class="box">
           <h2>12) Riporta il codice HTML di una pagina</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere un programma che riporta il codice HTML di una pagina.</p>
           <p>Mostra l'HTML letto dal file in modo sicuro (escape con <code>htmlspecialchars</code>).</p>
           <button id="btn-12" onclick="toggleBox('btn-12','sol-12')">Mostra soluzione ▼</button>
           <div id="sol-12" style="display:none; margin-top:10px;">
@@ -276,6 +284,7 @@ echo "&lt;pre&gt;" . htmlspecialchars($contenuto) . "&lt;/pre&gt;";
 
         <div class="box">
           <h2>13) Pagina HTML con link a data estesa</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere una pagina HTML con un link ad un file PHP che restituisce la data estesa.</p>
           <p>Pagina principale con link al controller PHP che restituisce la data formattata.</p>
           <button id="btn-13" onclick="toggleBox('btn-13','sol-13')">Mostra soluzione ▼</button>
           <div id="sol-13" style="display:none; margin-top:10px;">
@@ -295,6 +304,7 @@ echo strftime("%A %d %B %Y, %H:%M:%S");
 
         <div class="box">
           <h2>14) 10 nomi con colore casuale</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Estrarre da un array 10 nomi di ragazzi e assegnare a ciascuno un colore casuale.</p>
           <p>Estrai un colore HEX per ogni nome e applicalo allo stile inline.</p>
           <button id="btn-14" onclick="toggleBox('btn-14','sol-14')">Mostra soluzione ▼</button>
           <div id="sol-14" style="display:none; margin-top:10px;">
