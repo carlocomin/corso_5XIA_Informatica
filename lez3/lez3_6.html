@@ -129,9 +129,9 @@ foreach ($corsi as $indice =&gt; $materia) {
 }
 ?&gt;</code></pre>
           <ul>
-            <li>Gli array PHP sono dinamici: puoi aggiungere elementi senza dichiararne la dimensione.</li>
-            <li><code>count()</code> restituisce la lunghezza corrente; evita di usare numeri magici.</li>
-            <li>La sintassi <code>[$a, $b]</code> è preferita a <code>array($a, $b)</code> perché più leggibile.</li>
+            <li>Gli array PHP sono dinamici: si espandono da soli quando fai <code>$corsi[] = ...</code>, quindi non serve dichiarare dimensione o tipo degli elementi.</li>
+            <li><code>count()</code> restituisce sempre la lunghezza corrente: usala per calcolare l'ultimo indice (<code>count($corsi) - 1</code>) ed evita numeri magici che diventano errati se la lista cresce.</li>
+            <li>La sintassi breve <code>[$a, $b]</code> è preferita a <code>array($a, $b)</code> perché più leggibile e coerente con altri linguaggi moderni; usa quella forma per tutti i nuovi array.</li>
           </ul>
         </div>
 
