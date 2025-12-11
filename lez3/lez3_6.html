@@ -193,6 +193,30 @@ echo "$primoStudente ha media $mediaGiulia";
           </ul>
         </div>
 
+        <h2>Array PHP vs array C/C++ e Java</h2>
+        <div class="box">
+          <pre><code class="language-php">// PHP: una sola struttura per lista + mappa
+$dati = ["Uno", 2, "chiave" =&gt; 3];
+$dati[] = 4;            // cresce da solo, nessun malloc
+$dati[10] = "buco";     // array sparso, indice 10 creato al volo
+
+// C: array statico, tipo omogeneo
+int numeri[3] = {1, 2, 3};
+// Java: array statico, tipo omogeneo
+String[] parole = {"Uno", "Due"};</code></pre>
+          <ul>
+            <li><strong>Dimensione</strong>: gli array PHP sono dinamici e possono avere "buchi" negli indici; in C/Java la dimensione è fissa e va gestita la riallocazione (o usi <code>std::vector</code>/<code>ArrayList</code>).</li>
+            <li><strong>Tipi</strong>: PHP permette elementi eterogenei nella stessa struttura; C/C++ e Java richiedono lo stesso tipo (salvo cast espliciti o <code>void*</code>), quindi presta attenzione a fare validazione e cast in ingresso.</li>
+            <li><strong>Chiavi</strong>: in PHP la stessa struttura gestisce indici numerici e chiavi stringa; l'equivalente in C/Java è un <code>std::map</code>/<code>unordered_map</code> o un <code>HashMap</code>.</li>
+            <li><strong>Ordine</strong>: PHP mantiene l'ordine di inserimento anche con chiavi stringa; in C++/Java dipende dalla struttura (es. <code>std::map</code> ordina per chiave, <code>HashMap</code> no).</li>
+            <li><strong>Copia e memoria</strong>: in PHP l'assegnazione copia per valore ma in modalità "copy-on-write" (la memoria viene duplicata solo se modifichi). In C/Java le copie avvengono subito e in C devi gestire manualmente la memoria.</li>
+            <li><strong>Accesso sicuro</strong>: usa <code>array_key_exists()</code> o l'operatore <code>??</code> prima di leggere chiavi opzionali; in C/Java l'accesso fuori bound genera undefined behavior/exception.</li>
+            <li><strong>Iterazione</strong>: <code>foreach</code> in PHP ti dà subito chiave e valore; l'equivalente è un range-based for in C++ (<code>for (auto &[k, v] : mappa)</code>) o un for-each in Java (<code>for (var entry : map.entrySet())</code>).</li>
+            <li><strong>Funzioni built-in</strong>: PHP offre decine di utility (<code>count</code>, <code>array_map</code>, <code>array_filter</code>, <code>in_array</code>) che sostituiscono molte implementazioni manuali tipiche di C/Java.</li>
+          </ul>
+          <p class="note">Se arrivi da C/C++ o Java, pensa agli array PHP come a un contenitore ibrido <em>lista + dizionario</em>: potentissimo per prototipare, ma da usare con disciplina su tipi e chiavi per evitare ambiguità.</p>
+        </div>
+
         <h2>Checklist di buone pratiche</h2>
         <div class="box">
           <ul>
