@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez3_11 · Funzioni in PHP (approfondimento)</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez3_10.html"; }
+    function nextSlide(){ window.location.href = "piano.html#lez3-12"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+  </script>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
+    <ul>
+      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
+      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
+      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
+      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_7.html">Lez3.7: Array indicizzati</a></li>
+      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni)</a></li>
+      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali</a></li>
+      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP</a></li>
+      <li><a class="active" href="lez3_11.html">Lez3.11: Funzioni in PHP (approfondimento)</a></li>
+      <li><a href="piano.html#lez3-12">Lez3.12: Integrazione HTML/CSS e sicurezza</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Funzioni in PHP: approfondimento</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <p class="note">Riprendiamo le funzioni introducendo aspetti che diventano utili quando il codice cresce: tipizzazione, parametri variabili, chiusure e passaggi per riferimento.</p>
+
+        <div class="box">
+          <h2>Type hinting e valori di ritorno tipizzati</h2>
+          <p>Dal PHP 7 puoi indicare il tipo dei parametri e del valore di ritorno: se non rispettati, viene generato un errore di tipo. Usa <code>?</code> per indicare che il valore può essere <code>null</code>.</p>
+          <pre><code class="language-php">&lt;?php
+function sommaInteri(int $a, int $b): int {
+    return $a + $b;
+}
+
+function trovaUtente(?int $id): ?string {
+    if ($id === null) return null;
+    return "Utente #$id";
+}
+?&gt;</code></pre>
+          <p class="note">Le dichiarazioni di tipo aiutano a trovare bug in anticipo e rendono il codice più chiaro.</p>
+        </div>
+
+        <div class="box">
+          <h2>Parametri variadici</h2>
+          <p>Con l'operatore <code>...</code> puoi accettare un numero variabile di argomenti raccolti in un array.</p>
+          <pre><code class="language-php">&lt;?php
+function sommaTutti(int ...$numeri): int {
+    return array_sum($numeri);
+}
+
+$totale = sommaTutti(1, 2, 3, 4); // 10
+?&gt;</code></pre>
+          <p class="note">Puoi mescolare parametri normali e variadici, ma quello variadico deve stare in fondo.</p>
+        </div>
+
+        <div class="box">
+          <h2>Passaggio per riferimento</h2>
+          <p>Anteponendo <code>&amp;</code> al parametro lavori sul valore originale, non su una copia. Utile per modificare array e stringhe senza restituirli esplicitamente.</p>
+          <pre><code class="language-php">&lt;?php
+function aggiungiPrefisso(string $prefisso, array &amp;$nomi): void {
+    foreach ($nomi as &amp;$nome) {
+        $nome = "$prefisso $nome";
+    }
+}
+
+$lista = ["Marco", "Giulia"];
+aggiungiPrefisso("Sig.", $lista);
+// $lista ora contiene ["Sig. Marco", "Sig. Giulia"]
+?&gt;</code></pre>
+        </div>
+
+        <div class="box">
+          <h2>Funzioni anonime e closure</h2>
+          <p>Le funzioni possono essere assegnate a variabili o passate come argomento. Con <code>use</code> catturi variabili esterne creando una closure.</p>
+          <pre><code class="language-php">&lt;?php
+$prefisso = "TODO";
+$formatter = function(string $testo) use ($prefisso): string {
+    return "[$prefisso] $testo";
+};
+
+echo $formatter("sistemare bug");
+?&gt;</code></pre>
+          <p class="note">Le closure sono spesso usate con <code>array_map</code>, <code>array_filter</code> e funzioni che accettano callback.</p>
+        </div>
+
+        <div class="box">
+          <h2>Arrow function</h2>
+          <p>Per callback brevi puoi usare la sintassi a freccia (<code>fn</code>) introdotta in PHP 7.4: cattura automaticamente le variabili esterne per valore.</p>
+          <pre><code class="language-php">&lt;?php
+$numeri = [1, 2, 3, 4];
+$raddoppiati = array_map(fn(int $n): int => $n * 2, $numeri);
+// [2, 4, 6, 8]
+?&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
