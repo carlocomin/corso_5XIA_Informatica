@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_15 · BCNF: definizione e decomposizione</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez4_14.html"; }
+    function nextSlide(){ window.location.href = "lez4_16.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>BCNF: definizione e decomposizione</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Definizione rigorosa di BCNF</h2>
+        <div class="box">
+          <p>Una relazione <code>R</code> è in <strong>BCNF</strong> se, per ogni DF non banale <code>X → Y</code> implicata da <code>F</code> (cioè in <code>F⁺</code>):</p>
+          <p class="ok" style="display:block"><code>X</code> è una superchiave di <code>R</code>.</p>
+          <p class="note">Equivalentemente: basta controllare DF del tipo <code>X → A</code> con RHS singolo.</p>
+        </div>
+
+        <h2>Checklist: come riconoscere una violazione BCNF</h2>
+        <div class="box">
+          <ol>
+            <li>Prendi una DF non banale <code>X → A</code>.</li>
+            <li>Calcola <code>X⁺</code>.</li>
+            <li>Se <code>X⁺</code> non contiene tutti gli attributi di <code>R</code>, allora <code>X</code> non è superchiave ⇒ <span class="warn">violazione BCNF</span>.</li>
+          </ol>
+        </div>
+
+        <h2>Decomposizione standard in BCNF (lossless join)</h2>
+        <div class="box">
+          <p>Se esiste una DF non banale <code>X → Y</code> con <code>X</code> non superchiave, decomponi:</p>
+          <pre><code class="language-text">R1 = X ∪ Y
+R2 = R − (Y − X)</code></pre>
+          <p class="note">La decomposizione è lossless perché in <code>R1</code> vale <code>X → Y</code> ⇒ <code>X</code> è chiave di <code>R1</code> e fa da collante nel join.</p>
+          <p class="warn">Attenzione: questa decomposizione <strong>non garantisce</strong> sempre la preservazione delle dipendenze (slide successiva).</p>
+          <p class="note">In pratica: BCNF “pulisce” molto bene, ma a volte spezza vincoli che prima erano controllabili su una sola tabella.</p>
+        </div>
+
+        <h2>Applicazione all’esempio LEZIONE</h2>
+        <div class="box">
+          <p>Nello schema <code>LEZIONE(Studente, Docente, Corso)</code> la DF che viola BCNF è:</p>
+          <p class="ok" style="display:block"><code>Docente → Corso</code></p>
+          <p>Decomposizione:</p>
+          <pre><code class="language-text">R1(Docente, Corso)
+R2(Studente, Docente)</code></pre>
+          <ul>
+            <li>In <code>R1</code>, <code>Docente</code> è chiave ⇒ <code>R1</code> è in BCNF.</li>
+            <li>In <code>R2</code> non resta la ridondanza “Docente ripete sempre lo stesso corso”.</li>
+          </ul>
+          <p class="ok">La ridondanza sparisce: l’associazione Docente–Corso compare una sola volta in <code>R1</code>.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

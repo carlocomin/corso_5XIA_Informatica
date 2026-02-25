@@ -115,5 +115,11 @@ li {
     transition: left 0.3s ease, overflow-y 0s;
 }
 
+.sidebar a.active {
+    font-weight: 700;
+    color: #00695c;
+    text-decoration: underline;
+}
+
 
 

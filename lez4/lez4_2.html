@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_2 · Chiusura di attributi X⁺: calcolo operativo</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez4_1.html"; }
+    function nextSlide(){ window.location.href = "lez4_3.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Chiusura di un insieme di attributi: <code>X⁺</code></h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Definizione</h2>
+        <div class="box">
+          <p>Dati:</p>
+          <ul>
+            <li>uno schema <code>R</code></li>
+            <li>un insieme di DF <code>F</code> su <code>R</code></li>
+            <li>un insieme di attributi <code>X ⊆ R</code></li>
+          </ul>
+          <p>la chiusura di <code>X</code> rispetto a <code>F</code> (<code>X⁺</code>) è:</p>
+          <p class="ok" style="display:block">tutti gli attributi determinabili a partire da <code>X</code> usando le DF in <code>F</code>.</p>
+          <p class="note">Intuizione: <code>X⁺</code> è “tutto ciò che posso sapere con certezza” se mi danno solo i valori di <code>X</code> e accetto le regole <code>F</code> come vere.</p>
+        </div>
+
+        <h2>Procedura operativa (algoritmo)</h2>
+        <div class="box">
+          <ol>
+            <li>Inizia con <code>X⁺ = X</code>.</li>
+            <li>Se esiste una DF <code>Y → Z</code> con <code>Y ⊆ X⁺</code>, allora aggiungi <code>Z</code> a <code>X⁺</code>.</li>
+            <li>Ripeti finché non puoi più aggiungere attributi.</li>
+          </ol>
+          <pre><code class="language-text">Input: X, F
+Xplus := X
+repeat
+  changed := false
+  for each (Y -> Z) in F do
+    if Y ⊆ Xplus and Z ⊄ Xplus then
+      Xplus := Xplus ∪ Z
+      changed := true
+until changed = false
+Output: Xplus</code></pre>
+          <p class="note">Questo algoritmo è “a espansione”: parti da ciò che sai (<code>X</code>) e applichi tutte le DF che diventano attivabili man mano che la conoscenza cresce.</p>
+          <p class="note">È il motore di quasi tutti i controlli: implicazione di DF, superchiavi, minimalità.</p>
+        </div>
+
+        <h2>Esempio guidato</h2>
+        <div class="box">
+          <p>Schema <code>R(A,B,C,D)</code> e:</p>
+          <pre><code class="language-text">F = { A → B,  B → C,  CD → A }</code></pre>
+          <p><strong>Calcola</strong> <code>A⁺</code> e <code>(CD)⁺</code>.</p>
+          <button id="btnEx1" onclick="toggleBox('btnEx1','ansEx1')">Mostra ▼</button>
+          <div id="ansEx1" style="display:none; margin-top:.5rem">
+            <div class="note" style="display:block"><strong>Calcolo di</strong> <code>A⁺</code></div>
+            <ul>
+              <li>Start: <code>A⁺ = {A}</code></li>
+              <li><code>A → B</code> ⇒ <code>{A,B}</code></li>
+              <li><code>B → C</code> ⇒ <code>{A,B,C}</code></li>
+              <li><code>CD → A</code> non applicabile (manca <code>D</code>)</li>
+            </ul>
+            <p class="ok" style="display:block"><code>A⁺ = {A, B, C}</code></p>
+
+            <div class="note" style="display:block; margin-top:.6rem"><strong>Calcolo di</strong> <code>(CD)⁺</code></div>
+            <ul>
+              <li>Start: <code>(CD)⁺ = {C,D}</code></li>
+              <li><code>CD → A</code> ⇒ <code>{A,C,D}</code></li>
+              <li><code>A → B</code> ⇒ <code>{A,B,C,D}</code></li>
+            </ul>
+            <p class="ok" style="display:block"><code>(CD)⁺ = {A, B, C, D} = R</code></p>
+            <p class="warn">Quindi <code>CD</code> è una superchiave di <code>R</code>.</p>
+          </div>
+        </div>
+
+        <h2>Uso tipico di <code>X⁺</code></h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Implicazione</span>: <code>X → Y</code> è implicata da <code>F</code> se <code>Y ⊆ X⁺</code>.</li>
+            <li><span class="def">Superchiave</span>: <code>X</code> è superchiave se <code>X⁺</code> contiene tutti gli attributi di <code>R</code>.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

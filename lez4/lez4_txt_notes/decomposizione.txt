@@ -1,0 +1,157 @@
+DECOMPOSIZIONE DI SCHEMI RELAZIONALI
+ALGORITMO GENERALE (FORMA NORMALE GENERICA)
+(handout per lo studio)
+
+------------------------------------------------------------
+1. PROBLEMA DI PARTENZA
+------------------------------------------------------------
+
+Dato:
+- uno schema relazionale R (insieme di attributi)
+- un insieme di dipendenze funzionali F su R
+
+vogliamo trasformare R in uno o più schemi (R1, R2, ...),
+che soddisfino una certa FORMA NORMALE (non specificata),
+riducendo ridondanze e anomalie.
+
+Obiettivi tipici della decomposizione:
+- ottenere relazioni “più sane” rispetto alla forma normale scelta
+- mantenere una decomposizione SENZA PERDITA di informazione (lossless)
+- (quando possibile) preservare le dipendenze funzionali
+
+------------------------------------------------------------
+2. IDEA GENERALE DELLA DECOMPOSIZIONE
+------------------------------------------------------------
+
+Principio chiave:
+
+    Se una dipendenza funzionale X → Y “causa” una violazione
+    della forma normale obiettivo in R,
+    allora quella dipendenza va isolata in una relazione separata.
+
+In questo modo:
+- la parte “Y determinata da X” viene separata
+- la violazione non “contamina” tutto lo schema
+
+Nota:
+Qui “violazione” è intesa in modo astratto:
+dipende dalla forma normale scelta (2NF/3NF/BCNF, ecc.),
+ma l’azione correttiva generale è sempre: isolare X → Y.
+
+------------------------------------------------------------
+3. PASSO 0 — PULIZIA INIZIALE (CONSIGLIATA)
+------------------------------------------------------------
+
+Prima di decomporre è utile:
+
+1) calcolare una COPERTURA MINIMALE Fm di F
+2) (se serve per riconoscere violazioni) individuare le CHIAVI CANDIDATE di R
+
+Motivo:
+- dipendenze ridondanti o “sporche” rendono più difficile capire
+  quali siano le vere cause strutturali delle anomalie.
+
+------------------------------------------------------------
+4. ALGORITMO GENERALE DI DECOMPOSIZIONE
+------------------------------------------------------------
+
+MENTRE (while) esiste una dipendenza funzionale in F (o in Fm)
+che viola la forma normale obiettivo nello schema corrente:
+
+    1) scegli una dipendenza “violante”:
+           X → Y
+
+    2) decomponi lo schema corrente R in due schemi:
+           R1 = X ∪ Y
+           R2 = R − (Y − X)
+
+       (equivalentemente, puoi leggere R2 come:
+           R2 = (R − Y) ∪ X
+        cioè: togli Y dal resto, ma rimetti X come collegamento)
+
+    3) prosegui l’analisi separatamente su R1 e R2
+
+FINE
+
+Nota importante:
+Dopo una decomposizione, non lavori più con “F su R” in blocco,
+ma con le dipendenze rilevanti per ogni sottoschema.
+Intuitivamente: in R1 consideri le DF che riguardano attributi di R1,
+in R2 quelle che riguardano attributi di R2.
+
+------------------------------------------------------------
+5. PERCHÉ NELLA FORMULA COMPARE (Y − X)?
+------------------------------------------------------------
+
+Nella decomposizione si usa:
+
+    R1 = X ∪ Y
+    R2 = R − (Y − X)
+
+e NON si usa:
+
+    R2 = R − Y
+
+Perché?
+
+RISPOSTA INTUITIVA:
+- X deve comparire in ENTRAMBE le relazioni,
+  altrimenti non esiste un “ponte” per ricostruire i dati tramite join.
+- X è il collante: permette di collegare il pezzo che hai isolato (R1)
+  con il resto (R2).
+
+RISPOSTA FORMALMENTE CORRETTA (lossless join):
+- Con la decomposizione standard vale:
+      R1 ∩ R2 = X
+- In R1 vale la dipendenza X → Y, quindi in R1 X determina tutti gli attributi:
+  X è una (super)chiave di R1.
+- Una condizione classica sufficiente per il join senza perdita è:
+      (R1 ∩ R2) → R1     oppure     (R1 ∩ R2) → R2
+  Qui (R1 ∩ R2) = X e X → R1 vale, quindi la decomposizione è lossless.
+
+Se togliessi anche X da R2 (togliendo tutto Y),
+romperesti questa proprietà: il join non ricostruirebbe R.
+
+------------------------------------------------------------
+6. ESEMPIO CONCRETO (CORRETTO vs SBAGLIATO)
+------------------------------------------------------------
+
+Sia:
+
+    R(A, B, C, D)
+    chiave candidata: {A,C}
+    F contiene la dipendenza: A → B
+
+Decomposizione CORRETTA (isolamento di A → B):
+
+    R1(A, B)
+    R2(A, C, D)
+
+- In R1, A determina B (la dipendenza è “isolata”).
+- A compare anche in R2: serve come collegamento per il join.
+
+Decomposizione SBAGLIATA (se togliessi tutto Y, quindi anche X dal resto):
+
+    R1(A, B)
+    R2(C, D)
+
+In questo caso:
+- A non è più presente in R2
+- non esiste più una parte comune tra R1 e R2
+- il join naturale R1 ⋈ R2 NON può ricostruire R (si perde informazione)
+
+------------------------------------------------------------
+7. IDEA CHIAVE DA RICORDARE
+------------------------------------------------------------
+
+    Non si decompone “a caso”:
+    si decompone SEMPRE in risposta a una violazione individuata.
+
+Quando isoli una dipendenza X → Y:
+
+    - metti insieme X e Y (R1 = X ∪ Y)
+    - togli dal resto solo ciò che dipende da X (togli Y − X, non X)
+
+Frase utile:
+    “X (la premessa della DF X → Y) non è l’informazione che stiamo spostando:
+     X è il filo che tiene tutto insieme.”

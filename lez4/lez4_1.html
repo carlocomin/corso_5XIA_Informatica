@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_1 · Dipendenze funzionali: richiamo e obiettivi</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "../programma.html"; }
+    function nextSlide(){ window.location.href = "lez4_2.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Dipendenze funzionali: richiamo e obiettivi</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Obiettivi della sequenza</h2>
+        <div class="box">
+          <ul>
+            <li>Usare le <strong>dipendenze funzionali</strong> come “regole del dominio” per ragionare su ridondanze e anomalie.</li>
+            <li>Calcolare <strong>chiusure</strong> (<code>X⁺</code>) e usare il criterio <code>Y ⊆ X⁺</code> per verificare implicazioni.</li>
+            <li>Costruire una <strong>copertura minimale</strong> (pulizia delle DF).</li>
+            <li>Capire l’algoritmo generale di <strong>decomposizione lossless</strong> e il ruolo di <code>R2 = R − (Y − X)</code>.</li>
+            <li>Arrivare a <strong>3NF</strong> e <strong>BCNF</strong>, includendo il tema cruciale della <strong>dependency preservation</strong>.</li>
+          </ul>
+        </div>
+
+        <h2>Dipendenza funzionale (DF)</h2>
+        <div class="box">
+          <p>In uno schema <code>R</code>, una dipendenza funzionale</p>
+          <p class="ok" style="display:block"><code>X → Y</code></p>
+          <p>significa che <strong>a ogni valore degli attributi</strong> <code>X</code> corrisponde <strong>un solo valore</strong> degli attributi <code>Y</code>.</p>
+          <div class="note">Lettura: “<code>X</code> determina univocamente <code>Y</code>”.</div>
+          <p class="note">Intuizione: se “conosco <code>X</code>”, allora <code>Y</code> non può “cambiare a sorpresa”. Se vedo due righe con lo stesso <code>X</code>, devono avere anche lo stesso <code>Y</code>.</p>
+
+          <div class="note" style="display:block; margin-top:.6rem"><strong>Definizione formale (su un'istanza)</strong></div>
+          <p>Sia <code>r</code> un'istanza (insieme di tuple) di <code>R</code>. La DF <code>X → Y</code> vale in <code>r</code> se:</p>
+          <pre><code class="language-text">∀ t1, t2 ∈ r:
+  t1[X] = t2[X]  ⇒  t1[Y] = t2[Y]</code></pre>
+          <p class="note">Qui <code>t[X]</code> indica la proiezione della tupla <code>t</code> sugli attributi <code>X</code>.</p>
+        </div>
+
+        <h2>Esempi rapidi</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>Scenario</th><th>DF tipica</th><th>Interpretazione</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Studenti</td>
+                <td><code>Matr → Nome, Cognome</code></td>
+                <td>la matricola identifica lo studente</td>
+              </tr>
+              <tr>
+                <td>Reparti</td>
+                <td><code>RepartoID → RepartoNome, Telefono</code></td>
+                <td>l’ID reparto identifica i dati del reparto</td>
+              </tr>
+              <tr>
+                <td>Catalogo prodotti</td>
+                <td><code>SKU → Prezzo</code></td>
+                <td>uno SKU ha un prezzo (in quel momento)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="warn">Le DF sono vincoli del dominio: se l’ipotesi è falsa (es. “uno SKU può avere più prezzi”), la DF non è valida.</p>
+        </div>
+
+        <h2>Notazione minima (che useremo sempre)</h2>
+        <div class="box">
+          <ul>
+            <li><code>R</code> è l’insieme degli attributi (es. <code>R(A,B,C)</code>).</li>
+            <li><code>X, Y ⊆ R</code> sono insiemi di attributi (es. <code>X={A,C}</code>).</li>
+            <li>Una DF è <span class="def">non banale</span> se <code>Y</code> <strong>non</strong> è contenuto in <code>X</code>.</li>
+          </ul>
+        </div>
+
+        <h2>Micro-verifica (1)</h2>
+        <div class="box">
+          <p><strong>Domanda</strong>: se so che <code>Matr → Nome</code>, posso concludere anche <code>Matr → Nome, Cognome</code>?</p>
+          <button id="btnMV1" onclick="toggleBox('btnMV1','ansMV1')">Mostra ▼</button>
+          <div id="ansMV1" style="display:none; margin-top:.5rem">
+            <p class="warn">Non necessariamente: per concludere <code>Matr → Nome, Cognome</code> devi avere anche <code>Matr → Cognome</code> (oppure dedurlo da altre DF).</p>
+            <p class="note">Nella prossima parte vedremo il criterio operativo con <code>X⁺</code> per rispondere in modo sistematico.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

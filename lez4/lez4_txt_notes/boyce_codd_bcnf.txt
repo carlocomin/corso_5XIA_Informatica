@@ -1,0 +1,282 @@
+FORMA NORMALE DI BOYCE-CODD (BCNF)
+Perche' a volte la 3NF non basta
+(handout per lo studio - 5BIA ITST)
+
+------------------------------------------------------------
+0. OBIETTIVO
+------------------------------------------------------------
+
+La 3NF elimina molte ridondanze, ma ammette ancora alcune dipendenze
+funzionali che possono creare ridondanza e anomalie.
+
+La BCNF (Boyce-Codd Normal Form) e' una forma normale PIU' FORTE:
+richiede che la premessa di OGNI dipendenza funzionale "vera" sia una chiave
+(piu' precisamente: una superchiave).
+
+Idea chiave:
+  3NF: alcune DF con premessa non-chiave sono tollerate se il determinato e' prime.
+  BCNF: nessuna tolleranza -> se c'e' una DF non banale X -> Y, allora X deve essere superchiave.
+
+
+------------------------------------------------------------
+1. RICHIAMO MINIMO (DF, CHIAVI, PRIME)
+------------------------------------------------------------
+
+DF (dipendenza funzionale):
+    X -> Y
+significa: X determina univocamente Y.
+
+Superchiave:
+    X e' superchiave di R se X -> R (X determina tutti gli attributi).
+
+Chiave candidata:
+    K e' una superchiave MINIMA.
+
+Attributo prime:
+    A e' prime se compare in almeno una chiave candidata.
+
+DF non banale:
+    X -> Y e' non banale se Y non e' contenuto in X.
+
+
+------------------------------------------------------------
+2. ESEMPIO LIMPIDO: IN 3NF MA NON IN BCNF (ANCORA RIDONDANZA)
+------------------------------------------------------------
+
+Schema:
+    LEZIONE(Studente, Docente, Corso)
+
+Significato (scenario realistico):
+  - Ogni studente segue un corso con un certo docente.
+  - Ogni docente insegna SEMPRE lo stesso corso (un solo corso).
+
+Dipendenze funzionali (DF):
+    (1) (Studente, Corso) -> Docente
+    (2) Docente -> Corso
+
+Calcolo delle chiavi candidate:
+  - (Studente, Corso)+ contiene Docente per (1), quindi determina tutti:
+        {Studente, Corso} e' una chiave candidata.
+  - (Studente, Docente)+ contiene Corso per (2), poi con (Studente, Corso) ottengo Docente:
+        {Studente, Docente} e' una chiave candidata.
+
+Quindi gli attributi prime sono:
+    Studente, Docente, Corso
+(tutti compaiono in qualche chiave candidata).
+
+Perche' e' in 3NF?
+  Considera la DF (2) Docente -> Corso:
+    - Docente NON e' superchiave (da Docente non ricavi Studente).
+    - pero' Corso e' PRIME.
+  Quindi la 3NF la accetta (vale la condizione: "RHS prime").
+
+Perche' NON e' in BCNF?
+  In BCNF, per ogni DF non banale X -> Y deve valere:
+      X superchiave.
+  Ma nella DF (2) la premessa e' Docente, che non e' superchiave.
+  Quindi violazione di BCNF.
+
+Ridondanza (istanza):
+
+    Studente   Docente    Corso
+    --------   -------    -----
+    Ada        Rossi      BasiDati
+    Bruno      Rossi      BasiDati
+    Chiara     Verdi      Reti
+    Diego      Rossi      BasiDati
+
+Ridondanza evidente:
+  - per ogni studente con docente Rossi ripeto sempre "BasiDati".
+  - e' la DF Docente -> Corso che "costringe" la ripetizione.
+
+Anomalie:
+  - Aggiornamento: se Rossi cambia corso, devo cambiare tutte le tuple con Rossi.
+  - Inserimento: per registrare che "Rossi insegna BasiDati" devo avere almeno uno studente.
+  - Cancellazione: se cancello l'ultimo studente con Rossi, perdo l'informazione su quale corso insegna Rossi.
+
+
+------------------------------------------------------------
+3. DEFINIZIONE RIGOROSA DI BCNF
+------------------------------------------------------------
+
+Una relazione R e' in BCNF se, per OGNI dipendenza funzionale non banale
+    X -> Y
+implicata da F (cioe' in F+), vale:
+
+    X e' una superchiave di R.
+
+Equivalente (spesso usata):
+  basta controllare DF del tipo X -> A (A singolo attributo).
+
+
+------------------------------------------------------------
+4. SIGNIFICATO INTUITIVO DELLA BCNF
+------------------------------------------------------------
+
+Intuizione:
+  "Le uniche dipendenze funzionali ammesse sono quelle dove la premessa
+   identifica (almeno) una tupla."
+
+In altre parole:
+  se un insieme di attributi X determina qualcosa, allora X deve essere
+  abbastanza "forte" da identificare l'intera riga (superchiave).
+
+La BCNF e' quindi un modo molto diretto per eliminare ridondanze dovute a DF:
+  nessun attributo (o gruppo) "non-chiave" deve determinare altri attributi.
+
+
+------------------------------------------------------------
+5. DECOMPOSIZIONE IN BCNF (ALGORITMO)
+------------------------------------------------------------
+
+Se R NON e' in BCNF, esiste una DF non banale X -> Y in F+ con:
+    X NON superchiave.
+
+Decomposizione standard (lossless join):
+    R1 = X union Y
+    R2 = R - (Y - X)
+
+Fatti importanti:
+  - La decomposizione e' SENZA PERDITA (lossless), perche' in R1 vale X -> Y,
+    quindi X e' superchiave di R1 e fa da "collante" nel join.
+  - La decomposizione in BCNF NON garantisce sempre la preservazione
+    delle dipendenze (dependency preservation).
+
+
+------------------------------------------------------------
+6. BCNF SULL'ESEMPIO LEZIONE (COME SI SISTEMA)
+------------------------------------------------------------
+
+La DF che viola BCNF e' (2):
+    Docente -> Corso
+
+Decomposizione:
+  R1(Docente, Corso)
+  R2(Studente, Docente)
+
+Ora:
+  - In R1, Docente e' chiave (Docente -> Corso), quindi R1 e' in BCNF.
+  - In R2 non ci sono DF non banali "problematiche" (a parte quelle con superchiavi),
+    quindi R2 e' in BCNF.
+  - Ridondanza sparita: l'associazione Docente-Corso compare una sola volta in R1.
+
+
+------------------------------------------------------------
+7. RELAZIONE TRA BCNF E 3NF
+------------------------------------------------------------
+
+Teorema:
+    Se R e' in BCNF allora R e' in 3NF.
+
+Dimostrazione (diretta):
+  Prendi una DF non banale X -> A in F+.
+  Se R e' in BCNF, allora X e' una superchiave.
+  Ma la 3NF richiede che, per ogni DF non banale X -> A, valga:
+      (i) X superchiave  oppure  (ii) A prime.
+  Qui vale (i). Quindi tutte le DF soddisfano la 3NF.
+  QED.
+
+Non vale il viceversa:
+  l'esempio LEZIONE e' in 3NF ma non in BCNF.
+
+Catena di implicazioni:
+    BCNF  ==>  3NF  ==>  2NF  ==>  1NF
+e nessuna implicazione inversa e' vera in generale.
+
+
+------------------------------------------------------------
+8. UN ALTRO CONTROESEMPIO (3NF MA NON BCNF)
+------------------------------------------------------------
+
+Schema:
+    R(A, B, C)
+DF:
+    A -> B
+    B -> A
+
+Chiavi candidate:
+    {A, C} e {B, C}
+Quindi A e B sono PRIME (compaiono in qualche chiave candidata).
+
+La DF A -> B:
+  - A NON e' superchiave (non determina C)
+  - pero' B e' PRIME
+Quindi 3NF ok, BCNF no.
+
+Ridondanza tipica:
+  per ogni valore di A, il valore di B e' forzato e si ripete su molte tuple (varia C).
+
+
+------------------------------------------------------------
+9. NOTA CRITICA: BCNF VS PRESERVAZIONE DELLE DIPENDENZE
+------------------------------------------------------------
+
+La BCNF e' "piu' pulita" contro le ridondanze, ma puo' costringere
+a decomposizioni che NON preservano tutte le DF.
+
+Che cosa significa "preservare le dipendenze" (dependency preservation)?
+  Data una decomposizione di R in (R1, R2, ..., Rn), diciamo che essa
+  PRESERVA le DF di F se ogni vincolo funzionale di interesse puo' essere
+  controllato imponendo DF SOLO sulle singole relazioni R1, R2, ..., Rn,
+  senza dover ricostruire R con un join.
+
+  Formalmente (idea standard):
+    - per ogni Ri si considerano le DF "visibili" su Ri (proiezione di F+ su Ri)
+    - se l'unione di queste DF implica tutte le DF originali, allora la
+      decomposizione e' dependency-preserving
+
+Perche' puo' fallire in BCNF?
+  L'algoritmo di decomposizione in BCNF garantisce (in genere) il join senza perdita,
+  ma quando "spacchi" una relazione, puoi distribuire gli attributi di una DF
+  su tabelle diverse: in quel caso la DF non e' piu' verificabile localmente.
+
+Esempio classico:
+    R(A, B, C)
+    F = { AB -> C,  C -> B }
+
+In R, C -> B viola BCNF (C non e' superchiave).
+Decomponendo su C -> B:
+    R1(C, B)
+    R2(A, C)
+
+Osservazione (il punto cruciale):
+  La DF AB -> C parla contemporaneamente di A, B e C.
+  Dopo la decomposizione:
+    - in R1 ci sono solo (C, B)  -> manca A
+    - in R2 ci sono solo (A, C)  -> manca B
+  Quindi AB -> C NON e' controllabile "dentro" una singola tabella.
+
+Controesempio concreto (mostra che la DF puo' perdersi):
+  Considera le seguenti istanze (che rispettano i vincoli locali):
+
+    r1(C, B) = { (c1, b1), (c2, b1) }
+      - qui vale C -> B (ogni C ha un solo B)
+
+    r2(A, C) = { (a1, c1), (a1, c2) }
+      - su (A, C) non c'e' nessuna DF non banale obbligatoria derivabile da F
+
+  Join naturale r1 ⋈ r2 produce:
+    (a1, b1, c1) e (a1, b1, c2)
+  Qui AB -> C e' VIOLATA, perche' la coppia (a1, b1) determina due valori diversi di C.
+
+Conclusione:
+  La decomposizione e' lossless (si ricostruisce R come join),
+  ma NON e' dependency-preserving: potresti avere database che soddisfa
+  tutte le DF "locali" su R1 e R2, ma viola una DF globale su R.
+
+Conseguenza pratica:
+  a volte si preferisce una decomposizione in 3NF (lossless e dependency-preserving)
+  invece che spingersi fino a BCNF, se si vuole far rispettare le DF senza join.
+
+
+------------------------------------------------------------
+10. CHECKLIST OPERATIVA (COME RICONOSCERE UNA VIOLAZIONE BCNF)
+------------------------------------------------------------
+
+Per ogni DF non banale X -> Y (meglio: X -> A):
+  - calcola se X e' superchiave (cioe' se X+ contiene tutti gli attributi di R)
+  - se NON lo e', allora la DF viola BCNF e indica una ridondanza potenziale
+
+Ricorda:
+  - in 3NF alcune DF "non-chiave" sono accettate (quando RHS e' prime)
+  - in BCNF NO: se X determina qualcosa, X deve essere superchiave

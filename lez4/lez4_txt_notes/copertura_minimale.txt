@@ -1,0 +1,262 @@
+DIPENDENZE FUNZIONALI
+CHIUSURA, COPERTURA MINIMALE E VERIFICA DI EQUIVALENZA
+(handout per lo studio)
+
+------------------------------------------------------------
+1. DIPENDENZE FUNZIONALI (richiamo)
+------------------------------------------------------------
+
+In uno schema relazionale, una dipendenza funzionale
+
+    X → Y
+
+significa che:
+a ogni valore degli attributi X corrisponde UN SOLO valore
+degli attributi Y.
+
+In altre parole:
+X determina univocamente Y.
+
+------------------------------------------------------------
+2. CHIUSURA DI UN INSIEME DI ATTRIBUTI: X⁺ (rispetto a F)
+------------------------------------------------------------
+
+Dato:
+- uno schema R
+- un insieme di dipendenze funzionali F
+- un insieme di attributi X ⊆ R
+
+la chiusura di X rispetto a F, indicata con X⁺, è:
+
+    l’insieme di TUTTI gli attributi che posso determinare
+    a partire da X usando le dipendenze in F.
+
+Nota:
+scrivere “X⁺” sottintende sempre “rispetto a F”.
+
+------------------------------------------------------------
+2B. DUE “CHIUSURE” DIVERSE: X⁺ e F⁺ (attenzione alla notazione)
+------------------------------------------------------------
+
+Esistono due concetti distinti che spesso vengono indicati
+entrambi con la parola “chiusura”:
+
+A) Chiusura di un insieme di attributi: X⁺ (rispetto a F)
+B) Chiusura di un insieme di dipendenze: F⁺
+
+Sono collegate, ma NON sono la stessa cosa.
+
+
+------------------------------------------------------------
+2B. CHIUSURA DI UN INSIEME DI DIPENDENZE: F⁺
+------------------------------------------------------------
+
+Dato:
+- uno schema R
+- un insieme di dipendenze funzionali F
+
+F⁺ è:
+
+    l’insieme di TUTTE le dipendenze funzionali
+    logicamente implicate da F (assiomi di Armstrong).
+
+F⁺ è in genere enorme: NON si enumera in pratica.
+
+PONTE IMPORTANTE (caratterizzazione operativa):
+Una dipendenza X → Y è implicata da F se e solo se:
+
+    Y ⊆ X⁺   (dove X⁺ è calcolata rispetto a F)
+
+Quindi:
+- X⁺ è lo strumento operativo (calcolo)
+- F⁺ è l’oggetto globale (tutte le conseguenze)
+
+------------------------------------------------------------
+3. COPERTURA MINIMALE: IDEA E DEFINIZIONE
+------------------------------------------------------------
+
+Una copertura minimale (o copertura canonica) serve a
+“ripulire” l’insieme di dipendenze eliminando ridondanze.
+
+Intuizione:
+    stessa informazione, forma più semplice.
+
+Definizione:
+Un insieme Fm è una copertura minimale di F se:
+
+1) Equivalenza:
+       Fm⁺ = F⁺
+
+2) Conseguente singolo:
+       ogni FD è della forma X → A (A attributo singolo)
+
+3) Premesse minimali:
+       in nessuna X → A esiste b ∈ X tale che
+       (X − {b}) → A sia ancora implicata
+
+4) Nessuna FD ridondante:
+       nessuna FD può essere eliminata senza cambiare la chiusura
+
+Nota:
+La copertura minimale NON è unica.
+
+------------------------------------------------------------
+4. REGOLE DI SEMPLIFICAZIONE (TRASFORMAZIONI “SOUND”)
+------------------------------------------------------------
+
+Per ottenere una copertura minimale si applicano tre
+trasformazioni standard. Sono dette “sound” perché:
+
+    NON cambiano il contenuto informativo:
+    preservano le implicazioni logiche (la chiusura).
+
+Questo è il motivo per cui, applicandole correttamente,
+si ottiene automaticamente Fm⁺ = F⁺.
+
+------------------------------------------------------------
+4.1 REGOLA 1: SCOMPOSIZIONE DEL CONSEGUENTE (RHS singolo)
+------------------------------------------------------------
+
+Se hai una dipendenza con più attributi a destra:
+
+    X → (A B C)
+
+la sostituisci con:
+
+    X → A
+    X → B
+    X → C
+
+Perché è sound?
+- Da X → ABC segue X → A, X → B, X → C.
+- Viceversa, se X → A, X → B, X → C allora X → ABC.
+
+Quindi l’informazione non cambia, cambia solo la forma.
+
+------------------------------------------------------------
+4.2 REGOLA 2: ELIMINAZIONE DI ATTRIBUTI SUPERFLUI A SINISTRA
+------------------------------------------------------------
+
+Considera una FD (con RHS singolo):
+
+    X → A
+
+Un attributo b ∈ X è SUPERFLUO (extraneous) se
+puoi eliminarlo dalla premessa senza perdere la dipendenza:
+
+    (X − {b}) → A
+
+Come si verifica in pratica (metodo operativo):
+- calcola (X − {b})⁺ rispetto all’insieme corrente di FD
+- se A ∈ (X − {b})⁺ allora b è superfluo e lo elimini
+
+Perché è sound?
+- Se A è già determinabile da X − {b}, allora b non aggiunge
+  potere determinante: la dipendenza resta vera senza b.
+
+------------------------------------------------------------
+4.3 REGOLA 3: ELIMINAZIONE DI DIPENDENZE RIDONDANTI
+------------------------------------------------------------
+
+Considera una FD (RHS singolo):
+
+    X → A
+
+È RIDONDANTE se è già implicata dalle altre dipendenze.
+
+Come si verifica in pratica:
+- considera F' = F \ {X → A}
+- calcola X⁺ rispetto a F'
+- se A ∈ X⁺ allora X → A è implicata da F' e quindi è ridondante
+
+Perché è sound?
+- Se le altre dipendenze implicano già X → A, eliminarla
+  non cambia ciò che si può dedurre (non cambia la chiusura).
+
+------------------------------------------------------------
+5. PROCEDURA STANDARD PER COSTRUIRE Fm
+------------------------------------------------------------
+
+1) porta tutte le FD a RHS singolo (Regola 1)
+2) elimina attributi superflui a sinistra (Regola 2)
+3) elimina dipendenze ridondanti (Regola 3)
+
+Ripeti finché non ci sono ulteriori semplificazioni.
+
+RISULTATO:
+l’insieme finale è una copertura minimale (o comunque
+una copertura “molto ridotta” se non si spinge fino in fondo).
+
+------------------------------------------------------------
+6. PERCHÉ “NON SERVE” CONTROLLARE Fm⁺ = F⁺
+------------------------------------------------------------
+
+In teoria, per dire “Fm è copertura di F” bisogna avere:
+
+    Fm⁺ = F⁺
+
+MA in pratica NON si calcola F⁺ né Fm⁺ per enumerazione.
+
+Perché possiamo fidarci?
+Perché ciascuna regola di semplificazione usata nella procedura
+è SOUND e preserva l’equivalenza.
+
+Quindi, applicando una sequenza di trasformazioni sound:
+
+    F = F0  ≡  F1  ≡  F2  ≡ ... ≡  Fk = Fm
+
+si ha automaticamente:
+
+    Fm⁺ = F⁺
+
+Questo è un’invariante del procedimento:
+ogni passo non cambia il significato, quindi nemmeno il risultato.
+
+------------------------------------------------------------
+7. COME CONTROLLARE FORMALMENTE (SE PROPRIO VOLESSI)
+------------------------------------------------------------
+
+Se vuoi comunque verificare formalmente che:
+
+    Fm⁺ = F⁺
+
+non devi enumerare tutte le dipendenze implicate (impossibile),
+né calcolare X⁺ per tutti i sottoinsiemi di attributi (2^n).
+
+Metodo efficiente (standard): doppia inclusione
+
+(1) Controlla: F ⊆ Fm⁺
+    Per ogni FD X → Y in F:
+      - calcola X⁺ rispetto a Fm
+      - verifica che Y ⊆ X⁺
+
+(2) Controlla: Fm ⊆ F⁺
+    Per ogni FD X → Y in Fm:
+      - calcola X⁺ rispetto a F
+      - verifica che Y ⊆ X⁺
+
+Se entrambi i controlli passano, allora:
+
+    Fm⁺ = F⁺
+
+Importante:
+Questo metodo richiede di calcolare chiusure SOLO
+delle premesse X presenti nelle dipendenze da controllare
+(e non di tutti i sottoinsiemi di attributi).
+
+------------------------------------------------------------
+8. ESEMPIO BREVE (idea)
+------------------------------------------------------------
+
+F = { A → BC, B → C, A → B }
+
+Regola 1 (RHS singolo):
+    { A → B, A → C, B → C }
+
+Regola 3 (ridondanza):
+A → C è implicata da A → B e B → C, quindi si elimina.
+
+Fm = { A → B, B → C }
+
+Qui Fm⁺ = F⁺ perché ogni passo ha preservato l’equivalenza.
+

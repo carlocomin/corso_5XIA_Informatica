@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_11 · 3NF: perché la 2NF non basta</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez4_10.html"; }
+    function nextSlide(){ window.location.href = "lez4_12.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>3NF: perché la 2NF non basta</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Idea chiave</h2>
+        <div class="box">
+          <p>La <strong>2NF</strong> elimina un tipo specifico di dipendenza “cattiva”:</p>
+          <p class="ok">le dipendenze <strong>parziali</strong> da una chiave composta.</p>
+          <p>Ma possono rimanere dipendenze <strong>transitive</strong> tra attributi <strong>non di chiave</strong>, che causano ancora ridondanza e anomalie.</p>
+          <p class="note">Intuizione: la tabella contiene “due cose diverse insieme” (es. impiegati e reparti), quindi finisci per ripetere i dati della cosa “più piccola” (il reparto) molte volte.</p>
+        </div>
+
+        <h2>Esempio (classico): IMPIEGATO</h2>
+        <div class="box">
+          <p>Schema:</p>
+          <p class="ok" style="display:block"><code>IMPIEGATO(EmpID, EmpNome, RepartoID, RepartoNome, RepartoTelefono)</code></p>
+          <p>Ipotesi realistiche (DF):</p>
+          <pre><code class="language-text">(1) EmpID → EmpNome, RepartoID
+(2) RepartoID → RepartoNome, RepartoTelefono</code></pre>
+          <p>Chiave candidata: <code>{EmpID}</code> (chiave singola).</p>
+          <p class="note">Con chiave singola non possono esistere dipendenze parziali ⇒ spesso 2NF è “automatica”.</p>
+        </div>
+
+        <h2>Eppure c’è ridondanza</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>EmpID</th><th>EmpNome</th><th>RepartoID</th><th>RepartoNome</th><th>RepartoTelefono</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>10</td><td>Ada</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+              <tr><td>11</td><td>Bruno</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+              <tr><td>12</td><td>Chiara</td><td>D2</td><td>IT</td><td>011-222222</td></tr>
+              <tr><td>13</td><td>Diego</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+            </tbody>
+          </table>
+          <p class="warn">I dati del reparto (<code>RepartoNome</code>, <code>RepartoTelefono</code>) si ripetono per ogni impiegato del reparto.</p>
+        </div>
+
+        <h2>Anomalie tipiche</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Aggiornamento</span>: se cambia il telefono di <code>D1</code>, devo aggiornare molte tuple. Se ne sbaglio una → inconsistenza.</li>
+            <li><span class="def">Inserimento</span>: se voglio inserire un reparto senza impiegati, non ho una tupla dove metterlo (o devo usare NULL/fittizi).</li>
+            <li><span class="def">Cancellazione</span>: se cancello l’ultimo impiegato di <code>D2</code>, perdo anche l’informazione sul reparto <code>D2</code>.</li>
+          </ul>
+        </div>
+
+        <h2>Cosa sta succedendo: dipendenza transitiva</h2>
+        <div class="box">
+          <p>Dalle DF (1) e (2) segue:</p>
+          <pre><code class="language-text">EmpID → RepartoID
+RepartoID → RepartoNome, RepartoTelefono
+--------------------------------------
+EmpID → RepartoNome, RepartoTelefono</code></pre>
+          <p class="ok">Alcuni attributi non-prime non dipendono “direttamente” dalla chiave: dipendono da un altro attributo non-prime.</p>
+          <p class="note">È esattamente il fenomeno che la 3NF vuole impedire (o controllare rigorosamente).</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

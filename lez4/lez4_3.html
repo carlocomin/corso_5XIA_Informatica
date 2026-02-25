@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_3 · X⁺ e F⁺: implicazione di dipendenze</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez4_2.html"; }
+    function nextSlide(){ window.location.href = "lez4_4.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1><code>X⁺</code> e <code>F⁺</code>: il ponte operativo</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Due concetti diversi</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>Nome</th><th>Notazione</th><th>Definizione</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Chiusura di attributi</td>
+                <td><code>X⁺</code> (rispetto a <code>F</code>)</td>
+                <td>tutti gli attributi determinabili a partire da <code>X</code> usando le DF di <code>F</code></td>
+              </tr>
+              <tr>
+                <td>Chiusura di dipendenze</td>
+                <td><code>F⁺</code></td>
+                <td>tutte le DF logicamente implicate da <code>F</code> (conseguenze)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="warn">In pratica <code>F⁺</code> può essere enorme: non lo si enumera.</p>
+          <p class="note">Intuizione: <code>F</code> è l’elenco “breve” di regole che ti danno; <code>F⁺</code> è tutto ciò che puoi dedurre combinandole in tutti i modi possibili.</p>
+        </div>
+
+        <h2>Caratterizzazione operativa (da ricordare)</h2>
+        <div class="box">
+          <p>Una DF <code>X → Y</code> è implicata da <code>F</code> <strong>se e solo se</strong>:</p>
+          <p class="ok" style="display:block"><code>Y ⊆ X⁺</code></p>
+          <p class="note">Quindi il calcolo di <code>X⁺</code> è lo strumento pratico per decidere se una DF appartiene a <code>F⁺</code>.</p>
+          <p class="note">Questo evita discussioni “a intuito”: invece di provare a indovinare, calcoli <code>X⁺</code> e hai una risposta oggettiva.</p>
+        </div>
+
+        <h2>Micro-esempio (implicazione)</h2>
+        <div class="box">
+          <p>Sia:</p>
+          <pre><code class="language-text">F = { A → B,  B → C }</code></pre>
+          <p><strong>Domanda</strong>: <code>A → C</code> è implicata?</p>
+          <button id="btnImp1" onclick="toggleBox('btnImp1','ansImp1')">Mostra ▼</button>
+          <div id="ansImp1" style="display:none; margin-top:.5rem">
+            <p>Calcolo <code>A⁺</code> rispetto a <code>F</code>:</p>
+            <ul>
+              <li>Start: <code>{A}</code></li>
+              <li><code>A→B</code> ⇒ <code>{A,B}</code></li>
+              <li><code>B→C</code> ⇒ <code>{A,B,C}</code></li>
+            </ul>
+            <p class="ok" style="display:block">Poiché <code>C ∈ A⁺</code>, allora <code>A → C</code> è implicata.</p>
+          </div>
+        </div>
+
+        <h2>Uso tipico (da oggi in poi)</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Test “implicata?”</strong>: per verificare <code>X → Y</code>, calcola <code>X⁺</code> e controlla <code>Y ⊆ X⁺</code>.</li>
+            <li><strong>Superchiavi / chiavi</strong>: <code>X</code> è superchiave se <code>X⁺</code> contiene tutti gli attributi di <code>R</code>.</li>
+            <li><strong>Copertura minimale</strong>: i test “superfluo?” e “ridondante?” si fanno calcolando chiusure.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+TERZA FORMA NORMALE (3NF)
+Perche' la 2NF non basta
+(handout per lo studio - 5BIA)
+
+------------------------------------------------------------
+0. OBIETTIVO
+------------------------------------------------------------
+
+Vogliamo capire perche' si introduce la TERZA FORMA NORMALE:
+anche dopo aver portato una relazione in SECONDA FORMA NORMALE (2NF),
+possono restare ridondanze e anomalie.
+
+L'idea chiave: la 2NF elimina solo un certo tipo di dipendenza "cattiva"
+(dipendenze PARZIALI dalla chiave). Ma possono restare dipendenze
+TRANSITIVE tra attributi non di chiave.
+
+Per questo serve la 3NF.
+
+
+------------------------------------------------------------
+1. RICHIAMO MINIMO: DF, CHIAVI, ATTRIBUTI "PRIME"
+------------------------------------------------------------
+
+Dipendenza funzionale (DF):
+    X -> Y
+significa: se due tuple coincidono su X, allora coincidono anche su Y.
+
+Superchiave:
+    X e' superchiave di R se X -> R (cioe' X determina tutti gli attributi).
+
+Chiave candidata:
+    K e' una superchiave MINIMALE (nessun suo sottoinsieme e' superchiave).
+
+Attributo prime:
+    un attributo A e' PRIME se compare in almeno una chiave candidata.
+    (Altrimenti A e' NON-PRIME.)
+
+DF non banale:
+    X -> A e' non banale se A non e' contenuto in X.
+
+
+------------------------------------------------------------
+2. COSA GARANTISCE LA SECONDA FORMA NORMALE (2NF)
+------------------------------------------------------------
+
+Una relazione R e' in 2NF se:
+  - e' in 1NF
+  - e non esiste una DF "parziale" del tipo:
+        S -> A
+    dove:
+        S e' un sottoinsieme PROPRIO di una chiave candidata K
+        A e' un attributo NON-PRIME
+
+Intuizione:
+    se la chiave e' composta (K = {k1,k2,...}), nessun attributo non-prime
+    deve dipendere solo da "un pezzo" della chiave.
+
+Nota importantissima:
+    se una relazione ha una chiave candidata di UN SOLO attributo,
+    allora NON puo' avere dipendenze parziali (perche' non c'e' un "pezzo"
+    proprio della chiave). Quindi spesso e' automaticamente in 2NF.
+    Ma puo' NON essere in 3NF.
+
+
+------------------------------------------------------------
+3. ESEMPIO CHIARO: 2NF MA ANCORA RIDONDANZA (E ANOMALIE)
+------------------------------------------------------------
+
+Schema:
+    IMPIEGATO(EmpID, EmpNome, RepartoID, RepartoNome, RepartoTelefono)
+
+Ipotesi realistiche (DF):
+    (1) EmpID -> EmpNome, RepartoID
+    (2) RepartoID -> RepartoNome, RepartoTelefono
+
+Chiavi candidate:
+    {EmpID}  (e' una chiave "singola")
+
+Perche' IMPIEGATO e' in 2NF?
+    Perche' la chiave candidata e' {EmpID}. Non esistono sottoinsiemi
+    propri non vuoti di {EmpID}, quindi non possono esistere dipendenze
+    parziali di attributi non-prime da una parte della chiave.
+
+Eppure c'e' ridondanza (esempio di istanza):
+
+    EmpID  EmpNome  RepartoID  RepartoNome  RepartoTelefono
+    -----  -------  ---------  -----------  --------------
+    10     Ada      D1         Vendite      011-111111
+    11     Bruno    D1         Vendite      011-111111
+    12     Chiara   D2         IT           011-222222
+    13     Diego    D1         Vendite      011-111111
+
+Ridondanza evidente:
+    RepartoNome e RepartoTelefono si ripetono per ogni impiegato del reparto.
+
+Anomalie tipiche (perche' e' un problema):
+  - Anomalia di aggiornamento:
+      se cambia il telefono di D1, devo aggiornare TUTTE le tuple
+      degli impiegati di D1. Se ne dimentico una, creo inconsistenza.
+
+  - Anomalia di inserimento:
+      se voglio inserire un nuovo reparto D3 (nome e telefono) ma non ho
+      ancora impiegati in D3, non posso rappresentarlo in questa tabella
+      (a meno di valori nulli/fittizi su EmpID, EmpNome).
+
+  - Anomalia di cancellazione:
+      se l'ultimo impiegato del reparto D2 lascia l'azienda e cancello
+      la sua tupla, perdo anche l'informazione sul reparto D2.
+
+Conclusione:
+    la 2NF NON ha eliminato la ridondanza. Serve un vincolo piu' forte.
+
+
+------------------------------------------------------------
+4. COSA STA SUCCEDENDO: DIPENDENZA TRANSITIVA DALLA CHIAVE
+------------------------------------------------------------
+
+Dalle DF (1) e (2) segue una dipendenza transitiva:
+
+    EmpID -> RepartoID
+    RepartoID -> RepartoNome, RepartoTelefono
+    ----------------------------------------
+    EmpID -> RepartoNome, RepartoTelefono   (transitiva)
+
+Quindi alcuni attributi non-prime (RepartoNome, RepartoTelefono)
+NON dipendono "direttamente" dalla chiave: dipendono da un altro attributo
+non-prime (RepartoID).
+
+Questo e' esattamente cio' che la 3NF vuole evitare.
+
+
+------------------------------------------------------------
+5. TERZA FORMA NORMALE (3NF): DEFINIZIONE RIGOROSA
+------------------------------------------------------------
+
+Una relazione R e' in TERZA FORMA NORMALE (3NF) se, per OGNI DF non banale
+    X -> A
+implicata da F (cioe' in F+), vale almeno una delle seguenti condizioni:
+
+  (i)  X e' una superchiave di R
+  (ii) A e' un attributo prime (appartiene a qualche chiave candidata)
+
+Questa e' la definizione standard (basata su "superchiave" e "prime").
+
+Osservazione importante:
+  la definizione si applica a QUALUNQUE DF non banale X -> A (in F+),
+  anche quando la premessa X e' "mista", cioe' contiene sia attributi prime
+  sia non-prime. In particolare:
+    - se X NON e' superchiave, allora per essere in 3NF e' necessario che
+      l'attributo determinato A sia PRIME (non basta che X contenga prime).
+
+
+------------------------------------------------------------
+6. SIGNIFICATO INTUITIVO DELLA 3NF
+------------------------------------------------------------
+
+Intuizione operativa:
+    un attributo NON-PRIME deve dipendere SOLO dalla chiave
+    (e non da altri attributi non-prime).
+
+Frase mnemonica (utile ma da interpretare con attenzione):
+    "gli attributi non di chiave dipendono dalla chiave, da tutta la chiave
+     e da nient'altro che la chiave".
+
+La 2NF copre "tutta la chiave" (niente dipendenze parziali).
+La 3NF aggiunge "nient'altro che la chiave" (niente dipendenze transitive
+che introducono ridondanza).
+
+
+------------------------------------------------------------
+7. COME SI RISOLVE L'ESEMPIO: DECOMPOSIZIONE (IDEA)
+------------------------------------------------------------
+
+Nell'esempio IMPIEGATO, la DF che introduce ridondanza e':
+    RepartoID -> RepartoNome, RepartoTelefono
+
+La correzione naturale e' separare l'entita' REPARTO:
+
+    IMPIEGATO(EmpID, EmpNome, RepartoID)
+    REPARTO(RepartoID, RepartoNome, RepartoTelefono)
+
+Ora:
+  - i dati del reparto compaiono UNA SOLA VOLTA in REPARTO
+  - IMPIEGATO contiene solo il collegamento (RepartoID)
+  - le anomalie di aggiornamento/inserimento/cancellazione spariscono
+
+
+------------------------------------------------------------
+8. ALTRI ESEMPI CHIARIFICATORI (RAPIDI)
+------------------------------------------------------------
+
+Esempio A (2NF ma non 3NF):
+    ORDINE(OrdineID, ClienteID, ClienteNome, ClienteCitta)
+DF:
+    OrdineID -> ClienteID
+    ClienteID -> ClienteNome, ClienteCitta
+Chiave candidata: {OrdineID}
+Ridondanza: dati del cliente ripetuti per ogni ordine dello stesso cliente.
+
+Esempio B (tipico caso editori/libri):
+    LIBRO(ISBN, Titolo, EditoreID, EditoreNome)
+DF:
+    ISBN -> Titolo, EditoreID
+    EditoreID -> EditoreNome
+Chiave candidata: {ISBN}
+Ridondanza: EditoreNome ripetuto per tutti i libri dello stesso editore.
+
+In entrambi i casi:
+    la chiave e' singola => 2NF "automaticamente"
+    ma restano dipendenze transitive => violazione della 3NF
+
+
+------------------------------------------------------------
+9. TEOREMA: 3NF ==> 2NF (DIMOSTRAZIONE)
+------------------------------------------------------------
+
+Teorema:
+    Se uno schema R e' in 3NF, allora e' anche in 2NF.
+
+Dimostrazione (per assurdo):
+    Supponiamo R in 3NF ma NON in 2NF.
+    Allora, per definizione di 2NF, esistono:
+      - una chiave candidata K di R
+      - un sottoinsieme proprio S di K (S subset K)
+      - un attributo A NON-PRIME
+    tali che vale la DF:
+        S -> A
+
+    Poiche' K e' una chiave candidata, e' una superchiave MINIMALE.
+    Se S fosse una superchiave, allora K non sarebbe minimale (perche' S subset K
+    e determinerebbe tutti gli attributi), contraddizione.
+    Quindi:
+        S NON e' una superchiave.
+
+    Riassunto sulla DF S -> A:
+      - S non e' superchiave
+      - A non e' prime
+      - S -> A e' non banale (altrimenti A sarebbe in S)
+
+    Ma allora la DF S -> A viola la definizione di 3NF
+    (non vale ne' (i) ne' (ii)).
+
+    Contraddizione. Quindi se R e' in 3NF allora R e' in 2NF. QED.
+
+
+------------------------------------------------------------
+10. NON VALE IL VICEVERSA: 2NF -/-> 3NF (CONTROESEMPIO)
+------------------------------------------------------------
+
+Lo schema IMPIEGATO del punto 3 e' un controesempio:
+
+    IMPIEGATO(EmpID, EmpNome, RepartoID, RepartoNome, RepartoTelefono)
+DF:
+    EmpID -> EmpNome, RepartoID
+    RepartoID -> RepartoNome, RepartoTelefono
+Chiave candidata: {EmpID}
+
+E' in 2NF:
+    chiave singola => nessuna dipendenza parziale possibile.
+
+Ma NON e' in 3NF:
+    esiste la DF RepartoID -> RepartoNome (e anche RepartoTelefono)
+    dove RepartoID NON e' superchiave di IMPIEGATO e RepartoNome NON e' prime.
+    Quindi la definizione di 3NF e' violata.
+
+Conclusione:
+    3NF ==> 2NF, ma 2NF non implica 3NF.

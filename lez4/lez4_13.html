@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez4_13 · 3NF: decomposizione e teoremi</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez4_12.html"; }
+    function nextSlide(){ window.location.href = "lez4_14.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 4 — Normalizzazione</h2>
+    <ul>
+      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
+      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
+      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
+      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
+      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
+      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>3NF: decomposizione e risultati importanti</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+
+        <h2>Come si risolve l’esempio IMPIEGATO</h2>
+        <div class="box">
+          <p>La DF che introduce ridondanza è:</p>
+          <p class="ok" style="display:block"><code>RepartoID → RepartoNome, RepartoTelefono</code></p>
+          <p>La correzione naturale è separare l’entità <code>REPARTO</code>:</p>
+          <pre><code class="language-text">IMPIEGATO(EmpID, EmpNome, RepartoID)
+REPARTO(RepartoID, RepartoNome, RepartoTelefono)</code></pre>
+          <ul>
+            <li>I dati del reparto compaiono una sola volta in <code>REPARTO</code>.</li>
+            <li><code>IMPIEGATO</code> contiene solo il collegamento <code>RepartoID</code>.</li>
+            <li class="ok">Le anomalie di aggiornamento/inserimento/cancellazione spariscono.</li>
+          </ul>
+          <p class="note">Intuizione: sposti “i dati del reparto” in una tabella dove compaiono una sola volta per reparto, e lasci in IMPIEGATO solo l’ID che punta al reparto.</p>
+        </div>
+
+        <h2>Teorema: <code>3NF ⇒ 2NF</code></h2>
+        <div class="box">
+          <p>Se uno schema è in 3NF, allora è anche in 2NF.</p>
+          <button id="btnT1" onclick="toggleBox('btnT1','ansT1')">Mostra ▼</button>
+          <div id="ansT1" style="display:none; margin-top:.5rem">
+            <p class="def">Dimostrazione (per assurdo, in breve)</p>
+            <ol>
+              <li>Supponi <code>R</code> in 3NF ma non in 2NF.</li>
+              <li>Allora esistono una chiave candidata <code>K</code>, un sottoinsieme proprio <code>S ⊂ K</code> e un attributo <code>A</code> non-prime tali che <code>S → A</code>.</li>
+              <li><code>S</code> non può essere superchiave (altrimenti <code>K</code> non sarebbe minimale).</li>
+              <li>La DF <code>S → A</code> è non banale, con LHS non superchiave e RHS non-prime ⇒ viola la 3NF.</li>
+            </ol>
+            <p class="ok">Contraddizione ⇒ se è 3NF allora è 2NF.</p>
+          </div>
+        </div>
+
+        <h2>Non vale il viceversa: <code>2NF ↛ 3NF</code></h2>
+        <div class="box">
+          <p>Il controesempio è proprio <code>IMPIEGATO</code>:</p>
+          <ul>
+            <li>chiave singola <code>{EmpID}</code> ⇒ niente dipendenze parziali ⇒ 2NF</li>
+            <li>ma c’è <code>RepartoID → RepartoNome</code> con LHS non superchiave e RHS non-prime ⇒ non 3NF</li>
+          </ul>
+          <p class="warn">Conclusione: 2NF non basta per eliminare tutte le ridondanze.</p>
+        </div>
+
+        <h2>Catena di implicazioni (utile da ricordare)</h2>
+        <div class="box">
+          <p class="ok" style="display:block"><code>BCNF ⇒ 3NF ⇒ 2NF ⇒ 1NF</code></p>
+          <p class="note">Le implicazioni inverse non valgono in generale.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
