@@ -9,7 +9,7 @@
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "../programma.html"; }
+    function prevSlide(){ if (history.length > 1) { history.back(); } else { window.location.href = "../programma.html"; } }
     function nextSlide(){ window.location.href = "lez1_2.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
@@ -46,8 +46,6 @@
       <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
       <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
       <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
-      <li><a href="lez1_7.html">Lez1.7: Modellazione di esempio</a></li>
-      <li><a href="lez1_8.html">Lez1.8: Riepilogo & micro-verifica</a></li>
     </ul>
   </div>
   <!-- END MENU -->
