@@ -25,7 +25,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -46,26 +46,24 @@
     <div class="content-box">
       <div class="inner-box">
         <p class="note">
-          Una selezione delle funzioni più usate sugli array in PHP. Ogni blocco riporta
-          cosa fa la funzione, l'esempio di codice e la spiegazione dell'output.
+          Queste funzioni sono prima di tutto strumenti generali di PHP. In questo modulo le useremo sia negli esercizi introduttivi sia, piu avanti, su input gia validati e risultati di query.
         </p>
 
         <div class="box">
           <h2>array_sum(array $valori): somma di tutti gli elementi</h2>
-          <p>Converte automaticamente stringhe numeriche in numero e ignora valori non numerici.</p>
+          <p>Utile quando devi sommare valori numerici gia raccolti in un array.</p>
           <pre><code class="language-php">&lt;?php
 $prezzi = [9.99, 14.50, 3];
 $totale = array_sum($prezzi);
 
 echo "Totale carrello: €" . number_format($totale, 2, ',', '.');
-// Output: Totale carrello: €27,49
 ?&gt;</code></pre>
-          <p class="note">Somma i tre valori e formatta il totale con due decimali e separatore italiano.</p>
+          <p class="note">Negli esercizi puo servire per somme e medie; con una query potresti usarla dopo aver estratto una colonna numerica.</p>
         </div>
 
         <div class="box">
           <h2>array_map(callable $f, array $a): applica una funzione a tutti gli elementi</h2>
-          <p>Utile per trasformazioni senza scrivere cicli espliciti.</p>
+          <p>Utile per trasformazioni senza scrivere ogni volta un ciclo esplicito.</p>
           <pre><code class="language-php">&lt;?php
 $voti = [18, 23, 30];
 $stati = array_map(function($voto) {
@@ -73,21 +71,13 @@ $stati = array_map(function($voto) {
 }, $voti);
 
 print_r($stati);
-/* Output:
-Array
-(
-    [0] =&gt; Promosso
-    [1] =&gt; Promosso
-    [2] =&gt; Promosso
-)
-*/
 ?&gt;</code></pre>
-          <p class="note">La funzione anonima riceve ogni voto e restituisce una stringa; <code>array_map</code> crea il nuovo array.</p>
+          <p class="note">La stessa idea puo servire per formattare nomi o etichette letti da MySQL prima di stamparli in HTML.</p>
         </div>
 
         <div class="box">
           <h2>array_filter(array $a, ?callable $f = null): filtra gli elementi</h2>
-          <p>Se la callback non è indicata, rimuove i valori “falsy” (0, stringa vuota, <code>null</code>, ecc.).</p>
+          <p>Serve a tenere solo gli elementi che rispettano una condizione.</p>
           <pre><code class="language-php">&lt;?php
 $numeri = [10, 5, 0, -2, 7];
 $positivi = array_filter($numeri, function($n) {
@@ -95,49 +85,38 @@ $positivi = array_filter($numeri, function($n) {
 });
 
 print_r($positivi);
-// Output: Array ( [0] =&gt; 10 [1] =&gt; 5 [4] =&gt; 7 )
 ?&gt;</code></pre>
-          <p class="note">Manteniamo solo i valori maggiori di zero; le chiavi originali (0,1,4) vengono preservate.</p>
+          <p class="note">Negli esempi base filtra numeri o stringhe; dopo una query puo servire per lavorare solo su una parte del risultato.</p>
         </div>
 
         <div class="box">
           <h2>in_array(mixed $needle, array $haystack): cerca un valore</h2>
-          <p>Con il terzo parametro <code>true</code> esegue il confronto stretto (tipo + valore).</p>
+          <p>Con il terzo parametro <code>true</code> esegue il confronto stretto.</p>
           <pre><code class="language-php">&lt;?php
-$tagConsentiti = ["news", "eventi", "offerte"];
-if (in_array("eventi", $tagConsentiti)) {
-  echo "Tag valido, posso salvarlo.";
+$classiConsentite = ["5BIA", "5AIA", "5CINF"];
+if (in_array("5BIA", $classiConsentite, true)) {
+  echo "Classe valida";
 }
-
-var_dump(in_array(1, ["1", 2]));        // true (confronto non stretto)
-var_dump(in_array(1, ["1", 2], true));   // false (tipo diverso)
 ?&gt;</code></pre>
-          <p class="note">Il confronto non stretto converte le stringhe numeriche; passando <code>true</code> evitiamo conversioni indesiderate.</p>
+          <p class="note">Passare <code>true</code> evita confronti ambigui quando i dati arrivano da form o query.</p>
         </div>
 
         <div class="box">
           <h2>array_merge(array ...$arrays): unisce più array</h2>
-          <p>Per le chiavi numeriche, reindicizza in sequenza; per le chiavi stringa, l'ultimo valore sovrascrive i precedenti.</p>
+          <p>Utile per unire dati base e dati aggiuntivi in un solo array.</p>
           <pre><code class="language-php">&lt;?php
-$base = ["rosso", "verde"];
-$extra = ["blu", "giallo"];
-$uniti = array_merge($base, $extra);
+$datiBase = ["nome" =&gt; "Ada"];
+$datiExtra = ["classe" =&gt; "5BIA", "email" =&gt; "ada@example.org"];
+$studente = array_merge($datiBase, $datiExtra);
 
-print_r($uniti);
-// Output: Array ( [0] =&gt; rosso [1] =&gt; verde [2] =&gt; blu [3] =&gt; giallo )
-
-$a = ["tema" =&gt; "scuro", "font" =&gt; "Arial"];
-$b = ["tema" =&gt; "chiaro", "grandezza" =&gt; 16];
-$preferenze = array_merge($a, $b);
-print_r($preferenze);
-// Output: Array ( [tema] =&gt; chiaro [font] =&gt; Arial [grandezza] =&gt; 16 )
+print_r($studente);
 ?&gt;</code></pre>
-          <p class="note">Nel primo caso gli elementi vengono accodati; nel secondo le chiavi stringa permettono di sovrascrivere le impostazioni.</p>
+          <p class="note">Con chiavi stringa, l'ultimo valore vince se una chiave e presente in entrambi gli array.</p>
         </div>
 
         <div class="box">
           <h2>array_key_exists(string|int $chiave, array $array): verifica la presenza di una chiave</h2>
-          <p>Restituisce <code>true</code> anche se il valore associato è <code>null</code>, a differenza di <code>isset()</code>.</p>
+          <p>Restituisce <code>true</code> anche se il valore associato e <code>null</code>.</p>
           <pre><code class="language-php">&lt;?php
 $utente = [
   "nome" =&gt; "Luca",
@@ -147,25 +126,37 @@ $utente = [
 var_dump(array_key_exists("ruolo", $utente)); // true
 var_dump(isset($utente["ruolo"]));             // false
 ?&gt;</code></pre>
-          <p class="note">Utile quando la chiave può esistere ma avere un valore nullo (es. campo opzionale non compilato).</p>
+          <p class="note">E utile quando un campo puo essere presente ma vuoto, per esempio dopo una validazione.</p>
         </div>
 
         <div class="box">
           <h2>Combina le funzioni per pipeline compatte</h2>
-          <p>Un esempio di analisi dati: normalizzare, filtrare e sommare in tre passaggi leggibili.</p>
+          <p>Le funzioni sugli array diventano potenti quando le combini in sequenza.</p>
           <pre><code class="language-php">&lt;?php
-$acquisti = ["10", "5.5", "", "7", "errore"];
+$righe = [
+  ['nome' =&gt; 'ada', 'classe' =&gt; '5BIA'],
+  ['nome' =&gt; 'luca', 'classe' =&gt; '4BIA']
+];
 
-$numeri = array_map('floatval', $acquisti);          // converte in numeri
-$validi  = array_filter($numeri, function($n) {
-  return $n &gt; 0;                                     // scarta 0, NaN e vuoti
+$soloQuinte = array_filter($righe, function($riga) {
+  return $riga['classe'] === '5BIA';
 });
-$totale = array_sum($validi);                        // somma solo i valori validi
+$nomi = array_map(function($riga) {
+  return strtoupper($riga['nome']);
+}, $soloQuinte);
 
-echo "Spesa totale: €" . number_format($totale, 2, ',', '.');
-// Output: Spesa totale: €22,50
+print_r($nomi);
 ?&gt;</code></pre>
-          <p class="note">Componendo <code>array_map</code>, <code>array_filter</code> e <code>array_sum</code> creiamo una pipeline senza cicli manuali.</p>
+          <p class="note">Questa logica e perfetta quando vuoi pulire o trasformare dati prima di stamparli nella view.</p>
+        </div>
+
+        <div class="box">
+          <h2>Da ricordare</h2>
+          <ul>
+            <li>Prima capisci la funzione con un array semplice.</li>
+            <li>Poi riusi la stessa idea su array piu complessi, compresi quelli letti dal database.</li>
+            <li>Se il codice diventa meno leggibile di un <code>foreach</code>, un ciclo esplicito puo restare la scelta migliore.</li>
+          </ul>
         </div>
       </div>
     </div>

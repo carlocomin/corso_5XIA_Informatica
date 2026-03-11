@@ -88,7 +88,7 @@
 
         <h2>Rappresentazione grafica</h2>
         <div class="box">
-          <p>Usiamo una notazione Chen-like con nodo ISA (triangolo). Doppia linea dal supertipo al nodo: <strong>copertura totale</strong>. Etichette <strong>D</strong>/<strong>O</strong> per disgiunta/sovrapposta.</p>
+          <p>Usiamo una notazione Chen-like con nodo ISA (triangolo). La <strong>doppia linea</strong> dal supertipo al nodo indica <strong>copertura totale</strong>. Le etichette <strong>D</strong> e <strong>O</strong> distinguono i casi disgiunti e sovrapposti.</p>
 
           <svg viewBox="0 0 820 280" width="100%" height="300" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto">
             <!-- Supertipo PERSONA -->
@@ -102,9 +102,11 @@
             <text x="410" y="112" font-size="12" text-anchor="middle" fill="#78350f">ISA</text>
 
             <!-- Doppia linea per copertura TOTALE (PERSONA ⇒ ISA) -->
-           
-            <!-- Etichetta D (disjoint) accanto al nodo -->
-            <text x="460" y="102" font-size="12" fill="#78350f">D.T.</text>
+            <line x1="404" y1="80" x2="404" y2="94" stroke="#2563eb" stroke-width="2"/>
+            <line x1="416" y1="80" x2="416" y2="94" stroke="#2563eb" stroke-width="2"/>
+
+            <!-- Etichetta del caso mostrato: disgiunta e totale -->
+            <text x="458" y="102" font-size="12" fill="#78350f">D + T</text>
 
             <!-- Sottotipo STUDENTE -->
             <rect x="150" y="200" width="160" height="50" rx="8" ry="8"
@@ -148,65 +150,39 @@ Ereditarietà di chiave:
           </code></pre>
         </div>
 
-<h2>Implicazioni progettuali</h2>
-<div class="box">
-  <ul>
-    <li>
-      <strong>Localizzazione delle proprietà</strong>:
-      <ul>
-        <li>Metti nel <em>supertipo</em> solo gli attributi/relazioni che sono <strong>veri per tutte</strong> le istanze di <code>S</code>.</li>
-        <li>Se un attributo vale solo per alcuni sottoinsiemi, spostalo nel <em>sottotipo</em> corrispondente: evita campi opzionali che diventano quasi sempre NULL.</li>
-        <li><em>Regola</em>: se un attributo ha vincoli diversi (dominio, obbligatorietà) tra sottoinsiemi, <strong>specializza</strong>.</li>
-      </ul>
-    </li>
+        <h2>Implicazioni progettuali</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Nel supertipo</strong> vanno solo attributi e relazioni che valgono per tutte le istanze.</li>
+            <li><strong>Nel sottotipo</strong> vanno gli attributi che esistono solo per una parte delle istanze o che hanno vincoli specifici.</li>
+            <li>Se la specializzazione e <strong>disgiunta</strong>, una stessa istanza non puo stare in due sottotipi diversi.</li>
+            <li>Se la specializzazione e a <strong>copertura totale</strong>, nessuna istanza del supertipo puo restare fuori da tutti i sottotipi.</li>
+            <li>La chiave del supertipo resta la chiave anche nei sottotipi: non si introducono chiavi autonome.</li>
+          </ul>
+          <p class="warn">Un solo tipo con molti campi opzionali tende a nascondere regole importanti; la specializzazione serve proprio a renderle esplicite.</p>
+        </div>
 
-    <li>
-      <strong>Collocazione dei vincoli</strong>:
-      <ul>
-        <li>Vincoli generali (identità, integrità di dominio) su <code>S</code>; vincoli specifici su <code>Sᵢ</code>.</li>
-        <li>Se la specializzazione è <strong>disgiunta</strong> (D), impiega un <em>predicato di appartenenza</em> per escludere sovrapposizioni:
-          <code>∀x, (x ∈ Sᵢ ∧ x ∈ Sⱼ) ⇒ falso</code> per <code>i ≠ j</code>.</li>
-        <li>Se è a <strong>copertura totale</strong> (T): <code>∀x ∈ S, ∃i : x ∈ Sᵢ</code> (nessuna istanza “orfana”).</li>
-      </ul>
-    </li>
+        <h2>Impatto sulla traduzione (preview Lez2.7)</h2>
+        <div class="box">
+          <ul>
+            <li>La scelta <strong>D/O</strong> e <strong>T/P</strong> influenza la strategia di traduzione nel modello relazionale.</li>
+            <li>Con <strong>D + T</strong> il caso e di solito piu semplice da controllare e spiegare.</li>
+            <li>Con <strong>O</strong> oppure <strong>P</strong> servono piu attenzione e vincoli aggiuntivi.</li>
+          </ul>
+          <div class="note">Le regole operative di trasformazione sono dettagliate nella Lez2.7.</div>
 
-    <li>
-      <strong>Ereditarietà delle chiavi</strong>:
-      <ul>
-        <li>La chiave di <code>S</code>, <code>K(S)</code>, identifica anche le istanze di ogni <code>Sᵢ</code> (niente nuove chiavi autonome nei sottotipi).</li>
-        <li>Evita “pseudo-chiavi” nei sottotipi: se serve distinguere varianti, usa attributi descrittivi o ulteriori specializzazioni.</li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Chiarezza semantica vs optionalite</strong>:
-      <ul>
-        <li>Un unico tipo con molti campi opzionali tende a nascondere regole e a generare incoerenze.</li>
-        <li>La specializzazione rende <strong>esplicite</strong> appartenenze, obbligatorietà e domini diversi tra sottoinsiemi.</li>
-      </ul>
-    </li>
-</div>
-<h2>Impatto sulla traduzione (preview Lez2.7)</h2>
-<div class="box">
-       <ul>
-        <li>La scelta D/O e T/P influenza la <em>strategia</em> di traduzione (tabella unica, per gerarchia, per sottotipo) e l’enforcement dei vincoli.</li>
-        <li>Con D+T è più semplice garantire integrità e query senza ambiguità; con O o P serviranno vincoli aggiuntivi.</li>
-      </ul>
-      <div class="note">Le regole operative di trasformazione sono dettagliate nella Lez2.7.</div>
-  
-
-  <div style="margin-top:.6rem">
-    <button id="btnCHK26" onclick="toggleBox('btnCHK26','ansCHK26')">Checklist decisionale rapida ▼</button>
-  </div>
-  <div id="ansCHK26" style="display:none; margin-top:.5rem">
-    <ul>
-      <li><strong>Attributi molto opzionali?</strong> → Valuta specializzazione.</li>
-      <li><strong>Vincoli diversi tra sottoinsiemi?</strong> → Specializza e localizza i vincoli.</li>
-      <li><strong>Relazioni diverse per sottoinsiemi?</strong> (es. solo Docente ha “Insegna”) → Specializza.</li>
-      <li><strong>Query spesso filtrano per tipo?</strong> (es. “solo Studenti”) → Specializza per chiarezza ed efficienza concettuale.</li>
-    </ul>
-  </div>
-</div>
+          <div style="margin-top:.6rem">
+            <button id="btnCHK26" onclick="toggleBox('btnCHK26','ansCHK26')">Checklist decisionale rapida ▼</button>
+          </div>
+          <div id="ansCHK26" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><strong>Attributi molto opzionali?</strong> → valuta la specializzazione.</li>
+              <li><strong>Vincoli diversi tra sottoinsiemi?</strong> → specializza e localizza i vincoli.</li>
+              <li><strong>Relazioni diverse per sottoinsiemi?</strong> → specializza.</li>
+              <li><strong>Query spesso filtrate per tipo?</strong> → la specializzazione aiuta la leggibilita del modello.</li>
+            </ul>
+          </div>
+        </div>
 
 <h2>Domanda-guida</h2>
 <div class="box">

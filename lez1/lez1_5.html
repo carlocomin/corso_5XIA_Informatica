@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez1_5 · Chiavi esterne & integrità referenziale (definizione formale)</title>
+  <title>ITST – 5ª · Lez1_5 · Chiavi esterne e integrità referenziale</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -41,50 +41,42 @@
   <div class="sidebar" id="menu">
     <h2>Lezione 1 — Modello Relazionale</h2>
     <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
       <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
       <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
       <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Chiavi esterne & integrità referenziale</h1>
+    <h1>Chiavi esterne e integrità referenziale</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
       <button onclick="nextSlide()">Avanti &#8594;</button>
     </div>
 
-<!-- Inserire questo blocco PRIMA di <h2>Definizione formale</h2> -->
     <div class="content-box">
       <div class="inner-box">
-<h2>Definizione intuitiva</h2>
-<div class="box">
-  <p>
-    Una <strong>chiave esterna (FK)</strong> è un legame tra due relazioni: una <em>figlia</em> <code>S</code> e una <em>genitore</em> <code>R</code>. 
-    In <code>S</code> c’è un insieme di attributi <code>F</code> che deve “puntare” alla chiave (primaria o candidata) <code>K</code> di <code>R</code>.
-  </p>
-  <ul>
-    <li><strong>Significato</strong>: per ogni tupla di <code>S</code>, i valori su <code>F</code> devono
-      <em>oppure</em> essere tutti <code>NULL</code> (se il legame è opzionale),
-      <em>oppure</em> coincidere esattamente con i valori di <code>K</code> in <em>una</em> tupla esistente di <code>R</code>.</li>
-    <li><strong>Compatibilità</strong>: gli attributi di <code>F</code> e quelli corrispondenti di <code>K</code> hanno gli stessi domini/tipi (confronto “a coppie”).</li>
-    <li><strong>Chiavi composte</strong>: se la chiave in <code>R</code> ha più colonne, la corrispondenza deve valere per <em>tutti</em> i componenti, insieme (niente match parziali).</li>
-    <li><strong>Coerenza</strong>: non possono esistere righe “orfane” in <code>S</code>; ogni riferimento deve puntare a un genitore esistente in <code>R</code>.</li>
-    <li><strong>Auto-riferimento</strong>: la FK può riferire la <em>stessa</em> relazione (es. albero categorie: <code>PadreId → Id</code>).</li>
-    <li><strong>Politiche operative</strong> (implementazione): cosa accade se si modifica/elimina il genitore (es. <em>CASCADE</em>, <em>RESTRICT</em>) non cambia il significato del vincolo: 
-      la FK serve comunque a evitare riferimenti a entità inesistenti.</li>
-  </ul>
-  <div class="note">In breve: <em>ogni riga figlia o non riferisce nessuno (se consentito) o riferisce una riga reale e ben definita del genitore</em>.</div>
-</div></div></div>
+        <h2>Definizione intuitiva</h2>
+        <div class="box">
+          <p>
+            Una <strong>chiave esterna (FK)</strong> è un legame tra due relazioni: una <em>figlia</em> <code>S</code> e una <em>genitore</em> <code>R</code>.
+            In <code>S</code> c’è un insieme di attributi <code>F</code> che deve “puntare” alla chiave (primaria o candidata) <code>K</code> di <code>R</code>.
+          </p>
+          <ul>
+            <li><strong>Significato</strong>: per ogni tupla di <code>S</code>, i valori su <code>F</code> devono o essere tutti <code>NULL</code> (se il legame è opzionale), oppure coincidere con i valori di <code>K</code> in una tupla esistente di <code>R</code>.</li>
+            <li><strong>Compatibilità</strong>: gli attributi di <code>F</code> e quelli corrispondenti di <code>K</code> devono essere confrontabili correttamente.</li>
+            <li><strong>Chiavi composte</strong>: se la chiave in <code>R</code> ha più colonne, la corrispondenza deve valere per tutti i componenti insieme.</li>
+            <li><strong>Coerenza</strong>: non devono esistere righe “orfane” in <code>S</code>.</li>
+            <li><strong>Auto-riferimento</strong>: la FK può riferire la stessa relazione, per esempio <code>PadreId → Id</code>.</li>
+          </ul>
+          <div class="note">In breve: ogni riga figlia o non riferisce nessuno, se il legame è opzionale, oppure riferisce una riga reale del genitore.</div>
+        </div>
 
-
-    <div class="content-box">
-      <div class="inner-box">
         <h2>Definizione formale</h2>
         <div class="box">
           <p>Considera due schemi di relazione:</p>
@@ -104,7 +96,7 @@
         <h2>Note importanti</h2>
         <ul>
           <li><strong>Obbligatorietà</strong>: se F non ammette NULL (tutti gli attributi di F sono NOT NULL) allora il riferimento è <em>obbligatorio</em> (totale).</li>
-          <li><strong>Composizione</strong>: F e K possono essere <em>composite</em> (più attributi). La corrispondenza è componente-per-componente.</li>
+          <li><strong>Composizione</strong>: F e K possono essere <em>composte</em> (più attributi). La corrispondenza è componente per componente.</li>
           <li><strong>Auto-riferimento</strong>: una FK può riferire la <em>stessa</em> relazione (albero gerarchico espresso in forma relazionale).</li>
           <li><strong>Semantica vs implementazione</strong>: il modello definisce il predicato referenziale; le azioni su modifica/cancellazione (CASCADE, RESTRICT…) sono scelte implementative.</li>
         </ul>
@@ -137,7 +129,7 @@
           </div>
         </div>
 
-        <h2>Composite & self-referencing</h2>
+        <h2>Chiavi esterne composte e auto-riferite</h2>
         <div class="box">
           <div class="note" style="margin-bottom:.35rem">FK composta</div>
           <p><code>Offerte(CodCorso, Anno, Aule)</code> con <code>FK (CodCorso, Anno) → CorsiAnnuali(CodCorso, Anno)</code>. La compatibilità è per-campo; entrambi i valori devono corrispondere a una tupla esistente in <code>CorsiAnnuali</code>.</p>

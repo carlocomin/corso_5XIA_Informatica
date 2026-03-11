@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez4_16 · Dependency preservation: definizione e controesempio</title>
+  <title>ITST – 5ª · Lez4_16 · Preservazione delle dipendenze: definizione e controesempio</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -61,17 +61,17 @@
       <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
       <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
       <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
-      <li><a href="lez4_16.html">Lez4.16: Dependency preservation</a></li>
+      <li><a href="lez4_16.html">Lez4.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Dependency preservation (preservazione delle dipendenze)</h1>
+    <h1>Preservazione delle dipendenze</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Fine &#8594;</button>
+      <button onclick="nextSlide()">Programma &#8594;</button>
     </div>
 
     <div class="content-box">
@@ -130,6 +130,16 @@ r2(A, C) = { (a1, c1), (a1, c2) }</code></pre>
           <p class="note">La scelta dipende da cosa è più importante nel contesto: eliminare ridondanza al massimo oppure poter imporre vincoli senza join.</p>
         </div>
 
+        <h2>Cosa deve restare</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Lossless join</strong> riguarda il recupero corretto dell'informazione dopo la decomposizione.</li>
+            <li><strong>Preservazione delle dipendenze</strong> riguarda la possibilita di controllare i vincoli localmente, senza join.</li>
+            <li>Tra <strong>3NF</strong> e <strong>BCNF</strong> non c'e una scelta "sempre migliore": conta il compromesso tra ridondanza e controllabilita dei vincoli.</li>
+          </ul>
+          <p class="ok">Questo e il punto di arrivo del modulo 4: saper leggere una decomposizione non solo come formula, ma come scelta progettuale motivata.</p>
+        </div>
+
         <h2>Micro-verifica finale</h2>
         <div class="box">
           <p><strong>Domanda</strong>: qual è la differenza tra “lossless join” e “dependency preservation”?</p>
@@ -137,7 +147,7 @@ r2(A, C) = { (a1, c1), (a1, c2) }</code></pre>
           <div id="ansMV16" style="display:none; margin-top:.5rem">
             <ul>
               <li><span class="def">Lossless join</span>: dal join delle tabelle decomposte posso ricostruire l’informazione originale senza “inventare” associazioni.</li>
-              <li><span class="def">Dependency preservation</span>: posso controllare tutte le DF originali imponendo vincoli solo sulle singole tabelle, senza join.</li>
+              <li><span class="def">Preservazione delle dipendenze</span>: posso controllare tutte le DF originali imponendo vincoli solo sulle singole tabelle, senza join.</li>
             </ul>
             <p class="warn">Sono proprietà diverse: una può valere senza l’altra.</p>
           </div>
@@ -148,7 +158,7 @@ r2(A, C) = { (a1, c1), (a1, c2) }</code></pre>
 
     <div class="nav-buttons" style="margin-top:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Fine &#8594;</button>
+      <button onclick="nextSlide()">Programma &#8594;</button>
     </div>
   </div>
 </body>

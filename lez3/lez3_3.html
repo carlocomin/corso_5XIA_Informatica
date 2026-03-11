@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -56,61 +56,51 @@
         <h2>Obiettivo della sessione</h2>
         <div class="box">
           <ul>
-            <li>Avere un ambiente locale con <strong>server PHP</strong> e <strong>MySQL</strong> funzionanti.</li>
-            <li>Attivare le estensioni necessarie (mysqli/PDO) e verificare che il server risponda.</li>
-            <li>Preparare un utente e un database di test per le prossime lezioni.</li>
+            <li>Avere un ambiente locale con <strong>PHP</strong> e <strong>MySQL</strong> funzionanti.</li>
+            <li>Preparare una connessione <strong>PDO</strong> riutilizzabile.</li>
+            <li>Arrivare non solo a "Connessione OK", ma al primo contatto con una <strong>query parametrizzata</strong>.</li>
           </ul>
-          <p class="note">Concludi la lezione con un file PHP che conferma la connessione al DB.</p>
         </div>
 
-        <h2>Cosa installare (per OS)</h2>
+        <h2>Cosa serve davvero</h2>
         <div class="box">
           <ul>
-            <li><strong>Windows</strong>: XAMPP o WAMP (include Apache, PHP, MySQL/MariaDB).</li>
-            <li><strong>macOS</strong>: MAMP oppure Homebrew (<code>brew install php mysql</code>).</li>
-            <li><strong>Linux</strong>: stack LAMP (<code>apache2</code>, <code>php</code>, <code>php-mysql</code>, <code>mysql-server</code>).</li>
+            <li>Server web locale o bundle equivalente (XAMPP, WAMP, MAMP, LAMP).</li>
+            <li>PHP con estensione <code>pdo_mysql</code> attiva.</li>
+            <li>Un'istanza MySQL o MariaDB raggiungibile in locale.</li>
           </ul>
-          <p class="warn">Assicurati di installare PHP ≥ 8.1 e di avere l'estensione <code>pdo_mysql</code> attiva.</p>
+          <p class="note">Per il modulo conta il risultato finale: browser raggiungibile, DB pronto, PDO disponibile.</p>
         </div>
 
         <h2>Configurazione minima</h2>
         <div class="box">
           <ul>
-            <li>Avvia i servizi <strong>Apache</strong> (o Nginx) e <strong>MySQL</strong> dal pannello del tuo bundle o tramite <code>systemctl</code>.</li>
-            <li>Identifica la <strong>document root</strong> (es. <code>htdocs/</code> in XAMPP, <code>/var/www/html</code> su Linux).</li>
-            <li>Place i file PHP nella document root e verifica che il browser risponda su <code>http://localhost</code>.</li>
+            <li>Avvia il server web e MySQL.</li>
+            <li>Individua la cartella da cui il browser legge i file PHP.</li>
+            <li>Verifica che <code>http://localhost</code> risponda.</li>
+            <li>Controlla da terminale la versione PHP con <code>php -v</code>.</li>
           </ul>
-          <p class="ok">Se vedi l'index di XAMPP o un "Hello World" PHP, il server web è pronto.</p>
+          <p class="warn">Se PHP non vede l'estensione <code>pdo_mysql</code>, le slide successive sul database non potranno funzionare.</p>
         </div>
 
-        <h2>Verifica PHP</h2>
+        <h2>Prepara il database e la tabella guida del modulo</h2>
         <div class="box">
-          <ul>
-            <li>Da terminale: <code>php -v</code> per controllare versione e moduli.</li>
-            <li>File di prova <code>info.php</code> nella root:</li>
-          </ul>
-          <pre><code class="language-php">&lt;?php
-phpinfo();
-?&gt;</code></pre>
-          <p class="warn">Usa <code>phpinfo()</code> solo per test e poi rimuovi il file: espone troppe informazioni.</p>
-        </div>
-
-        <h2>Prepara MySQL</h2>
-        <div class="box">
-          <ul>
-            <li>Accedi a MySQL: <code>mysql -u root -p</code> oppure usa il pannello incluso.</li>
-            <li>Crea database e utente dedicato:</li>
-          </ul>
           <pre><code class="language-sql">CREATE DATABASE corso_php CHARACTER SET utf8mb4;
 CREATE USER 'studente'@'localhost' IDENTIFIED BY 'password_sicura';
 GRANT ALL PRIVILEGES ON corso_php.* TO 'studente'@'localhost';
-FLUSH PRIVILEGES;</code></pre>
-          <p class="note">Non usare l'utente <code>root</code> nelle app: crea sempre un account a privilegi limitati.</p>
+
+USE corso_php;
+
+CREATE TABLE studenti (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  classe VARCHAR(20) NOT NULL
+);</code></pre>
+          <p class="note">Nel modulo ricorreremo spesso alla tabella <code>studenti</code>: averla pronta rende piu chiari esempi, query e prepared statements. Qui compare anche l'utente <code>studente</code>, cosi la parte SQL e l'esempio PDO restano coerenti tra loro.</p>
         </div>
 
-        <h2>Test rapido di connessione (PDO)</h2>
+        <h2>Prima connessione PDO</h2>
         <div class="box">
-          <p>Salva <code>db-test.php</code> nella document root e aprilo da browser.</p>
           <pre><code class="language-php">&lt;?php
 $dsn = 'mysql:host=localhost;dbname=corso_php;charset=utf8mb4';
 $user = 'studente';
@@ -119,23 +109,54 @@ $pass = 'password_sicura';
 try {
     $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
     echo "Connessione OK";
 } catch (PDOException $e) {
-    echo "Errore connessione: " . htmlspecialchars($e->getMessage());
+    echo "Errore: " . htmlspecialchars($e->getMessage());
 }
 </code></pre>
-          <p class="ok">Se appare "Connessione OK", sei pronto per le query delle prossime lezioni.</p>
+          <p class="note">Sostituisci <code>$user</code> e <code>$pass</code> con le credenziali reali del tuo ambiente locale.</p>
+          <p class="ok">Questa connessione e la base di tutto il modulo: la riuseremo per leggere e inserire dati.</p>
+        </div>
+
+        <h2>Perche usare PDO in questo corso</h2>
+        <div class="box">
+          <ul>
+            <li>Un'unica interfaccia chiara per lavorare con il database.</li>
+            <li>Supporto diretto ai <strong>prepared statements</strong>.</li>
+            <li>Codice piu leggibile e riutilizzabile rispetto a query costruite a mano.</li>
+          </ul>
+        </div>
+
+        <h2>Primo esempio di prepared statement</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$stmt = $pdo->prepare(
+    "SELECT id, nome, classe
+     FROM studenti
+     WHERE classe = :classe"
+);
+
+$stmt->execute([
+    'classe' => '5BIA'
+]);
+
+$righe = $stmt->fetchAll();
+?&gt;</code></pre>
+          <p class="warn">Il punto chiave non e memorizzare i metodi, ma capire la sequenza: <code>prepare</code>, poi <code>execute</code>, poi lettura del risultato.</p>
         </div>
 
         <h2>Checklist finale</h2>
         <div class="box">
           <ul>
-            <li>PHP e MySQL installati e avviati; estensione <code>pdo_mysql</code> attiva.</li>
-            <li>Document root individuata e raggiungibile via <code>http://localhost</code>.</li>
-            <li>Database <code>corso_php</code> e utente dedicato funzionanti.</li>
-            <li>File di test rimosso dopo la verifica (<code>info.php</code>).</li>
+            <li>PHP e MySQL attivi.</li>
+            <li>Database <code>corso_php</code> creato.</li>
+            <li>Tabella <code>studenti</code> pronta.</li>
+            <li>Connessione PDO verificata.</li>
+            <li>Idea chiara di cosa sia un prepared statement.</li>
           </ul>
+          <p class="ok">Nella prossima slide useremo PHP dentro HTML, ma con l'orizzonte gia orientato ai dati del database.</p>
         </div>
 
       </div>

@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -55,49 +55,69 @@
 
         <h2>Perché questo modulo</h2>
         <div class="box">
-          <p>Integrare <strong>PHP</strong>, <strong>MySQL</strong> e <strong>HTML/CSS</strong> per costruire un flusso completo: richiesta del browser, elaborazione lato server, lettura/scrittura su database, risposta in pagina.</p>
-          <p class="note">Obiettivo: collegare i concetti teorici del modello relazionale a un'implementazione web concreta.</p>
+          <p>Questo modulo introduce <strong>PHP come linguaggio lato server</strong> e lo collega subito a <strong>MySQL</strong> per costruire pagine che leggono input, eseguono query semplici e mostrano risultati in HTML.</p>
+          <p class="note">Non e un modulo avanzato di backend: il focus e padroneggiare bene il flusso <code>browser -&gt; PHP -&gt; MySQL -&gt; HTML</code>.</p>
         </div>
 
-        <h2>Cosa porterai a casa</h2>
+        <h2>Cosa saprai fare alla fine</h2>
         <div class="box">
           <ul>
-            <li><strong>Backend</strong>: saper ricevere dati da form, validarli e persisterli in MySQL con prepared statements.</li>
-            <li><strong>Frontend</strong>: impaginare tabelle e form con HTML/CSS mantenendo pulizia e usabilità.</li>
-            <li><strong>Linguaggio</strong>: padroneggiare i costrutti fondamentali di PHP, con focus particolare su <strong>array</strong> e <strong>mappe associative</strong>.</li>
-            <li><strong>Sicurezza di base</strong>: sanitizzazione input, escaping output, gestione credenziali.</li>
+            <li>Scrivere script PHP semplici e leggibili integrati con HTML.</li>
+            <li>Leggere input da <code>$_GET</code> e <code>$_POST</code>, validarli e trattarli in modo essenziale ma corretto.</li>
+            <li>Aprire una connessione <strong>PDO</strong> verso MySQL.</li>
+            <li>Eseguire <strong>SELECT</strong> e <strong>INSERT</strong> di base con <strong>prepared statements</strong>.</li>
+            <li>Mostrare risultati del database in liste e tabelle HTML.</li>
           </ul>
+        </div>
+
+        <h2>Cosa non faremo</h2>
+        <div class="box">
+          <ul>
+            <li>Niente framework o architetture avanzate.</li>
+            <li>Niente ORM, routing complesso o pattern enterprise.</li>
+            <li>Niente ottimizzazioni da produzione: qui servono <strong>basi didattiche solide</strong>.</li>
+          </ul>
+          <p class="warn">La priorita e capire il percorso del dato, non costruire un'applicazione complessa.</p>
         </div>
 
         <h2>Prerequisiti minimi</h2>
         <div class="box">
           <ul>
-            <li>Concetti di <strong>HTTP</strong> e differenza tra client e server.</li>
-            <li>Ripasso rapido di <strong>HTML</strong> (form, tabelle, classi CSS) e del <strong>modello relazionale</strong> (tabelle, chiavi, vincoli).</li>
-            <li>Ambiente locale funzionante (PHP + MySQL) o stack equivalente <span class="note">(XAMPP/LAMP/WAMP/Containers)</span>.</li>
+            <li>Ripasso di <strong>HTML</strong>: form, tabelle e attributi principali.</li>
+            <li>Idea generale di <strong>client</strong>, <strong>server</strong> e richiesta HTTP.</li>
+            <li>Richiamo del <strong>modello relazionale</strong>: tabelle, chiavi e vincoli di base.</li>
           </ul>
         </div>
 
-        <h2>Struttura della sequenza</h2>
+        <h2>Sequenza del modulo</h2>
         <div class="box">
-          <ul>
-            <li><strong>Bootstrap rapido</strong>: setup, primo script PHP, flusso richiesta/risposta.</li>
-            <li><strong>Basi del linguaggio</strong>: sintassi, tipi, controllo di flusso, funzioni.</li>
-            <li><strong>Array e mappe</strong>: creazione, iterazione, ricerca, filtri e trasformazioni (pezzo centrale della lezione).</li>
-            <li><strong>Interfacciamento al DB</strong>: connessione, query parametrizzate, gestione errori.</li>
-            <li><strong>Integrazione front-end</strong>: render di risultati in HTML, styling essenziale con CSS.</li>
-          </ul>
-          <p class="ok">Ogni step include esempi brevi + micro-esercizi per fissare i concetti.</p>
+          <ol>
+            <li>Capire come viaggia una richiesta web e dove entra PHP.</li>
+            <li>Scrivere PHP di base: output, variabili, tipi, array, funzioni.</li>
+            <li>Leggere input da form e validarli.</li>
+            <li>Collegarsi a MySQL con PDO.</li>
+            <li>Eseguire query parametrizzate e mostrare il risultato in HTML.</li>
+          </ol>
+          <p class="ok">Il filo conduttore sara sempre lo stesso: <strong>dati inseriti dall'utente, elaborati da PHP, salvati o letti da MySQL, ristampati in pagina</strong>.</p>
         </div>
 
-        <h2>Deliverable della lezione</h2>
+        <h2>Mini-progetto guida</h2>
         <div class="box">
           <ul>
-            <li>Un <strong>mini-progetto</strong> che mostra dati da MySQL e inserisce record da form.</li>
-            <li>Snippet riutilizzabili per <strong>array/indexati</strong> e <strong>array associativi</strong> (mappe) con funzioni utili.</li>
-            <li>Checklist di <strong>sicurezza base</strong> per PHP + MySQL + HTML/CSS.</li>
+            <li>Una pagina che legge righe da MySQL e le mostra in tabella.</li>
+            <li>Un form che raccoglie dati essenziali.</li>
+            <li>Un inserimento eseguito con <em>prepared statement</em>.</li>
+            <li>Una ristampa HTML dei dati aggiornati.</li>
           </ul>
-          <p class="warn">Nota: questa slide introduce il percorso. I dettagli operativi sono nelle slide successive.</p>
+        </div>
+
+        <h2>Deliverable attesi</h2>
+        <div class="box">
+          <ul>
+            <li>Una base riutilizzabile per connessione PDO e query parametrizzate.</li>
+            <li>Snippet chiari per input, validazione minima e output HTML sicuro.</li>
+            <li>Un lessico tecnico coerente per distinguere linguaggio PHP, database e interfaccia web.</li>
+          </ul>
         </div>
 
       </div>

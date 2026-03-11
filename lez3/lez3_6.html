@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_6 · Datatype fondamentali e array</title>
+  <title>ITST – 5ª · Lez3_6 · Tipi di dato fondamentali e array</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -43,7 +43,7 @@
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Datatype fondamentali e array</h1>
+    <h1>Tipi di dato fondamentali e array</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -56,175 +56,140 @@
         <h2>Obiettivi</h2>
         <div class="box">
           <ul>
-            <li>Conoscere i datatype più usati in PHP e quando sceglierli.</li>
-            <li>Creare e leggere array indicizzati e array associativi (mappe) con sintassi moderna.</li>
-            <li>Applicare cast, controlli di tipo e funzioni built-in per ispezionare i dati in sicurezza.</li>
+            <li>Ripassare i datatype fondamentali piu usati in PHP.</li>
+            <li>Capire gli array come struttura chiave del linguaggio.</li>
+            <li>Riconoscere quando usare array indicizzati e quando usare array associativi.</li>
+            <li>Prepararsi a leggere e stampare risultati provenienti da MySQL.</li>
           </ul>
-          <p class="note">Lavoreremo con esempi minimali ma realistici, commentati riga per riga.</p>
         </div>
 
         <h2>Scalari: stringhe, numeri, boolean, null</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$utente = "Giulia";      // string
-$eta = 19;               // integer
-$peso = 54.5;            // float (double)
-$iscritta = true;        // boolean
-$telefono = null;        // assenza di valore
+$utente = "Giulia";
+$eta = 19;
+$media = 7.5;
+$iscritta = true;
+$telefono = null;
 
-// var_dump mostra tipo e contenuto: utile in debug
-var_dump($utente, $eta, $peso, $iscritta, $telefono);
-
-// controllo sicuro: confronta valore + tipo
-if ($eta === 19) {
-  echo "Benvenuta, $utente";
-}
+var_dump($utente, $eta, $media, $iscritta, $telefono);
 ?&gt;</code></pre>
           <ul>
-            <li><code>===</code> e <code>!==</code> evitano sorprese rispetto ai confronti deboli (es. <code>"0" == false</code>).</li>
-            <li><code>null</code> distingue tra campo non impostato e stringa vuota: fondamentale quando validi form.</li>
-            <li><code>var_dump()</code> va tolto dal codice finale, ma durante lo sviluppo rende evidenti i tipi reali.</li>
+            <li>Questi sono i tipi di base che userai piu spesso negli script introduttivi.</li>
+            <li><code>null</code> rappresenta l'assenza di valore ed e molto comune nei dati opzionali.</li>
+            <li><code>var_dump()</code> e utile per capire il tipo reale di un dato durante il debug.</li>
           </ul>
         </div>
 
-        <h2>Costanti e cast espliciti</h2>
+        <h2>Cast e lettura sicura dei dati</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-define('IVA', 0.22);        // costante legacy
-const RUOLO_DEFAULT = 'user'; // costante moderna
-
-$quantita = "5";            // stringa arrivata da un form
-$pezzi = (int) $quantita;    // 5, conversione esplicita
-
-$prezzo = 19.99;
-$totale = $pezzi * $prezzo;  // 5 * 19.99 = 99.95
-
-// gestione booleana di input check-box
-$consenso = $_POST['consenso'] ?? '0';
-if ((bool) $consenso === true) {
-  echo "Consenso fornito";
-}
+$quantita = (int) ($_POST['quantita'] ?? 0);
+$prezzo = (float) ($_POST['prezzo'] ?? 0);
+$attivo = (bool) ($_POST['attivo'] ?? false);
 ?&gt;</code></pre>
           <ul>
-            <li>Le costanti rendono espliciti parametri di dominio (es. IVA): non possono essere ridefinite.</li>
-            <li>Casting prima dei calcoli rende il comportamento prevedibile e riduce warning.</li>
-            <li>Combina cast e validazione (es. <code>filter_var()</code>) prima di salvare su DB.</li>
+            <li>Il cast esplicito rende piu chiaro come userai il dato.</li>
+            <li>Quando i valori arrivano da un form, prima chiarisci il tipo e poi li validi o li elabori.</li>
+            <li>Questo stesso approccio verra riusato quando passeremo valori a PDO.</li>
           </ul>
+        </div>
+
+        <h2>Perche gli array sono centrali in questo modulo</h2>
+        <div class="box">
+          <p>In PHP moltissimi dati applicativi vengono gestiti come array:</p>
+          <ul>
+            <li>campi ricevuti da form;</li>
+            <li>righe restituite da una query;</li>
+            <li>liste di risultati da mostrare in HTML.</li>
+          </ul>
+          <p class="note">Per questo il modulo dedica piu spazio agli array che ad altri aspetti del linguaggio.</p>
         </div>
 
         <h2>Array indicizzati: liste ordinate</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$corsi = ["TPSIT", "Sistemi", "Informatica"];
+$classi = ["5BIA", "5AIA", "5CINF"];
+$classi[] = "5DINF";
 
-// aggiungere e leggere
-$corsi[] = "Gestione progetto"; // push in coda
-$primo = $corsi[0];             // "TPSIT"
-$ultimo = $corsi[count($corsi)-1];
-
-// iterare con indice + valore
-foreach ($corsi as $indice =&gt; $materia) {
-  echo "$indice: $materia\n";
+foreach ($classi as $classe) {
+    echo $classe . "&lt;br&gt;";
 }
 ?&gt;</code></pre>
           <ul>
-            <li>Gli array PHP sono dinamici: si espandono da soli quando fai <code>$corsi[] = ...</code>, quindi non serve dichiarare dimensione o tipo degli elementi.</li>
-            <li><code>count()</code> restituisce sempre la lunghezza corrente: usala per calcolare l'ultimo indice (<code>count($corsi) - 1</code>) ed evita numeri magici che diventano errati se la lista cresce.</li>
-            <li>La sintassi breve <code>[$a, $b]</code> è preferita a <code>array($a, $b)</code> perché più leggibile e coerente con altri linguaggi moderni; usa quella forma per tutti i nuovi array.</li>
+            <li>Usa un array indicizzato quando l'ordine conta.</li>
+            <li>Gli elementi vengono letti tramite indice: <code>0</code>, <code>1</code>, <code>2</code>...</li>
+            <li>La sintassi <code>[]</code> aggiunge un elemento in coda.</li>
           </ul>
         </div>
 
-        <h2>Array associativi: mappe chiave → valore</h2>
+        <h2>Array associativi: una riga con campi nominati</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$profilo = [
-  'nome' =&gt; 'Giulia',
-  'classe' =&gt; '5XIA',
-  'email' =&gt; 'giulia@example.com'
+$studente = [
+  'id' => 1,
+  'nome' => 'Giulia',
+  'classe' => '5BIA'
 ];
 
-// lettura sicura con ?? per evitare notice
-$email = $profilo['email'] ?? 'non fornita';
-
-// aggiornamento e aggiunta
-$profilo['email'] = 'g.rossi@example.com';
-$profilo['telefono'] = null; // campo opzionale
-
-// ciclo chiave => valore
-foreach ($profilo as $campo =&gt; $valore) {
-  echo "$campo: " . ($valore ?? '—') . "\n";
-}
+echo $studente['nome'];
 ?&gt;</code></pre>
           <ul>
-            <li>Le mappe associano etichette semantiche ai dati: più leggibili di un array numerico.</li>
-            <li>Usa <code>??</code> quando un campo può mancare (input form opzionali) per evitare warning.</li>
-            <li>Confronta chiavi con <code>array_key_exists()</code> se devi distinguere tra "manca" e "vale null".</li>
+            <li>Qui ogni dato ha un nome semantico: <code>id</code>, <code>nome</code>, <code>classe</code>.</li>
+            <li>Questo rende il codice piu leggibile rispetto a un array solo numerico.</li>
           </ul>
+          <p class="ok">Questo formato e molto vicino a una riga di tabella letta da MySQL con <code>PDO::FETCH_ASSOC</code>.</p>
         </div>
 
-        <h2>Array annidati e uso combinato</h2>
+        <h2>Lista di righe: l'array che ritorna una query</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$stmt = $pdo->query("SELECT id, nome, classe FROM studenti");
+$righe = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($righe as $riga) {
+    echo $riga['nome'] . " - " . $riga['classe'] . "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          <p>Qui hai un array di array associativi: e il formato tipico dei risultati SQL in questo modulo.</p>
+        </div>
+
+        <h2>Array annidati e accesso ai dati</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
 $studenti = [
-  [
-    'nome' =&gt; 'Giulia',
-    'voti' =&gt; [8, 7.5, 9]
-  ],
-  [
-    'nome' =&gt; 'Ahmed',
-    'voti' =&gt; [6, 8, 7]
-  ]
+  ['nome' => 'Ada', 'classe' => '5BIA'],
+  ['nome' => 'Alan', 'classe' => '5BIA']
 ];
 
-// accesso a dati annidati
-$primoStudente = $studenti[0]['nome']; // Giulia
-$primoVoto = $studenti[0]['voti'][0];  // 8
-
-// calcolo media con funzione built-in
-$mediaGiulia = array_sum($studenti[0]['voti']) / count($studenti[0]['voti']);
-
-echo "$primoStudente ha media $mediaGiulia";
+echo $studenti[0]['nome']; // Ada
 ?&gt;</code></pre>
           <ul>
-            <li>Combina array indicizzati + associativi per modellare strutture reali (es. tabella studenti).</li>
-            <li>Funzioni utili: <code>array_sum</code>, <code>array_map</code>, <code>array_filter</code>, <code>in_array</code>.</li>
-            <li>Per dati complessi valuta classi/oggetti, ma gli array restano comodi per prototipi e view.</li>
+            <li>Indice esterno: scegli la riga.</li>
+            <li>Chiave interna: scegli il campo della riga.</li>
+            <li>Questa struttura compare spesso sia negli esercizi sia nelle pagine che leggono il database.</li>
           </ul>
         </div>
 
-        <h2>Array PHP vs array C/C++ e Java</h2>
+        <h2>Buone pratiche utili per il database</h2>
         <div class="box">
-          <pre><code class="language-php">// PHP: una sola struttura per lista + mappa
-$dati = ["Uno", 2, "chiave" =&gt; 3];
-$dati[] = 4;            // cresce da solo, nessun malloc
-$dati[10] = "buco";     // array sparso, indice 10 creato al volo
-
-// C: array statico, tipo omogeneo
-int numeri[3] = {1, 2, 3};
-// Java: array statico, tipo omogeneo
-String[] parole = {"Uno", "Due"};</code></pre>
           <ul>
-            <li><strong>Dimensione</strong>: gli array PHP sono dinamici e possono avere "buchi" negli indici; in C/Java la dimensione è fissa e va gestita la riallocazione (o usi <code>std::vector</code>/<code>ArrayList</code>).</li>
-            <li><strong>Tipi</strong>: PHP permette elementi eterogenei nella stessa struttura; C/C++ e Java richiedono lo stesso tipo (salvo cast espliciti o <code>void*</code>), quindi presta attenzione a fare validazione e cast in ingresso.</li>
-            <li><strong>Chiavi</strong>: in PHP la stessa struttura gestisce indici numerici e chiavi stringa; l'equivalente in C/Java è un <code>std::map</code>/<code>unordered_map</code> o un <code>HashMap</code>.</li>
-            <li><strong>Ordine</strong>: PHP mantiene l'ordine di inserimento anche con chiavi stringa; in C++/Java dipende dalla struttura (es. <code>std::map</code> ordina per chiave, <code>HashMap</code> no).</li>
-            <li><strong>Copia e memoria</strong>: in PHP l'assegnazione copia per valore ma in modalità "copy-on-write" (la memoria viene duplicata solo se modifichi). In C/Java le copie avvengono subito e in C devi gestire manualmente la memoria.</li>
-            <li><strong>Accesso sicuro</strong>: usa <code>array_key_exists()</code> o l'operatore <code>??</code> prima di leggere chiavi opzionali; in C/Java l'accesso fuori bound genera undefined behavior/exception.</li>
-            <li><strong>Iterazione</strong>: <code>foreach</code> in PHP ti dà subito chiave e valore; l'equivalente è un range-based for in C++ (<code>for (auto &[k, v] : mappa)</code>) o un for-each in Java (<code>for (var entry : map.entrySet())</code>).</li>
-            <li><strong>Funzioni built-in</strong>: PHP offre decine di utility (<code>count</code>, <code>array_map</code>, <code>array_filter</code>, <code>in_array</code>) che sostituiscono molte implementazioni manuali tipiche di C/Java.</li>
+            <li>Usa chiavi chiare negli array associativi: devono corrispondere ai nomi dei campi.</li>
+            <li>Controlla l'esistenza di una chiave con <code>??</code> o <code>array_key_exists()</code>.</li>
+            <li>Quando stampi valori da un array in HTML, usa <code>htmlspecialchars()</code>.</li>
+            <li>Quando ricevi dati da form, fai cast e validazione prima di costruire l'array da passare alla query.</li>
           </ul>
-          <p class="note">Se arrivi da C/C++ o Java, pensa agli array PHP come a un contenitore ibrido <em>lista + dizionario</em>: potentissimo per prototipare, ma da usare con disciplina su tipi e chiavi per evitare ambiguità.</p>
         </div>
 
-        <h2>Checklist di buone pratiche</h2>
+        <h2>Checklist finale</h2>
         <div class="box">
           <ul>
-            <li>Decidi il tipo appena ricevi l'input (cast o validazione) così da evitare conversioni implicite.</li>
-            <li>Usa array associativi per strutture eterogenee e dai nomi esplicativi alle chiavi.</li>
-            <li>Proteggi l'output HTML con <code>htmlspecialchars()</code>, specialmente quando stampi stringhe da array di input utente.</li>
-            <li>Documenta con commenti sintetici: spiegano il "perché" del dato, non solo il "cosa".</li>
+            <li>Datatype scalari = valori singoli come stringhe, numeri, boolean e <code>null</code>.</li>
+            <li>Array indicizzato = lista.</li>
+            <li>Array associativo = record con campi nominati.</li>
+            <li>Risultato di query = lista di record.</li>
           </ul>
-          <p class="ok">Con questi pattern i tuoi script saranno più leggibili e pronti per l'integrazione con database e template HTML.</p>
+          <p class="ok">Nella prossima slide useremo funzioni sugli array per filtrare, trasformare e leggere meglio i dati prima di mostrarli in pagina.</p>
         </div>
 
       </div>

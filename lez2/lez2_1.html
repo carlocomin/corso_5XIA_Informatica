@@ -49,28 +49,32 @@
     <div class="content-box">
       <div class="inner-box">
 
-        <h2>Contesto storico</h2>
+        <h2>Da dove arriviamo</h2>
         <div class="box">
           <p>
-            Il <strong>modello Entità-Relazione</strong> (E-R) fu proposto da <strong>Peter Chen</strong> nel 1976
-            per introdurre un linguaggio concettuale universale nella progettazione delle basi di dati.
+            Nel modulo 1 abbiamo visto il <strong>modello relazionale</strong> come linguaggio logico per organizzare i dati
+            in tabelle, chiavi e vincoli.
           </p>
           <p>
-            Prima di Chen, la progettazione dei dati avveniva direttamente nei termini di tabelle, record e puntatori.
-            Il modello E-R mira invece a descrivere la realtà con un livello di astrazione indipendente
-            dalla tecnologia di memorizzazione.
+            Prima di arrivare alle tabelle, pero, serve una domanda piu semplice:
+            <strong>quali oggetti del mondo reale vogliamo rappresentare e quali legami esistono tra loro?</strong>
           </p>
-          <p class="note">Scopo: fornire una rappresentazione <em>concettuale</em> del dominio, utile per la comunicazione tra analisti e progettisti.</p>
+          <p>
+            Il <strong>modello Entita-Relazione</strong> proposto da <strong>Peter Chen</strong> nel 1976 serve proprio a questo:
+            descrivere il dominio in modo <em>concettuale</em>, prima della traduzione nello schema relazionale.
+          </p>
+          <p class="note">Questa lezione fa da ponte tra il livello logico studiato nel modulo 1 e la progettazione del dominio prima della traduzione in tabelle.</p>
         </div>
 
-        <h2>Motivazioni principali</h2>
+        <h2>Perche serve il modello E-R</h2>
         <div class="box">
           <ul>
-            <li>Separare la <strong>fase concettuale</strong> (modellazione) da quella logica e fisica.</li>
-            <li>Esplicitare i <strong>concetti fondamentali</strong> del dominio: entità, attributi e relazioni.</li>
-            <li>Rendere la struttura dei dati <strong>comprensibile</strong> anche ai non tecnici.</li>
-            <li>Costituire la base per la <strong>trasformazione automatica</strong> in schema relazionale.</li>
+            <li>Separare in modo chiaro la <strong>fase concettuale</strong> dalla successiva traduzione logica e fisica.</li>
+            <li>Esplicitare gli elementi del dominio: <strong>entita</strong>, <strong>attributi</strong> e <strong>relazioni</strong>.</li>
+            <li>Discutere il modello anche con chi non ragiona ancora in termini di tabelle e colonne.</li>
+            <li>Preparare una traduzione piu controllata e coerente verso lo <strong>schema relazionale</strong>.</li>
           </ul>
+          <p class="warn">Se si parte subito dalle tabelle, e facile confondere il problema reale con una possibile implementazione.</p>
         </div>
 
         <h2>I tre livelli di astrazione dei dati</h2>
@@ -106,6 +110,16 @@
             rappresenta la struttura logica prima della costruzione fisica.
           </p>
           <p class="ok">Permette di ragionare su cosa rappresentare, non ancora su come implementarlo.</p>
+        </div>
+
+        <h2>Sequenza del modulo 2</h2>
+        <div class="box">
+          <ol>
+            <li>Capire <strong>entita, attributi e relazioni</strong> come strumenti di descrizione del dominio.</li>
+            <li>Ragionare su <strong>cardinalita, partecipazione, entita deboli e specializzazione</strong>.</li>
+            <li>Arrivare alla <strong>traduzione E-R -> relazionale</strong> in modo ordinato, senza saltare passaggi.</li>
+          </ol>
+          <p class="ok">Il modulo 2 e quindi il ponte naturale tra analisi concettuale e costruzione dello schema che verra poi usato nel modulo 3.</p>
         </div>
 
         <h2>Domanda-guida</h2>

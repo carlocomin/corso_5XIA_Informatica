@@ -25,7 +25,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -45,7 +45,7 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <p class="note">Le funzioni servono a riusare codice e organizzarlo. In PHP non c'è un <code>main</code>: ogni file può contenere codice eseguibile e funzioni richiamabili.</p>
+        <p class="note">Le funzioni servono a riusare codice e organizzarlo. Nel nostro modulo diventano utili soprattutto per non ripetere validazioni, formattazioni e piccole operazioni sul database.</p>
 
         <div class="box">
           <h2>Sintassi essenziale</h2>
@@ -73,6 +73,18 @@ function somma($a, $b) {
 }
 
 $risultato = somma(4, 6); // 10
+?&gt;</code></pre>
+        </div>
+
+        <div class="box">
+          <h2>Primo esempio utile al modulo</h2>
+          <p>Una funzione puo ricevere un input gia validato e restituire un valore pronto da mostrare o usare:</p>
+          <pre><code class="language-php">&lt;?php
+function formattaStudente($nome, $classe) {
+    return "$nome - classe $classe";
+}
+
+echo formattaStudente("Ada", "5BIA");
 ?&gt;</code></pre>
         </div>
 
@@ -105,11 +117,12 @@ function stampaMessaggio() {
 
 stampaMessaggio(); // usa la variabile definita fuori
 ?&gt;</code></pre>
+          <p class="warn">Nel codice didattico e utile sapere che <code>global</code> esiste, ma quando puoi e meglio passare i dati come parametri: il codice risulta piu chiaro.</p>
         </div>
 
         <div class="box">
           <h2>Esempio pratico</h2>
-          <p>Combinare parametri, ritorni e logica permette di costruire piccole utility riutilizzabili.</p>
+          <p>Combinare parametri, ritorni e logica permette di costruire piccole utility riutilizzabili anche in pagine che leggono il database.</p>
           <pre><code class="language-php">&lt;?php
 function calcolaMedia($lista) {
     $totale = array_sum($lista);
@@ -121,7 +134,28 @@ $numeri = [6, 8, 10];
 echo calcolaMedia($numeri); // 8
 ?&gt;</code></pre>
         </div>
+
+        <div class="box">
+          <h2>Esempio con PDO e query parametrizzata</h2>
+          <pre><code class="language-php">&lt;?php
+function caricaStudentiPerClasse(PDO $pdo, $classe) {
+    $stmt = $pdo->prepare(
+        "SELECT nome, classe
+         FROM studenti
+         WHERE classe = :classe"
+    );
+    $stmt->execute(['classe' => $classe]);
+    return $stmt->fetchAll();
+}
+?&gt;</code></pre>
+          <p class="ok">Qui la funzione non e un concetto astratto: diventa uno strumento concreto per non riscrivere ogni volta la stessa query.</p>
+        </div>
       </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
     </div>
   </div>
 </body>

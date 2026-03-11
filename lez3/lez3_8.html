@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -52,7 +52,22 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <p class="note">Clicca su “Mostra soluzione” per rivelare il codice di ciascun esercizio. Gli snippet sono auto-contenuti e commentati.</p>
+        <p class="note">Questa slide resta un <strong>laboratorio di consolidamento</strong>: non sostituisce il percorso principale del modulo, ma ti aiuta a fissare sintassi, cicli, input e stampa HTML con molta pratica.</p>
+        <div class="box">
+          <h2>Come usare questa slide</h2>
+          <ul>
+            <li>Gli esercizi 1-6 consolidano sintassi, cicli, stringhe e output.</li>
+            <li>Gli esercizi 7-9 introducono input da URL e piccoli calcoli.</li>
+            <li>Gli esercizi 10-14 lavorano di piu su pagine PHP, file e output HTML.</li>
+            <li>Le soluzioni restano a comparsa: prima prova da solo, poi confronta il codice.</li>
+          </ul>
+          <p class="ok">Il blocco esercizi rimane parte integrante del modulo: serve a non perdere la manualita di base mentre introduciamo PDO e MySQL nelle altre slide.</p>
+        </div>
+
+        <div class="box">
+          <h2>Blocco A — PHP base: cicli, stringhe, output</h2>
+          <p>Qui l'obiettivo e prendere confidenza con la sintassi e con il fatto che PHP genera HTML in modo dinamico.</p>
+        </div>
 
         <div class="box">
           <h2>1) Disegna una scacchiera 20×20</h2>
@@ -179,6 +194,11 @@ if ($stringa1 === $stringa2) {
         </div>
 
         <div class="box">
+          <h2>Blocco B — Input da URL e calcoli</h2>
+          <p>In questi esercizi compaiono <code>$_GET</code>, cast e controlli minimi sugli input.</p>
+        </div>
+
+        <div class="box">
           <h2>7) Secondi trascorsi da una data</h2>
           <p class="exercise-statement"><strong>Enunciato:</strong> Confrontare la data odierna con una data inserita (es. 15/3/2013) e stabilire quanti secondi sono trascorsi.</p>
           <p>Confronta una data inserita con l'istante attuale usando <code>DateTime</code>.</p>
@@ -231,6 +251,11 @@ $km = ($litri / $consumo) * 100;
 echo "Puoi percorrere circa " . round($km, 1) . " km";
 ?&gt;</code></pre>
           </div>
+        </div>
+
+        <div class="box">
+          <h2>Blocco C — Pagine PHP, file e output HTML</h2>
+          <p>Qui il focus torna sul lato server: leggere file, produrre pagine e stampare contenuti in modo leggibile.</p>
         </div>
 
         <div class="box">
@@ -295,8 +320,7 @@ echo "&lt;footer&gt;&lt;a href='data.php'&gt;Mostra data odierna&lt;/a&gt;&lt;/f
 echo "&lt;/body&gt;&lt;/html&gt;";
 
 // file data.php
-// echo date_i18n richiede l'estensione intl attiva
-echo strftime("%A %d %B %Y, %H:%M:%S");
+echo date("d/m/Y H:i:s");
 ?&gt;</code></pre>
           </div>
         </div>

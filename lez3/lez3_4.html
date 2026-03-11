@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -56,11 +56,10 @@
         <h2>Obiettivi veloci</h2>
         <div class="box">
           <ul>
-            <li>Scrivere un file <strong>.php</strong> con tag <code>&lt;?php ... ?&gt;</code> mescolato ad HTML.</li>
-            <li>Mostrare output dinamico con <code>echo</code> e variabili.</li>
-            <li>Capire dove girano i controlli: <em>server</em> esegue PHP, <em>browser</em> vede solo HTML.</li>
+            <li>Scrivere un file PHP mescolando logica e HTML in modo ordinato.</li>
+            <li>Stampare output dinamico lato server.</li>
+            <li>Preparare il terreno per mostrare in pagina anche dati presi da MySQL.</li>
           </ul>
-          <p class="note">Questo è il primo passo concreto per collegare logica server e interfaccia web.</p>
         </div>
 
         <h2>Struttura minima di un file PHP</h2>
@@ -70,49 +69,60 @@
 &lt;head&gt;...&lt;/head&gt;
 &lt;body&gt;
   &lt;h1&gt;Ciao dal server!&lt;/h1&gt;
-  &lt;p&gt;Oggi è: &lt;?php echo date('d/m/Y'); ?&gt;&lt;/p&gt;
+  &lt;p&gt;Oggi e: &lt;?php echo date('d/m/Y'); ?&gt;&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-          <ul>
-            <li>Il server interpreta il blocco PHP e rimpiazza il tag con l'output.</li>
-            <li>Il browser riceve solo HTML/CSS: niente codice PHP visibile lato client.</li>
-          </ul>
-          <p class="ok">Salva come <code>index.php</code> nella document root e apri <code>http://localhost</code>.</p>
+          <p class="warn">Il browser non riceve il codice PHP: riceve solo l'HTML che PHP ha prodotto.</p>
         </div>
 
-        <h2>Output dinamico e variabili</h2>
+        <h2>Output dinamico e valori variabili</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
 $nome = "Alice";
-$ruolo = "studente";
-
-echo "Benvenuta $nome!";          // interpolazione
-// alternativa compatta (short echo tag):
+$classe = "5BIA";
 ?&gt;
-&lt;p&gt;Ruolo: &lt;?= htmlspecialchars($ruolo) ?&gt;&lt;/p&gt;</code></pre>
-          <ul>
-            <li><code>echo</code> stampa stringhe; <code><?= ... ?></code> è shorthand sicuro per singoli valori.</li>
-            <li><code>htmlspecialchars()</code> converte caratteri speciali in entità HTML (es. <code>&lt;</code> → <code>&amp;lt;</code>, <code>&gt;</code> → <code>&amp;gt;</code>, <code>&amp;</code> → <code>&amp;amp;</code>, doppi apici → <code>&amp;quot;</code>).</li>
-            <li>Serve a prevenire XSS quando stampi contenuti provenienti dall'esterno: il browser li mostrerà come testo e non li eseguirà.</li>
-          </ul>
-          <p class="note">Esempio: se l'utente inserisce <code>&lt;script&gt;alert('ciao')&lt;/script&gt;</code>, <code>htmlspecialchars</code> lo renderà innocuo come testo visibile.</p>
+
+&lt;h2&gt;Benvenuta &lt;?= htmlspecialchars($nome) ?&gt;&lt;/h2&gt;
+&lt;p&gt;Classe: &lt;?= htmlspecialchars($classe) ?&gt;&lt;/p&gt;</code></pre>
+          <p class="note"><code>htmlspecialchars()</code> va usato ogni volta che stampi dati che potrebbero arrivare da form, URL o database.</p>
         </div>
 
-        <h2>Integrare PHP e HTML</h2>
+        <h2>Dal PHP all'HTML</h2>
         <div class="box">
-          <ul>
-            <li>Puoi aprire e chiudere più blocchi PHP nello stesso file.</li>
-            <li>Logica minimale all'inizio, markup più leggibile in basso.</li>
-          </ul>
           <pre><code class="language-php">&lt;?php
-$studenti = ["Anna", "Marco", "Luca"];
+$studenti = ["Ada", "Alan", "Grace"];
 ?&gt;
+
 &lt;ul&gt;
-  &lt;?php foreach ($studenti as $s): ?&gt;
-    &lt;li&gt;&lt;?= $s ?&gt;&lt;/li&gt;
+  &lt;?php foreach ($studenti as $studente): ?&gt;
+    &lt;li&gt;&lt;?= htmlspecialchars($studente) ?&gt;&lt;/li&gt;
   &lt;?php endforeach; ?&gt;
 &lt;/ul&gt;</code></pre>
-          <p class="note">Mantieni il PHP per la logica e lascia che l'HTML descriva la struttura della pagina.</p>
+          <p>La logica prepara i dati; l'HTML descrive come visualizzarli.</p>
+        </div>
+
+        <h2>Lo stesso schema con dati dal database</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$stmt = $pdo->prepare(
+    "SELECT nome, classe
+     FROM studenti
+     WHERE classe = :classe"
+);
+$stmt->execute(['classe' => '5BIA']);
+$studenti = $stmt->fetchAll();
+?&gt;
+
+&lt;ul&gt;
+  &lt;?php foreach ($studenti as $studente): ?&gt;
+    &lt;li&gt;
+      &lt;?= htmlspecialchars($studente['nome']) ?&gt;
+      -
+      &lt;?= htmlspecialchars($studente['classe']) ?&gt;
+    &lt;/li&gt;
+  &lt;?php endforeach; ?&gt;
+&lt;/ul&gt;</code></pre>
+          <p class="ok">Idea chiave: cambia la sorgente dei dati, non il principio con cui li stampi in HTML.</p>
         </div>
 
         <h2>Debug rapido</h2>
@@ -121,16 +131,22 @@ $studenti = ["Anna", "Marco", "Luca"];
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$variabile = [1, 2, 3];
-var_dump($variabile);    // stampa tipo e contenuto
-// die("stop");          // blocca l'esecuzione per ispezionare l'output
+var_dump($studenti);
+// exit('stop');
 ?&gt;</code></pre>
           <ul>
-            <li>Attiva gli errori solo in locale. In produzione usa log file, non <code>display_errors</code>.</li>
-            <li><code>var_dump</code>/<code>print_r</code> sono utili per capire cosa stai passando a HTML o al DB.</li>
-            <li><code>error_reporting</code> + <code>ini_set('display_errors', 1)</code> fanno sì che PHP mostri a schermo warning/notice/fatal: vedrai i messaggi direttamente nel browser, sopra o al posto della pagina renderizzata.</li>
-            <li><code>var_dump</code> e <code>print_r</code> scrivono l'output nel flusso HTML dove li chiami: compaiono nella pagina accanto al resto del markup, utili per tracciare variabili “al volo”.</li>
-            <li><code>die()</code> (o <code>exit()</code>) interrompe l'esecuzione subito e stampa il testo fornito: ideale per fermare il rendering quando vuoi leggere con calma l'output di debug.</li>
+            <li><code>var_dump()</code> aiuta a capire se hai una stringa, un array o il risultato di una query.</li>
+            <li><code>exit()</code> ti ferma in un punto preciso quando vuoi controllare lo stato del programma.</li>
+            <li>Questi strumenti vanno bene in locale; non devono restare nel codice finale da consegnare.</li>
+          </ul>
+        </div>
+
+        <h2>Cosa fissare da questa slide</h2>
+        <div class="box">
+          <ul>
+            <li>PHP produce HTML lato server.</li>
+            <li>Una lista HTML puo essere alimentata prima da un array, poi da una query MySQL.</li>
+            <li>Stampare dati in pagina e il punto di arrivo naturale del lavoro fatto con PDO e query parametrizzate.</li>
           </ul>
         </div>
 

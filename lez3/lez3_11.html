@@ -25,7 +25,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -45,7 +45,7 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <p class="note">Riprendiamo le funzioni introducendo aspetti che diventano utili quando il codice cresce: tipizzazione, parametri variabili, chiusure e passaggi per riferimento.</p>
+        <p class="note">Riprendiamo le funzioni introducendo aspetti che diventano utili quando il codice cresce. Restiamo su un livello base-intermedio: strumenti da saper leggere e riconoscere, non tecniche da usare tutte subito.</p>
 
         <div class="box">
           <h2>Type hinting e valori di ritorno tipizzati</h2>
@@ -90,18 +90,19 @@ $lista = ["Marco", "Giulia"];
 aggiungiPrefisso("Sig.", $lista);
 // $lista ora contiene ["Sig. Marco", "Sig. Giulia"]
 ?&gt;</code></pre>
+          <p class="note">E utile conoscerlo, ma nel nostro modulo non e il meccanismo principale: di solito preferiremo funzioni semplici con input chiari e ritorni espliciti.</p>
         </div>
 
         <div class="box">
           <h2>Funzioni anonime e closure</h2>
           <p>Le funzioni possono essere assegnate a variabili o passate come argomento. Con <code>use</code> catturi variabili esterne creando una closure.</p>
           <pre><code class="language-php">&lt;?php
-$prefisso = "TODO";
+$prefisso = "AVVISO";
 $formatter = function(string $testo) use ($prefisso): string {
     return "[$prefisso] $testo";
 };
 
-echo $formatter("sistemare bug");
+echo $formatter("controllare input");
 ?&gt;</code></pre>
           <p class="note">Le closure sono spesso usate con <code>array_map</code>, <code>array_filter</code> e funzioni che accettano callback.</p>
         </div>
@@ -114,8 +115,26 @@ $numeri = [1, 2, 3, 4];
 $raddoppiati = array_map(fn(int $n): int => $n * 2, $numeri);
 // [2, 4, 6, 8]
 ?&gt;</code></pre>
+          <p class="note">Per il corso basta riconoscere la sintassi e saperla leggere in esempi brevi, soprattutto insieme ad <code>array_map</code> e <code>array_filter</code>.</p>
+        </div>
+
+        <div class="box">
+          <h2>Chiusura del modulo: cosa sai fare adesso</h2>
+          <ul>
+            <li>Capire il flusso <code>browser -&gt; PHP -&gt; MySQL -&gt; HTML</code>.</li>
+            <li>Leggere input con <code>$_GET</code> e <code>$_POST</code>.</li>
+            <li>Validare valori in modo essenziale.</li>
+            <li>Usare PDO e prepared statements per query semplici.</li>
+            <li>Mostrare in pagina il risultato di una query con array, cicli e funzioni.</li>
+          </ul>
+          <p class="ok">Il modulo non ti chiede di sviluppare un backend avanzato: ti mette nelle condizioni di costruire correttamente una piccola pagina dinamica con database.</p>
         </div>
       </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
     </div>
   </div>
 </body>

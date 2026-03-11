@@ -32,7 +32,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -57,109 +57,103 @@
         <div class="box">
           <ul>
             <li>Prendere confidenza con variabili, commenti e regole di base della sintassi PHP.</li>
-            <li>Conoscere i tipi primitivi principali (stringhe, numeri, boolean, null) e come li usi nel codice e nelle pagine HTML.</li>
-            <li>Evitare errori comuni: concatenazione, comparazioni deboli vs strette, interpolazione e gestione degli input mancanti.</li>
+            <li>Conoscere i tipi primitivi principali e capire come li usi nel codice, nelle pagine HTML e negli input dei form.</li>
+            <li>Evitare errori tipici: concatenazione sbagliata, confronti deboli, input mancanti e cast poco chiari.</li>
           </ul>
-          <p class="note">Questa base è indispensabile prima di affrontare controlli di flusso e strutture dati: solo con tipi e sintassi chiari puoi leggere e manutenere il codice in modo affidabile.</p>
+          <p class="note">Questa base resta introduttiva a PHP: ci serve sia per leggere script semplici sia per arrivare con piu consapevolezza a <code>$_GET</code>, <code>$_POST</code> e PDO.</p>
         </div>
 
         <h2>Sintassi minima: variabili e commenti</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$nome = "Giulia";       // variabile: il simbolo $ è obbligatorio
-$eta  = 18;              // numeri senza virgolette
+$nome = "Giulia";
+$eta = 18;
 
 // commento su una linea
-/* commento su più linee */
-
-// case-sensitive su variabili: $Nome è diverso da $nome
+/* commento su piu linee */
 ?&gt;</code></pre>
           <ul>
             <li>Le istruzioni terminano con <code>;</code>.</li>
-            <li>Usa nomi chiari (snake_case o camelCase) e indenta il codice come negli esempi: il file sarà leggibile anche a distanza di tempo o da altri compagni.</li>
-            <li>Ricorda che PHP è case-sensitive sulle variabili ma non sui comandi <code>echo</code>/<code>Echo</code>; mantieni comunque uno stile coerente tutto minuscolo.</li>
+            <li>Le variabili iniziano sempre con <code>$</code>.</li>
+            <li>PHP distingue tra <code>$nome</code> e <code>$Nome</code>: sulle variabili il linguaggio e case-sensitive.</li>
           </ul>
+          <p class="note">Nelle prossime slide queste variabili rappresenteranno a volte valori scritti a mano, a volte dati letti da <code>$_POST</code> o da MySQL.</p>
         </div>
 
-        <h2>Stringhe: singoli vs doppi apici</h2>
+        <h2>Stringhe: singoli apici, doppi apici e concatenazione</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$nome = "Giulia";
+$classe = "5BIA";
+$titolo = "Elenco classe $classe";
+$testo = 'Classe: ' . $classe;
 
-$double = "Ciao $nome";           // interpolazione variabili
-$single = 'Ciao $nome';            // stringa letterale
-$concat = "Ciao " . $nome . "!"; // concatenazione con .
-
-echo $double;  // Ciao Giulia
+echo $titolo;
 ?&gt;</code></pre>
           <ul>
-            <li>I doppi apici espandono variabili e sequenze speciali (<code>\n</code> per andare a capo); i singoli mantengono tutto letterale, utile per stringhe statiche o query SQL.</li>
-            <li><code>.</code> è l'operatore di concatenazione (non <code>+</code>) e può concatenare anche numeri, che verranno convertiti in stringa.</li>
-            <li>Per sicurezza lato HTML, combina con <code>htmlspecialchars()</code> prima di mostrare input utente così da evitare injection o rotture del layout.</li>
+            <li>I doppi apici interpolano variabili; i singoli lasciano il testo letterale.</li>
+            <li><code>.</code> concatena stringhe: non usare <code>+</code>.</li>
+            <li>Quando una stringa arriva dall'esterno e va stampata in HTML, usa <code>htmlspecialchars()</code>.</li>
+            <li>I singoli apici sono utili anche quando vuoi testo stabile, per esempio in una stringa SQL o in un frammento HTML fisso.</li>
           </ul>
         </div>
 
         <h2>Numeri e booleani</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$intero = 42;         // int
-$decimale = 3.14;     // float
-$vero = true;         // boolean
-$falso = false;
+$prezzo = 19.90;
+$quantita = 3;
+$totale = $prezzo * $quantita;
 
-// attenzione alle comparazioni deboli vs strette
-var_dump(0 == false);   // true (confronto debole)
-var_dump(0 === false);  // false (tipi diversi, confronto stretto)
+$attivo = true;
+
+var_dump(0 == false);   // true
+var_dump(0 === false);  // false
 ?&gt;</code></pre>
           <ul>
-            <li>Preferisci gli operatori stretti <code>===</code> e <code>!==</code> quando confronti valori user-facing, perché controllano sia il valore sia il tipo.</li>
-            <li><code>var_dump()</code> mostra tipo e valore: utile per debug rapido, ma rimuovilo dal codice consegnato.</li>
-            <li>Gli interi e i float vengono convertiti automaticamente quando li sommi o dividi, ma attenzione ai decimali (es. <code>0.1 + 0.2</code>) per gli arrotondamenti binari.</li>
+            <li>Preferisci <code>===</code> e <code>!==</code> per confronti affidabili.</li>
+            <li><code>var_dump()</code> e utile in fase di debug per capire tipo e valore reali.</li>
+            <li>I valori numerici servono sia negli esercizi introduttivi sia, piu avanti, in calcoli e query.</li>
           </ul>
         </div>
 
-        <h2>Null, coalescenza e default</h2>
+        <h2>Null, default e dati mancanti</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$telefono = null;
-$telefono = $_POST['telefono'] ?? null; // prende POST se esiste, altrimenti null
-
-// valori di default con l'operatore ??
-$ruolo = $_POST['ruolo'] ?? 'studente';
+$nome = $_POST['nome'] ?? null;
+$classe = $_POST['classe'] ?? '5BIA';
 ?&gt;</code></pre>
           <ul>
-            <li><code>null</code> rappresenta l'assenza di valore: differenzia tra "campo non inviato" e stringa vuota.</li>
-            <li>L'operatore di coalescenza <code>??</code> evita notice su indici non definiti e imposta default leggibili senza dover annidare <code>isset()</code>.</li>
-            <li>Quando ricevi dati da form, usa <code>??</code> per prevenire warning e mostrare messaggi chiari all'utente.</li>
+            <li><code>null</code> indica assenza di valore.</li>
+            <li><code>??</code> evita notice e rende espliciti i valori di default.</li>
+            <li>Questa forma e molto utile quando ricevi dati da un form prima di validarli o salvarli.</li>
+            <li>E utile distinguere tra "chiave mancante", <code>null</code> e stringa vuota: non significano la stessa cosa.</li>
           </ul>
         </div>
 
-        <h2>Cast e conversioni rapide</h2>
+        <h2>Cast e conversioni esplicite</h2>
         <div class="box">
           <pre><code class="language-php">&lt;?php
-$quantita = "5";         // stringa
-$quantitaInt = (int) $quantita; // 5
+$quantita = "5";
+$quantitaInt = (int) $quantita;
 
-$flag = "1";
-if ((bool) $flag) {
-  echo "vero";
-}
+$id = (int) ($_GET['id'] ?? 0);
+$voto = (float) ($_POST['voto'] ?? 0);
 ?&gt;</code></pre>
           <ul>
-            <li>Casting esplicito rende chiaro come vuoi usare il dato (utile prima di salvare su DB) e riduce conversioni implicite imprevedibili.</li>
-            <li>Combina cast + validazione server-side per evitare input non coerenti: prima validi, poi casti, poi salvi.</li>            
+            <li>Il cast esplicito chiarisce come stai interpretando il dato ricevuto.</li>
+            <li>Prima si valida, poi si casta, poi si usa il valore.</li>
+            <li>Nel modulo questo passaggio tornera utile anche prima di una query parametrizzata.</li>
           </ul>
         </div>
 
         <h2>In sintesi</h2>
         <div class="box">
           <ul>
-            <li>Usa doppi apici per interpolare, singoli quando vuoi testo letterale.</li>
-            <li>Preferisci <code>===</code>/<code>!==</code> per confronti sicuri tra tipi diversi.</li>
-            <li>Gestisci valori opzionali con <code>??</code> e assegna default espliciti per evitare notice e comportamenti inattesi.</li>
-            <li>Casta e valida i dati in ingresso prima di usarli: l'applicazione sarà più sicura e prevedibile.</li>
+            <li>La sintassi di base serve a scrivere script PHP leggibili e prevedibili.</li>
+            <li>Stringhe, numeri, boolean e <code>null</code> compaiono subito negli esercizi, nei form e poi nelle query.</li>
+            <li>Se i tipi sono chiari, anche il passaggio verso MySQL diventa piu semplice da capire.</li>
           </ul>
-          <p class="ok">Pronti per Lez3.6: datatype e array PHP con esempi pratici.</p>
+          <p class="ok">Nella prossima slide vedremo gli array, che in PHP sono la struttura chiave per gestire risultati, righe e collezioni di dati.</p>
         </div>
 
       </div>

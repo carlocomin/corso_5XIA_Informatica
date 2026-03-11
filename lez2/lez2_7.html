@@ -60,6 +60,19 @@
           </ul>
         </div>
 
+        <h2>Sequenza operativa di traduzione</h2>
+        <div class="box">
+          <ol>
+            <li>Tradurre le <strong>entita forti</strong> in relazioni.</li>
+            <li>Gestire <strong>entita deboli</strong> e chiavi composte.</li>
+            <li>Tradurre <strong>attributi composti, multivalore e derivati</strong>.</li>
+            <li>Affrontare le relazioni <strong>1:1, 1:N e N:M</strong>.</li>
+            <li>Chiudere con i casi speciali: <strong>relazioni n-arie e specializzazioni</strong>.</li>
+            <li>Controllare infine <strong>PK, FK, UNIQUE</strong> e i vincoli non direttamente esprimibili.</li>
+          </ol>
+          <p class="note">Conviene leggerla come una procedura, non come un insieme di eccezioni sparse.</p>
+        </div>
+
         <h2>Entità forti → Relazioni</h2>
         <div class="box">
           <ul>
@@ -73,56 +86,19 @@ Entità: STUDENTE(Matr, Nome, Cognome, DataNascita, Email)
 Relazione: STUDENTE(Matr, Nome, Cognome, DataNascita, Email) — PK{Matr} — UNIQUE{Email}</code></pre>
         </div>
 		
-		<h2>Partecipazione totale (richiamo)</h2>
-<div class="box">
-  <p>
-    In una relazione E-R, la <strong>partecipazione totale</strong> di un insieme di entità <code>E</code> a una relazione <code>R</code>
-    significa che <em>ogni istanza</em> di <code>E</code> partecipa ad almeno una istanza di <code>R</code> (cardinalità minima ≥ 1).
-    Nella notazione di Chen si indica con una <strong>linea doppia</strong> tra l’entità e il rombo della relazione
-    (una sola linea = partecipazione <em>parziale</em>, minima 0).
-  </p>
-
-  <pre><code class="language-text">Formalizzazione (relazione binaria):
-Sia R ⊆ E × F.
-Totale su E ⇔ ∀ e ∈ E, ∃ f ∈ F : (e, f) ∈ R
-Parziale su E ⇔ ∃ e ∈ E : ¬∃ f ∈ F : (e, f) ∈ R
-
-Relazione n-aria R ⊆ E₁ × … × Eₙ:
-Totale su Eᵢ ⇔ ∀ x ∈ Eᵢ, ∃ (e₁,…,eₙ) ∈ R con eᵢ = x</code></pre>
-
-  <h3 style="margin:.5rem 0 .2rem">Traduzione ed enforcement nel modello relazionale</h3>
-  <ul>
-    <li>
-      <strong>1 : N</strong> — totale sul lato <em>N</em>:
-      rendi la <strong>FK NOT NULL</strong> nel lato N (ogni tupla del lato N deve riferire una tupla del lato 1).
-    </li>
-    <li>
-      <strong>1 : N</strong> — totale sul lato <em>1</em>:
-      richiede “almeno una occorrenza nel lato N per ogni tupla del lato 1”; questo <strong>non è esprimibile</strong>
-      con sole PK/FK standard. Servono <em>vincoli estesi</em> (trigger, procedure, o assertion se supportata).
-    </li>
-    <li>
-      <strong>1 : 1</strong> — totale su <em>A</em>:
-      metti in <em>A</em> una <strong>FK NOT NULL + UNIQUE</strong> verso <em>B</em>. Totale su entrambi i lati:
-      FKs <strong>NOT NULL + UNIQUE</strong> su entrambi i lati oppure <em>merge</em> delle tabelle se semanticamente lecito.
-    </li>
-    <li>
-      <strong>N : M</strong> — totale su <em>E</em>:
-      ogni tupla di <em>E</em> deve comparire almeno una volta nella tabella associativa; anche qui non bastano PK/FK:
-      usare <em>trigger</em> (es. bloccare DELETE/INSERT che violano la copertura) o job di validazione.
-    </li>
-    <li>
-      <strong>Entità debole</strong>:
-      la partecipazione totale alla relazione identificante si implementa con <strong>FK NOT NULL</strong> dalla tabella
-      debole all’owner; la PK della debole include <em>PK(owner)</em> ∪ <em>chiave parziale</em>.
-    </li>
-  </ul>
-
-  <div class="note">
-    “Totale” significa <em>almeno uno</em>, non “esattamente uno”. La cardinalità massima (1, N) va gestita con
-    <strong>UNIQUE</strong> (per i casi 1:1) o con la struttura della tabella associativa (per N:M).
-  </div>
-</div>
+        <h2>Partecipazione totale (richiamo breve)</h2>
+        <div class="box">
+          <p>
+            La <strong>partecipazione totale</strong> significa che ogni istanza di un'entita deve comparire
+            almeno una volta nella relazione considerata.
+          </p>
+          <ul>
+            <li>Se la <strong>FK</strong> si trova sul lato giusto, la totalita si esprime spesso con <strong>NOT NULL</strong>.</li>
+            <li>Se invece serve imporre che dall'altro lato esista <strong>almeno una occorrenza collegata</strong>, spesso PK e FK da sole non bastano.</li>
+            <li>Questo mostra che la traduzione relazionale conserva molto, ma <strong>non tutti i vincoli concettuali</strong> in modo automatico e locale.</li>
+          </ul>
+          <div class="note">"Totale" significa almeno uno, non esattamente uno. La cardinalita massima si gestisce con <strong>UNIQUE</strong> o con la struttura della relazione associativa.</div>
+        </div>
 
 
         <h2>Entità deboli → Relazioni con PK composta</h2>

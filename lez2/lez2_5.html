@@ -147,65 +147,23 @@ Funzioni:
         </div>
 
 
-<h2>Vincoli e buone pratiche</h2>
+<h2>Come ragionare in pratica su questi attributi</h2>
 <div class="box">
   <ul>
-    <li>
-      <strong>Dominio e validazione</strong>:
-      <ul>
-        <li><em>Dominio</em> = insieme dei valori ammessi per un attributo. Deve essere espresso come <strong>predicato</strong> chiaro (vero/falso) e non come descrizione vaga.</li>
-        <li>Esempi di predicati:
-          <ul>
-            <li><code>CAP ∈ {00000…99999}</code> con lunghezza esattamente 5 (zero iniziali ammessi).</li>
-            <li><code>Email</code>: contiene “@” e non inizia/termina con “@”.</li>
-            <li><code>Telefono</code>: cifre + opzionale “+” iniziale; spazi e trattini normalizzati prima del controllo.</li>
-          </ul>
-        </li>
-        <li><em>Normalizzazione del formato</em> prima della validazione (spazi, maiuscole/minuscole, accenti) per evitare falsi negativi/duplicati semantici.</li>
-        <li>Scrivi sempre il vincolo come formula: <code>∀ e ∈ STUDENTE: f_CAP(e) ∈ Σ⁵</code>, <code>∀ e: contieneChiocciola(f_Email(e))</code>.</li>
-      </ul>
-    </li>
+    <li><strong>Composto</strong>: usalo quando i componenti hanno significato proprio e possono servire in query o controlli. Esempio: <code>Indirizzo = (Via, Citta, CAP)</code>.</li>
+    <li><strong>Multivalore</strong>: usalo quando una stessa entita puo avere piu valori dello stesso tipo. Esempio: piu numeri di <code>Telefono</code> per uno studente.</li>
+    <li><strong>Derivato</strong>: usalo quando un valore si puo calcolare da altri dati gia presenti. Esempio: <code>Eta</code> ricavata da <code>DataNascita</code>.</li>
+    <li><strong>Errore tipico</strong>: trattare come attributo semplice un dato che in realta e strutturato, ripetibile o calcolabile.</li>
+  </ul>
+</div>
 
-    <li>
-      <strong>Cardinalità del multivalore</strong>:
-      <ul>
-        <li>Specifica <em>min/max</em>: es. <code>Telefono</code> ha <code>0..*</code> (facoltativo) oppure <code>1..3</code> (almeno uno, al massimo tre).</li>
-        <li><em>Unicità interna</em>: valori distinti all’interno dello stesso insieme (<code>∀ e: |f_Tel(e)| = |set(f_Tel(e))|</code>).</li>
-        <li><em>Assenza di ordine</em>: l’insieme non è una lista; se serve un ordinamento o una priorità, introduce un attributo aggiuntivo (es. <code>Priorità ∈ {primario, secondario}</code>).</li>
-        <li>Se i valori hanno proprietà proprie (tipo, note, validità), <em>promuovili</em> a nuova entità (<code>EmailDocente</code>) collegata 1:N.</li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Derivati</strong>:
-      <ul>
-        <li>Un derivato è determinato dagli altri dati: <code>f_D(e) = g(f_1(e), …)</code>. In generale <em>non si memorizza</em>.</li>
-        <li>Se dipende dal tempo (es. <code>Età</code>), memorizzarlo genera inconsistenze; calcolarlo al volo o tramite <em>vista</em>.</li>
-        <li>Se si decide di materializzarlo (motivi di performance), definire:
-          <ul>
-            <li><em>Regola di aggiornamento</em> (quando/come ricalcolarlo).</li>
-            <li><em>Fonte autorevole</em> (quali attributi lo determinano).</li>
-            <li><em>Invarianze</em> (es. “Età” cambia ogni anno → evitare materializzazione).</li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-
-    <li>
-      <strong>Composti</strong>:
-      <ul>
-        <li>Un attributo composto (<code>Indirizzo = (Via, Città, CAP)</code>) è utile se i componenti hanno semantica/ricerca/vincoli propri.</li>
-        <li>Esplicita i componenti come attributi semplici separati se:
-          <ul>
-            <li>servono <em>query mirate</em> (filtrare per CAP, ordinare per Città),</li>
-            <li>hanno <em>domini specifici</em> (CAP numerico a 5 cifre),</li>
-            <li>richiedono <em>vincoli incrociati</em> (CAP compatibile con Città/Provincia).</li>
-          </ul>
-        </li>
-        <li>Evita “blob testuali” (un solo campo libero) perché indeboliscono i vincoli e complicano le ricerche.</li>
-        <li>Consenti <em>parzialità controllata</em> solo se ha senso (es. Via nota ma CAP sconosciuto), documentando quali componenti possono essere NULL e perché.</li>
-      </ul>
-    </li>
+<h2>Checklist didattica</h2>
+<div class="box">
+  <ul>
+    <li>Se il dato ha <strong>parti interne significative</strong>, probabilmente e un attributo composto.</li>
+    <li>Se la stessa entita puo avere <strong>piu valori contemporaneamente</strong>, probabilmente e un attributo multivalore.</li>
+    <li>Se il valore si puo <strong>ottenere da altri attributi</strong>, probabilmente e un attributo derivato.</li>
+    <li>Memorizzare un derivato che cambia nel tempo puo creare <strong>incoerenze</strong>.</li>
   </ul>
 
   <div style="margin-top:.6rem">
@@ -219,10 +177,10 @@ Domini:
   Email soddisfa: contieneChiocciola(email) ∧ nonIniziaConChiocciola(email) ∧ nonFinisceConChiocciola(email)
 
 Vincoli:
-  ∀ e: |Telefono(e)| ≤ 3              -- al più tre numeri
-  ∀ e: |Telefono(e)| = |set(Telefono(e))|  -- tutti distinti
-  ∀ e: Età(e) = oggi − DataNascita(e)       -- derivato, non memorizzato
-  ∀ e: CAP(e) ⇔ (len=5 ∧ cifre)             -- dominio forte su CAP
+  ∀ e: |Telefono(e)| ≤ 3
+  ∀ e: |Telefono(e)| = |set(Telefono(e))|
+  ∀ e: Età(e) = oggi − DataNascita(e)
+  ∀ e: CAP(e) ⇔ (len=5 ∧ cifre)
 </code></pre>
   </div>
 </div>

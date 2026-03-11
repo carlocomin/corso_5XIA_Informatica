@@ -41,11 +41,11 @@
   <div class="sidebar" id="menu">
     <h2>Lezione 1 — Modello Relazionale</h2>
     <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi & contesto storico</a></li>
+      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
       <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio & entità</a></li>
+      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
       <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne & referenziale</a></li>
+      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
       <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
     </ul>
   </div>
@@ -64,117 +64,80 @@
         <h2>Obiettivo</h2>
         <ul>
           <li>Distinguere in modo rigoroso <strong>schema logico</strong> e <strong>schema fisico</strong>.</li>
-          <li>Definire l'<strong>indipendenza dei dati</strong> (logica e fisica) e le sue conseguenze pratiche.</li>
-          <li>Collegare il modello relazionale a scelte implementative: indici, file organization, piani di esecuzione.</li>
+          <li>Capire che cosa significa <strong>indipendenza dei dati</strong> e perche conta.</li>
+          <li>Chiudere il modulo 1 collegando il formalismo relazionale alla progettazione dei moduli successivi.</li>
         </ul>
 
-        <h2>Architettura ANSI/SPARC (3 livelli)</h2>
+        <h2>Domanda di partenza</h2>
+        <div class="box">
+          <p>Perche nel modello relazionale insistiamo cosi tanto sulla distinzione tra <strong>logico</strong> e <strong>fisico</strong>?</p>
+          <p class="note">Perche il cuore del modello relazionale sta proprio qui: poter ragionare sui dati senza legarsi da subito al modo in cui il DBMS li memorizza.</p>
+        </div>
+
+        <h2>Architettura ANSI/SPARC (richiamo essenziale)</h2>
         <div class="box">
           <ul>
             <li><span class="def">Esterno</span>: viste e interfacce utente/applicazione (sottoinsiemi/riformulazioni dello schema concettuale).</li>
             <li><span class="def">Concettuale</span> (logico): schemi di relazione, domini, vincoli (PK, FK, ecc.).</li>
             <li><span class="def">Interno</span> (fisico): strutture di memorizzazione, pagine, indici, partizioni, compressione.</li>
           </ul>
-          <p class="note">Il modello relazionale vive al <strong>livello concettuale</strong>; le query sono dichiarative e <em>indipendenti</em> dal livello interno.</p>
+          <p class="note">In questo corso il modello relazionale vive soprattutto al <strong>livello concettuale</strong>. Il livello interno esiste, ma non e il punto da cui partiamo per progettare.</p>
+        </div>
+
+        <h2>Confronto diretto: logico vs fisico</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>Piano</th><th>Domanda tipica</th><th>Esempi</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Logico</strong></td><td>Quali dati rappresento e con quali vincoli?</td><td>relazioni, attributi, chiavi, vincoli</td></tr>
+              <tr><td><strong>Fisico</strong></td><td>Come il DBMS memorizza e recupera quei dati?</td><td>indici, pagine, file, piani di esecuzione</td></tr>
+            </tbody>
+          </table>
         </div>
 
         <h2>Indipendenza dei dati</h2>
         <div class="box">
           <ul>
-            <li><span class="def">Indipendenza fisica</span>: cambi al livello <em>interno</em> (es. aggiungere un indice, cambiare organizzazione a pagine) non richiedono modifiche a schemi e query logiche.</li>
-            <li><span class="def">Indipendenza logica</span>: cambi compatibili al livello <em>concettuale</em> (es. aggiungere un attributo o scindere una tabella) non rompono le interfacce esterne; si preservano con <strong>viste</strong> e regole di compatibilità all’indietro.</li>
+            <li><span class="def">Indipendenza fisica</span>: posso cambiare aspetti interni del DBMS senza riscrivere lo schema logico o le query applicative.</li>
+            <li><span class="def">Indipendenza logica</span>: posso evolvere lo schema concettuale in modo controllato senza rompere tutte le viste esterne.</li>
           </ul>
-          <p class="warn">Rinominare attributi senza mantenere viste o compatibilità rompe l’indipendenza logica.</p>
+          <p class="warn">La chiave primaria e un concetto <strong>logico</strong>; l’indice e una scelta <strong>fisica</strong>. Nella pratica possono collaborare, ma non coincidono.</p>
         </div>
 
-        <h2>Logico: cosa definisce</h2>
-        <ul>
-          <li>Schemi di relazione: intestazioni, domini, vincoli (integrità di dominio, entità, referenziale, regole aggiuntive).</li>
-          <li>Semantica delle operazioni (algebra relazionale, calcolo relazionale): <strong>nessun riferimento</strong> a strutture fisiche.</li>
-          <li>Identità: chiavi primarie/candidate e loro significato.</li>
-        </ul>
-
-        <h2>Fisico: cosa riguarda</h2>
+        <h2>Esempio minimo</h2>
         <div class="box">
           <ul>
-            <li><strong>Organizzazione dei file</strong>: heap, clustered, append-only.</li>
-            <li><strong>Indici</strong>: B-Tree/B+Tree, Hash, bitmap; indici <em>clustered</em> vs <em>nonclustered</em>, indici di copertura.</li>
-            <li><strong>Layout</strong>: pagine, fillfactor, compressione, partizionamento (range/hash/list), replica.</li>
-            <li><strong>Identificatori fisici</strong>: RID/ctid/rowid non fanno parte del modello logico.</li>
+            <li><strong>Livello logico</strong>: <code>STUDENTE(Matr, Nome, Email)</code> con <code>PK{Matr}</code>.</li>
+            <li><strong>Livello fisico</strong>: il DBMS puo decidere se usare o no un indice, come organizzare le pagine e quale piano scegliere.</li>
+            <li>La definizione logica della relazione non cambia se il DBA aggiunge un indice su <code>Email</code>.</li>
           </ul>
-          <p class="note">Una <strong>chiave</strong> è logica; un <strong>indice</strong> è fisico. Molti DB implementano PK con un indice <em>UNIQUE</em>, ma concettualmente sono distinti.</p>
         </div>
 
-        <h2>Ottimizzazione delle query</h2>
+        <h2>Cosa conta davvero per noi</h2>
         <div class="box">
           <ul>
-            <li>L’utente scrive SQL dichiarativo; l’ottimizzatore genera un <strong>piano</strong> fisico equivalente (scan, index scan, join, sort, ecc.).</li>
-            <li>Il piano dipende da statistiche e indici disponibili, non dalla <em>forma</em> sintattica della query (entro certi limiti).</li>
-          </ul>
-          <div style="margin-top:.6rem"><button id="btnPLAN1" onclick="toggleBox('btnPLAN1','ansPLAN1')">Mostra esempio di costi ▼</button></div>
-          <div id="ansPLAN1" style="display:none; margin-top:.5rem">
-            <pre><code class="language-sql">-- Stessa logica, fisica diversa a seconda degli indici disponibili
--- Caso A: nessun indice su Iscrizioni(Matr)
-EXPLAIN SELECT *
-FROM Iscrizioni i JOIN Studenti s ON i.Matr = s.Matr
-WHERE s.Matr = 101;
--- Piano tipico: Seq Scan Iscrizioni → Hash Join → Filter
-
--- Caso B: indice su Iscrizioni(Matr) e PK indicizzata su Studenti(Matr)
-EXPLAIN SELECT *
-FROM Iscrizioni i JOIN Studenti s ON i.Matr = s.Matr
-WHERE s.Matr = 101;
--- Piano tipico: Index Seek/Scan → Nested Loop → molto più veloce
-</code></pre>
-          </div>
-        </div>
-
-        <h2>Esempi di scelte fisiche</h2>
-        <div class="box">
-          <div style="margin-bottom:.35rem" class="note">Linee guida sintetiche</div>
-          <ul>
-            <li>Indici B-Tree per ricerche per uguaglianza e per intervallo; Hash per uguaglianze pure (dove supportati); bitmap per colonne a bassa cardinalità (DW).</li>
-            <li>Partizionare tabelle molto grandi per migliorare manutenzione e pruning delle scansioni.</li>
-            <li>Valutare indici di copertura per query di lettura frequenti; evitare over-indexing che rallenta le scritture.</li>
-            <li>Preferire PK <em>immutabili</em>; <code>ON UPDATE CASCADE</code> diventa raro e i piani restano stabili.</li>
+            <li>Quando progetti, parti dal <strong>significato dei dati</strong> e dai <strong>vincoli</strong>.</li>
+            <li>Quando implementi, il DBMS sceglie strutture e piani fisici per eseguire bene le operazioni.</li>
+            <li>Confondere i due piani porta a schemi poco robusti e piu difficili da evolvere.</li>
           </ul>
         </div>
 
-        <h2>Compatibilità e migrazioni</h2>
+        <h2>Chiusura del modulo 1</h2>
         <div class="box">
           <ul>
-            <li><strong>Compatibilità logica</strong>: usare <em>view</em> per mantenere API stabili quando lo schema concettuale evolve.</li>
-            <li><strong>Compatibilità fisica</strong>: cambiare indici o partizioni non dovrebbe toccare le query; valutare re-build/analisi statistiche.</li>
+            <li>Il <strong>modello relazionale</strong> lavora sul piano logico: relazioni, attributi, tuple, vincoli, chiavi.</li>
+            <li>Il <strong>livello fisico</strong> serve all’implementazione, ma non deve guidare la modellazione iniziale.</li>
+            <li>Questa separazione e la ragione per cui il modello relazionale e stato cosi importante sul piano teorico e pratico.</li>
           </ul>
         </div>
 
+        <h2>Ponte al modulo 2</h2>
         <div class="box">
-          <strong>Domanda-guida</strong>: perché una <em>chiave primaria</em> non coincide con un <em>indice</em>?
-          <div style="margin-top:.6rem"><button id="btnDG6" onclick="toggleBox('btnDG6','ansDG6')">Mostra ▼</button></div>
-          <div id="ansDG6" style="display:none; margin-top:.5rem">
-            <ul>
-              <li><strong>Natura</strong>: la PK è un <em>vincolo logico</em> (identità e unicità); l’indice è una <em>struttura fisica</em> per accelerare accessi.</li>
-              <li><strong>Implementazione</strong>: un DB spesso usa un indice UNIQUE per far rispettare la PK, ma può farlo con altre tecniche; l’esistenza dell’indice è una scelta di implementazione.</li>
-              <li><strong>Conseguenze</strong>: puoi cambiare/ricreare indici senza toccare la semantica dello schema; la PK invece fa parte dello schema e delle sue dipendenze (FK).</li>
-            </ul>
-          </div>
+          <p>Nel modulo 2 ci sposteremo ancora piu indietro nel processo: non partiremo da relazioni gia pronte, ma dal <strong>dominio reale</strong> da rappresentare.</p>
+          <p class="ok">In altre parole: qui abbiamo chiarito il linguaggio del modello relazionale; nel prossimo modulo chiariremo come si arriva a uno schema concettuale prima della traduzione relazionale.</p>
         </div>
-
-        <!-- SQL illustrativo -->
-        <pre><code class="language-sql">-- Vincolo logico vs struttura fisica
-CREATE TABLE Studenti (
-  Matr   INTEGER NOT NULL,
-  Nome   VARCHAR(50) NOT NULL,
-  Email  VARCHAR(100) NOT NULL,
-  CONSTRAINT PK_Studenti PRIMARY KEY (Matr)
-);
-
--- Unicità logica su Email (vincolo), realizzata tipicamente con indice UNIQUE
-ALTER TABLE Studenti ADD CONSTRAINT UQ_Studenti_Email UNIQUE (Email);
-
--- Struttura fisica aggiuntiva per performance (nessun effetto sulla semantica)
-CREATE INDEX IX_Iscrizioni_Matr ON Iscrizioni(Matr);
-</code></pre>
 
       </div>
     </div>

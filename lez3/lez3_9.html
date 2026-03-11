@@ -25,7 +25,7 @@
       <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
       <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
       <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Datatype fondamentali e array</a></li>
+      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
       <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
       <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
       <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
@@ -45,7 +45,16 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <p class="note">Le superglobali sono array speciali sempre disponibili in ogni punto dello script. Offrono accesso diretto a input utente, informazioni di contesto e stato dell'applicazione. Qui trovi descrizioni estese e snippet pronti all'uso.</p>
+        <p class="note">Le superglobali sono array speciali sempre disponibili in ogni punto dello script. Nel nostro modulo servono soprattutto per leggere input utente, validarlo e poi usarlo in query parametrizzate verso MySQL.</p>
+
+        <div class="box">
+          <h2>Mappa didattica della slide</h2>
+          <ul>
+            <li>Nucleo del modulo: <code>$_GET</code>, <code>$_POST</code>, <code>$_SERVER</code>.</li>
+            <li>Passaggio chiave: leggere l'input, validarlo, usarlo in una query parametrizzata.</li>
+            <li>Le altre superglobali vanno conosciute, ma qui restano sullo sfondo.</li>
+          </ul>
+        </div>
 
         <div class="box">
           <h2>$_GET — Parametri in query string</h2>
@@ -57,12 +66,12 @@ $eta  = $_GET['eta'] ?? 'n/d';
 
 echo "Ciao $nome, ho ricevuto età: $eta";
 ?&gt;</code></pre>
-          <p class="note">Esempio diretto senza <code>filter_input</code>: è semplice ma espone a XSS/validazioni mancanti. Vedi sotto la sezione di approfondimento per gestire correttamente gli input.</p>
+          <p class="note">Esempio diretto e volutamente semplice: serve a capire la meccanica di <code>$_GET</code> prima della validazione.</p>
         </div>
 
         <div class="box">
           <h2>$_POST — Dati inviati da form</h2>
-          <p>Raccoglie i campi di un modulo con <code>method="POST"</code>. È preferito per dati sensibili (password) o corposi. Ricorda di abilitare <code>enctype="multipart/form-data"</code> se il form include upload.</p>
+          <p>Raccoglie i campi di un modulo con <code>method="POST"</code>. È il canale piu naturale quando l'utente invia dati da salvare o elaborare sul server.</p>
           <pre><code class="language-php">&lt;form action="salva-contatto.php" method="POST"&gt;
   &lt;input name="email" type="email" required&gt;
   &lt;textarea name="messaggio" required&gt;&lt;/textarea&gt;
@@ -79,21 +88,41 @@ if (!$email || !$msg) {
 
 echo "Grazie, contatteremo $email. Messaggio: $msg";
 ?&gt;</code></pre>
-          <p class="note">Esempio base senza sanificazione: funziona ma non filtra valori non validi e non protegge da HTML indesiderato.</p>
+          <p class="note">Anche qui partiamo dal caso base: prima capisci che cosa arriva in <code>$_POST</code>, poi aggiungi validazione e query parametrizzate.</p>
         </div>
 
         <div class="box">
-          <h2>filter_input / filter_input_array — sanificazione e validazione</h2>
-          <p>Queste funzioni applicano filtri standard agli input provenienti da <code>$_GET</code>, <code>$_POST</code>, <code>$_COOKIE</code> e <code>$_SERVER</code>. Operano in tre passaggi: scelta della sorgente (<code>INPUT_GET</code>, <code>INPUT_POST</code>, ecc.), selezione del filtro e definizione di opzioni/flag.</p>
+          <h2>$_SERVER — Contesto della richiesta</h2>
+          <p>Contiene informazioni utili sulla richiesta in corso. Nel modulo ci interessa soprattutto capire se la pagina e stata aperta in <code>GET</code> o inviata in <code>POST</code>.</p>
+          <pre><code class="language-php">&lt;?php
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+  echo "Il form e stato inviato.";
+} else {
+  echo "Mostro il form.";
+}
+?&gt;</code></pre>
+          <p class="ok">Questa variabile ti aiuta a distinguere tra la pagina che mostra il form e la pagina che lo elabora.</p>
+        </div>
+
+        <div class="box">
+          <h2>Le superglobali centrali del modulo</h2>
           <ul>
-            <li><strong>Sanitize</strong>: rimuove/escapa caratteri indesiderati (es. <code>FILTER_SANITIZE_SPECIAL_CHARS</code>, <code>FILTER_SANITIZE_EMAIL</code>).</li>
-            <li><strong>Validate</strong>: verifica il formato (es. <code>FILTER_VALIDATE_INT</code>, <code>FILTER_VALIDATE_EMAIL</code>), restituendo <code>false</code> se non valido.</li>
-            <li><strong>Opzioni</strong>: array <code>['options' =&gt; [...], 'flags' =&gt; ...]</code> per impostare vincoli (<code>min_range</code>, <code>max_range</code>, <code>default</code>, <code>FILTER_FLAG_ALLOW_FRACTION</code>, <code>FILTER_FLAG_STRIP_LOW</code>, ecc.).</li>
-            <li><strong>Array di filtri</strong>: con <code>filter_input_array</code> definisci una mappa di filtri per più campi in un'unica chiamata.</li>
-            <li><strong>Fall-back</strong>: se la chiave non esiste, restituisce <code>null</code>; se la validazione fallisce, <code>false</code>. Gestisci entrambi i casi.</li>
+            <li><code>$_GET</code>: filtri e parametri di lettura.</li>
+            <li><code>$_POST</code>: dati da form da validare prima del salvataggio.</li>
+            <li><code>$_SERVER</code>: capire se la richiesta e GET o POST e ottenere contesto utile.</li>
+          </ul>
+          <p class="ok">Nel percorso del modulo queste tre sono il ponte diretto tra pagina HTML, logica PHP e database.</p>
+        </div>
+
+        <div class="box">
+          <h2>Validazione essenziale con filter_input</h2>
+          <p>Quando il meccanismo base e chiaro, il passo successivo e validare l'input. Per il nostro livello basta capire il principio: scegli la sorgente, leggi il campo, applichi un filtro.</p>
+          <ul>
+            <li><code>FILTER_SANITIZE_SPECIAL_CHARS</code>: prepara una stringa da mostrare in HTML.</li>
+            <li><code>FILTER_VALIDATE_INT</code> e <code>FILTER_VALIDATE_EMAIL</code>: verificano se un valore ha il formato atteso.</li>
+            <li>Se il valore non e valido, non lo usi: mostri un messaggio o blocchi l'operazione.</li>
           </ul>
           <pre><code class="language-php">&lt;?php
-// Versione sicura per $_GET
 $nome = filter_input(INPUT_GET, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
 $eta  = filter_input(INPUT_GET, 'eta', FILTER_VALIDATE_INT, [
   'options' => ['min_range' => 1, 'max_range' => 120]
@@ -101,121 +130,47 @@ $eta  = filter_input(INPUT_GET, 'eta', FILTER_VALIDATE_INT, [
 
 $etaDescrizione = $eta === false ? 'età non valida' : ($eta === null ? 'nessuna età' : $eta . ' anni');
 echo "Ciao $nome, ho ricevuto $etaDescrizione";
-
-// Versione sicura per $_POST
-$input = filter_input_array(INPUT_POST, [
-  'email' => ['filter' => FILTER_VALIDATE_EMAIL],
-  'messaggio' => ['filter' => FILTER_SANITIZE_SPECIAL_CHARS]
-]);
-
-if (!$input['email'] || !$input['messaggio']) {
-  exit('Dati mancanti o invalidi');
-}
-
-echo "Grazie, contatteremo {$input['email']}. Messaggio: {$input['messaggio']}";
 ?&gt;</code></pre>
-          <p class="note">Alternativa avanzata: <code>filter_var</code> filtra valori già in memoria; <code>FILTER_DEFAULT</code> restituisce la stringa così com'è ma puoi aggiungere flag per rimuovere tag HTML (<code>FILTER_FLAG_NO_ENCODE_QUOTES</code> o <code>FILTER_SANITIZE_FULL_SPECIAL_CHARS</code>).</p>
+          <p class="note"><code>filter_input_array()</code> esiste ed e utile su piu campi insieme, ma per il modulo basta padroneggiare bene i casi semplici.</p>
         </div>
 
         <div class="box">
-          <h2>$_FILES — Upload di file</h2>
-          <p>Array bidimensionale che descrive ogni file caricato: nome originale, tipo MIME dichiarato, dimensione, eventuale codice di errore e percorso temporaneo. Verifica sempre <code>error</code> e tipo reale del file prima di salvarlo.</p>
-          <pre><code class="language-php">&lt;form action="upload.php" method="POST" enctype="multipart/form-data"&gt;
-  &lt;input type="file" name="curriculum" accept="application/pdf" required&gt;
-  &lt;button type="submit"&gt;Carica PDF&lt;/button&gt;
-&lt;/form&gt;
-
-&lt;?php // upload.php
-if (!isset($_FILES['curriculum'])) {
-  exit('Nessun file inviato');
-}
-$file = $_FILES['curriculum'];
-
-if ($file['error'] !== UPLOAD_ERR_OK) {
-  exit('Errore di upload: ' . $file['error']);
-}
-
-// Controllo del MIME reale
-$finfo = finfo_open(FILEINFO_MIME_TYPE);
-$mime = finfo_file($finfo, $file['tmp_name']);
-finfo_close($finfo);
-
-if ($mime !== 'application/pdf') {
-  exit('Sono accettati solo PDF');
-}
-
-$dest = __DIR__ . '/uploads/' . basename($file['name']);
-if (move_uploaded_file($file['tmp_name'], $dest)) {
-  echo 'File caricato correttamente!';
-} else {
-  echo 'Impossibile salvare il file';
-}
-?&gt;</code></pre>
+          <h2>Altre superglobali da conoscere, senza approfondirle ora</h2>
+          <ul>
+            <li><code>$_FILES</code>: descrive i file caricati con un form e richiede <code>enctype="multipart/form-data"</code>.</li>
+            <li><code>$_COOKIE</code>: legge preferenze salvate nel browser, ma non e adatto a dati sensibili.</li>
+            <li><code>$_SESSION</code>: mantiene dati lato server tra una richiesta e l'altra dopo <code>session_start()</code>.</li>
+          </ul>
+          <p class="note">Sono utili da conoscere, ma non sono il centro di questo modulo introduttivo.</p>
         </div>
 
         <div class="box">
-          <h2>$_SERVER — Contesto della richiesta</h2>
-          <p>Contiene intestazioni HTTP, percorsi, indirizzi IP e informazioni di runtime. Utile per logging, routing e debug. Le chiavi più usate sono <code>REQUEST_METHOD</code>, <code>HTTP_USER_AGENT</code>, <code>REMOTE_ADDR</code> e <code>SCRIPT_NAME</code>.</p>
+          <h2>Dal form al prepared statement</h2>
+          <p>Questo e il collegamento che ci interessa di piu nel modulo:</p>
           <pre><code class="language-php">&lt;?php
-$info = [
-  'Metodo' => $_SERVER['REQUEST_METHOD'] ?? 'sconosciuto',
-  'User-Agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'n/d',
-  'IP client' => $_SERVER['REMOTE_ADDR'] ?? 'n/d',
-  'Script' => $_SERVER['SCRIPT_NAME'] ?? 'n/d'
-];
+$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
+$classe = filter_input(INPUT_POST, 'classe', FILTER_SANITIZE_SPECIAL_CHARS);
 
-echo '&lt;h3&gt;Dettagli richiesta&lt;/h3&gt;';
-echo '&lt;ul&gt;';
-foreach ($info as $chiave => $valore) {
-  echo "&lt;li&gt;<strong>$chiave</strong>: " . htmlspecialchars($valore) . "&lt;/li&gt;";
+if ($nome && $classe) {
+  $stmt = $pdo->prepare(
+    "INSERT INTO studenti (nome, classe)
+     VALUES (:nome, :classe)"
+  );
+
+  $stmt->execute([
+    'nome' => $nome,
+    'classe' => $classe
+  ]);
 }
-
-echo '&lt;/ul&gt;';
 ?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>$_COOKIE — Preferenze lato client</h2>
-          <p>Associa chiave/valore salvati nel browser con una scadenza. Ricorda che il cookie è accessibile dall'utente: non conservarvi dati sensibili. Imposta l'attributo <code>HttpOnly</code> per mitigare accessi via JavaScript.</p>
-          <pre><code class="language-php">&lt;?php
-// Imposta un cookie per 30 giorni
-setcookie('tema', 'scuro', [
-  'expires' => time() + 60 * 60 * 24 * 30,
-  'path' => '/',
-  'httponly' => true,
-  'samesite' => 'Lax'
-]);
-
-$tema = $_COOKIE['tema'] ?? 'chiaro';
-echo "Tema preferito: " . htmlspecialchars($tema);
-?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>$_SESSION — Stato utente lato server</h2>
-          <p>Memorizza dati persistenti tra richieste sul server, legati a un identificatore salvato in un cookie di sessione. Va inizializzata con <code>session_start()</code> prima di leggere o scrivere. Ideale per login, carrello, preferenze temporanee.</p>
-          <pre><code class="language-php">&lt;?php
-session_start();
-
-if (!isset($_SESSION['visite'])) {
-  $_SESSION['visite'] = 0;
-}
-$_SESSION['visite']++;
-
-echo "Hai visitato questa pagina {$_SESSION['visite']} volte.";
-
-echo '&lt;br&gt;&lt;a href="logout.php"&gt;Chiudi sessione&lt;/a&gt;';
-?&gt;
-
-&lt;?php // logout.php
-session_start();
-session_unset();
-session_destroy();
-
-echo 'Sessione terminata.';
-?&gt;</code></pre>
+          <p class="warn">La superglobale da sola non basta: il passaggio corretto e sempre <strong>leggere</strong>, <strong>validare</strong>, <strong>passare i valori alla query parametrizzata</strong>.</p>
         </div>
       </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
     </div>
   </div>
 </body>
