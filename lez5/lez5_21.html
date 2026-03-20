@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez5_21 · 2PL e 2PL stretto</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez5_20.html"; }
+    function nextSlide(){ window.location.href = "lez5_22.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    function toggleBox(btnId, boxId){
+      const box = document.getElementById(boxId);
+      const btn = document.getElementById(btnId);
+      const open = box.style.display === 'block';
+      box.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      var current = window.location.pathname.split('/').pop();
+      var link = document.querySelector('#menu a[href="' + current + '"]');
+      if (link) link.classList.add('active');
+    });
+  </script>
+  <style>
+    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
+    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
+    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
+    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
+    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
+    pre code{ display:block; text-align:left !important; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
+    th{ background:#f8fafc; }
+    .def{font-weight:600}
+  </style>
+</head>
+<body>
+  <!-- BEGIN MENU -->
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu">
+    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <ul>
+      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
+      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
+      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
+      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
+      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
+      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
+      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
+      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
+      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
+      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
+      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
+      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
+      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
+      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
+      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+    </ul>
+  </div>
+  <!-- END MENU -->
+
+  <div class="slide">
+    <h1>Due fasi per ottenere serializzabilità</h1>
+
+    <div class="nav-buttons" style="margin-bottom:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+
+    <div class="content-box">
+      <div class="inner-box">
+        <h2>Locking a due fasi (2PL)</h2>
+        <div class="box">
+          <p>Nel protocollo <strong>2PL</strong> una transazione:</p>
+          <ul>
+            <li>prima acquisisce progressivamente i lock (<strong>fase crescente</strong>);</li>
+            <li>poi rilascia progressivamente i lock (<strong>fase calante</strong>);</li>
+            <li>dopo aver rilasciato un lock, non può acquisirne altri.</li>
+          </ul>
+        </div>
+
+        <h2>2PL stretto</h2>
+        <div class="box">
+          <p>Nel <strong>2PL stretto</strong> i lock vengono rilasciati solo dopo <code>COMMIT</code> o <code>ROLLBACK</code>.</p>
+          <p class="ok">Questo evita la lettura sporca, perché nessuna transazione può leggere dati ancora provvisori.</p>
+        </div>
+
+        <h2>Schema delle due fasi</h2>
+        <div class="box">
+<pre><code class="language-text">fase crescente:   lock(x)  lock(y)  lock(z)
+uso delle risorse:      r(x)  w(y)  r(z)
+fase calante:                    unlock(z) unlock(y) unlock(x)</code></pre>
+          <p class="note">Nel 2PL normale il punto chiave è: <strong>dopo il primo unlock non posso più acquisire nuovi lock</strong>.</p>
+          <p>Questa disciplina evita che una transazione continui a cambiare la propria situazione di lock in modo non controllabile.</p>
+        </div>
+
+        <h2>Limite importante</h2>
+        <div class="box">
+          <p class="note">Per impedire anche l'<strong>inserimento fantasma</strong>, non bastano i lock su record già presenti: servono meccanismi che proteggano anche il predicato di selezione.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top:10px">
+      <button onclick="prevSlide()">&#8592; Indietro</button>
+      <button onclick="nextSlide()">Avanti &#8594;</button>
+    </div>
+  </div>
+</body>
+</html>
