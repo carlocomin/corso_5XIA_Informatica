@@ -83,26 +83,41 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Limite pratico della view serializability</h2>
+        <h2>Perché non basta fermarsi alla view serializability</h2>
         <div class="box">
-          <p>La serializzabilità rispetto alle viste è molto generale, ma non è semplice da usare direttamente per decidere in pratica se uno schedule è corretto.</p>
-          <p class="warn">Dal punto di vista operativo è troppo costosa e poco maneggevole per uno scheduler reale.</p>
+          <p>La serializzabilità rispetto alle viste è importante perché cattura bene l'idea teorica di correttezza: se due schedule fanno leggere gli stessi valori e lasciano le stesse scritture finali, dal punto di vista osservabile si comportano allo stesso modo.</p>
+          <p>Il problema è che questa nozione chiede di ragionare in modo globale sullo schedule: bisogna capire <strong>chi legge da chi</strong> e <strong>chi scrive per ultimo</strong>, cioè informazioni che non sono sempre immediate da controllare mentre le operazioni stanno arrivando.</p>
+          <p class="warn">Per uno scheduler reale è quindi una nozione troppo poco maneggevole: è forte sul piano teorico, ma scomoda come criterio operativo di controllo.</p>
+        </div>
+
+        <h2>Che cosa cerchiamo allora</h2>
+        <div class="box">
+          <p>Ci serve una nozione un po' meno generale, ma più facile da verificare passo dopo passo.</p>
+          <p>In altre parole, vogliamo un criterio che:</p>
+          <ul>
+            <li>sia ancora abbastanza forte da garantire schedule corretti;</li>
+            <li>sia abbastanza semplice da essere controllato da un DBMS in esecuzione;</li>
+            <li>prepari strumenti concreti come il grafo dei conflitti e i protocolli di locking.</li>
+          </ul>
+          <p class="ok">Il trade-off sperato è questo: <strong>rinunciare a un po' di generalità per guadagnare controllabilità e applicabilità pratica</strong>.</p>
         </div>
 
         <h2>Azioni in conflitto</h2>
         <div class="box">
+          <p>Per fare questo restringiamo l'attenzione alle sole coppie di operazioni che possono davvero interferire.</p>
           <p>Due operazioni di transazioni diverse sono in conflitto se:</p>
           <ul>
             <li>agiscono sullo stesso oggetto;</li>
             <li>almeno una delle due è una scrittura.</li>
           </ul>
-          <p class="note">Si distinguono i casi <code>rw</code>, <code>wr</code> e <code>ww</code>.</p>
+          <p class="note">I casi da osservare sono <code>rw</code>, <code>wr</code> e <code>ww</code>: se l'ordine di queste coppie cambia, può cambiare anche il risultato dello schedule.</p>
         </div>
 
-        <h2>Passo successivo</h2>
+        <h2>Il passaggio ai conflitti</h2>
         <div class="box">
-          <p class="ok">Da qui si arriva all'equivalenza rispetto ai conflitti, molto più adatta a essere controllata in pratica.</p>
-          <p>Didatticamente, questo è il passaggio da una nozione più generale e potente a una più semplice da usare operativamente.</p>
+          <p>Nasce così l'idea di <strong>equivalenza rispetto ai conflitti</strong>: invece di confrontare tutta la "vista" prodotta dallo schedule, controlliamo se viene preservato l'ordine di tutte le operazioni che entrano in conflitto.</p>
+          <p>Questa nozione è <strong>più restrittiva</strong>: alcuni schedule view-serializable non risultano conflict-serializable. Però ha un vantaggio decisivo, perché si lascia tradurre in criteri chiari e verificabili.</p>
+          <p class="ok">Il guadagno pratico è decisivo: dalla conflict serializability si passa naturalmente al grafo dei conflitti, e poi ai meccanismi concreti con cui il DBMS controlla la concorrenza.</p>
         </div>
       </div>
     </div>
