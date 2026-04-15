@@ -83,20 +83,30 @@
 
     <div class="content-box">
       <div class="inner-box">
+        <h2>Perché non basta "avere dei lock"</h2>
+        <div class="box">
+          <p>Introdurre i lock non basta, perché bisogna ancora decidere <strong>quando</strong> una transazione può acquisirli e <strong>quando</strong> può rilasciarli.</p>
+          <p>Se ogni transazione prendesse e liberasse lock in modo troppo libero, il DBMS perderebbe proprio quella disciplina di accesso che serve per mantenere la correttezza.</p>
+          <p class="note">Il protocollo <strong>2PL</strong> nasce quindi per trasformare il locking in una regola ordinata e verificabile.</p>
+        </div>
+
         <h2>Locking a due fasi (2PL)</h2>
         <div class="box">
-          <p>Nel protocollo <strong>2PL</strong> una transazione:</p>
+          <p>Nel protocollo <strong>2PL</strong> una transazione attraversa due momenti distinti:</p>
           <ul>
             <li>prima acquisisce progressivamente i lock (<strong>fase crescente</strong>);</li>
             <li>poi rilascia progressivamente i lock (<strong>fase calante</strong>);</li>
             <li>dopo aver rilasciato un lock, non può acquisirne altri.</li>
           </ul>
+          <p>Questa scelta impone una disciplina chiara: prima "prenoto" tutte le risorse che mi servono, poi comincio a liberarle, ma senza tornare indietro a chiedere nuovi permessi.</p>
+          <p class="ok">L'idea di fondo è che una struttura di lock più ordinata produce schedule più controllabili e compatibili con la serializzabilità rispetto ai conflitti.</p>
         </div>
 
         <h2>2PL stretto</h2>
         <div class="box">
           <p>Nel <strong>2PL stretto</strong> i lock vengono rilasciati solo dopo <code>COMMIT</code> o <code>ROLLBACK</code>.</p>
-          <p class="ok">Questo evita la lettura sporca, perché nessuna transazione può leggere dati ancora provvisori.</p>
+          <p>Qui il punto non è solo l'ordine, ma anche la stabilità dei dati letti dagli altri: finché una transazione non ha concluso, i suoi effetti restano protetti.</p>
+          <p class="ok">Questo evita la lettura sporca, perché nessuna transazione può leggere dati ancora provvisori o appoggiarsi a scritture che potrebbero essere annullate.</p>
         </div>
 
         <h2>Schema delle due fasi</h2>
@@ -105,12 +115,13 @@
 uso delle risorse:      r(x)  w(y)  r(z)
 fase calante:                    unlock(z) unlock(y) unlock(x)</code></pre>
           <p class="note">Nel 2PL normale il punto chiave è: <strong>dopo il primo unlock non posso più acquisire nuovi lock</strong>.</p>
-          <p>Questa disciplina evita che una transazione continui a cambiare la propria situazione di lock in modo non controllabile.</p>
+          <p>Questa disciplina evita che una transazione continui a cambiare la propria situazione di lock in modo non controllabile, introducendo nuove interferenze mentre sta già liberando risorse.</p>
         </div>
 
-        <h2>Limite importante</h2>
+        <h2>Che cosa otteniamo e che cosa no</h2>
         <div class="box">
-          <p class="note">Per impedire anche l'<strong>inserimento fantasma</strong>, non bastano i lock su record già presenti: servono meccanismi che proteggano anche il predicato di selezione.</p>
+          <p>Con il 2PL otteniamo una disciplina molto importante per governare i conflitti tra letture e scritture. Con il 2PL stretto otteniamo anche una protezione migliore contro le letture di dati non ancora confermati.</p>
+          <p class="note">Resta però un limite importante: per impedire anche l'<strong>inserimento fantasma</strong>, non bastano i lock su record già presenti. Servono meccanismi che proteggano anche il predicato di selezione, cioè l'intero insieme dei dati che una query vuole controllare.</p>
         </div>
       </div>
     </div>

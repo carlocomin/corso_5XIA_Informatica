@@ -85,10 +85,11 @@
       <div class="inner-box">
         <h2>Deadlock</h2>
         <div class="box">
-          <p>Un <strong>deadlock</strong> si ha quando due transazioni restano in attesa l'una dell'altra.</p>
+          <p>Il locking rende più sicuro l'accesso ai dati, ma introduce anche un nuovo rischio: due transazioni possono bloccarsi a vicenda mentre aspettano lock incompatibili.</p>
+          <p>Un <strong>deadlock</strong> si ha proprio quando ogni transazione aspetta una risorsa trattenuta dall'altra, e nessuna delle due può fare il passo successivo.</p>
 <pre><code class="language-text">T1 blocca x e aspetta y
 T2 blocca y e aspetta x</code></pre>
-          <p>Strategie tipiche: <strong>timeout</strong>, <strong>rilevamento</strong> del ciclo, <strong>prevenzione</strong>.</p>
+          <p>Strategie tipiche: <strong>timeout</strong>, <strong>rilevamento</strong> del ciclo di attesa, <strong>prevenzione</strong> con regole più rigide sull'acquisizione dei lock.</p>
         </div>
 
         <h2>Idea visiva: attesa circolare</h2>
@@ -97,16 +98,19 @@ T2 blocca y e aspetta x</code></pre>
             <thead>
               <tr><th>Transazione</th><th>Possiede</th><th>Aspetta</th></tr>
             </thead>
-            <tbody>
+          <tbody>
               <tr><td><code>T1</code></td><td><code>x</code></td><td><code>y</code></td></tr>
               <tr><td><code>T2</code></td><td><code>y</code></td><td><code>x</code></td></tr>
             </tbody>
           </table>
-          <p class="warn">Nessuna delle due può proseguire senza un intervento del sistema.</p>
+          <p>La tabella mostra il punto critico: ciascuna transazione possiede esattamente la risorsa che serve all'altra.</p>
+          <p class="warn">Nessuna delle due può proseguire senza un intervento del sistema, quindi il DBMS deve riconoscere il problema o scioglierlo.</p>
         </div>
 
         <h2>Livelli di isolamento SQL</h2>
         <div class="box">
+          <p>Dopo aver visto i meccanismi interni di controllo, possiamo tornare al punto di vista dell'utente SQL: il DBMS non espone direttamente grafi e protocolli, ma offre <strong>livelli di isolamento</strong>.</p>
+          <p>Ogni livello dice, in sostanza, quanta libertà di concorrenza si accetta e quali anomalie ci si impegna a evitare.</p>
           <table>
             <thead>
               <tr><th>Livello</th><th>Letture sporche</th><th>Letture inconsistenti</th><th>Fantasmi</th></tr>
@@ -122,14 +126,14 @@ T2 blocca y e aspetta x</code></pre>
 
         <h2>Idea finale della slide</h2>
         <div class="box">
-          <p class="warn">Maggiore isolamento significa in generale minore libertà di concorrenza e più costo di controllo.</p>
+          <p class="warn">Maggiore isolamento significa in generale minore libertà di concorrenza e più costo di controllo: il DBMS protegge di più, ma deve coordinare di più.</p>
         </div>
 
         <h2>Come leggere la tabella</h2>
         <div class="box">
           <p><strong>Read Uncommitted</strong> privilegia il parallelismo ma accetta anche anomalie gravi.</p>
           <p><strong>Serializable</strong> è il riferimento più forte: il comportamento deve risultare equivalente a una esecuzione seriale.</p>
-          <p class="note">I livelli intermedi rappresentano compromessi diversi tra correttezza osservabile e prestazioni.</p>
+          <p class="note">I livelli intermedi rappresentano compromessi diversi tra correttezza osservabile e prestazioni: non sono "mezze misure casuali", ma scelte progettuali con effetti concreti sul comportamento del sistema.</p>
           <p>La tabella va quindi letta come una scala di compromessi, non come un semplice elenco di etichette.</p>
         </div>
       </div>

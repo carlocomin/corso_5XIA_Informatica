@@ -85,22 +85,37 @@
       <div class="inner-box">
         <h2>PostgreSQL</h2>
         <div class="box">
+          <p>PostgreSQL è utile come esempio perché mostra bene una cosa importante: i nomi dei livelli SQL restano gli stessi, ma il modo concreto in cui vengono realizzati dipende dalle tecniche interne del DBMS.</p>
           <ul>
             <li>Il livello di default è <strong>Read Committed</strong>.</li>
             <li>Usa tecniche basate su <strong>MVCC</strong> e snapshot.</li>
             <li>Il livello <strong>Read Uncommitted</strong> viene di fatto trattato come <strong>Read Committed</strong>.</li>
             <li>Il suo <strong>Repeatable Read</strong> è in alcuni casi più forte di quello previsto dallo standard.</li>
           </ul>
+          <p class="note">Quindi, quando leggiamo "Repeatable Read" in PostgreSQL, non dobbiamo pensare solo alla definizione astratta dello standard, ma al modo concreto in cui PostgreSQL lo implementa.</p>
         </div>
 
         <h2>MySQL / InnoDB</h2>
         <div class="box">
+          <p>Anche MySQL/InnoDB va letto nello stesso modo: stesso vocabolario generale, ma combinazione concreta diversa tra versioni multiple e locking.</p>
           <ul>
             <li>Il livello di default è <strong>Repeatable Read</strong>.</li>
             <li>Combina idee di <strong>MVCC</strong> e <strong>locking</strong>.</li>
             <li>Nel livello <strong>Read Uncommitted</strong> può mostrare anomalie come la dirty read.</li>
             <li>Nel livello <strong>Serializable</strong> usa un comportamento più restrittivo, anche tramite lock aggiuntivi.</li>
           </ul>
+          <p>Questo significa che due DBMS possono offrire livelli con lo stesso nome ma con effetti pratici non del tutto identici, soprattutto nei casi limite.</p>
+        </div>
+
+        <h2>Perché questo confronto è importante</h2>
+        <div class="box">
+          <p>Il confronto finale serve a chiudere il cerchio della lezione:</p>
+          <ul>
+            <li>la teoria ci dice quali problemi vogliamo evitare;</li>
+            <li>i protocolli e i lock mostrano con quali idee il DBMS cerca di evitarli;</li>
+            <li>i DBMS reali implementano queste idee in modo non sempre identico.</li>
+          </ul>
+          <p class="ok">Per questo non basta sapere "qual è il livello impostato": bisogna capire anche <strong>come quel DBMS realizza davvero quel livello</strong>.</p>
         </div>
 
         <h2>Cosa deve restare</h2>
