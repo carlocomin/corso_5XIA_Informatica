@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_8 · Panoramica delle anomalie</title>
+  <title>ITST – 5ª · Lez5_17c · Problemi NP-completi</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez5_7.html"; }
-    function nextSlide(){ window.location.href = "lez5_9.html"; }
+    function prevSlide(){ window.location.href = "lez5_17b.html"; }
+    function nextSlide(){ window.location.href = "lez5_17d.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
       const box = document.getElementById(boxId);
@@ -32,16 +32,12 @@
     .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
     .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
     .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
     table{ width:100%; border-collapse:collapse; }
     th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
     th{ background:#f8fafc; }
-    .def{font-weight:600}
   </style>
 </head>
 <body>
-  <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
     <h2>Lezione 5 — Transazioni concorrenti</h2>
@@ -80,46 +76,40 @@
       <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
     </ul>
   </div>
-  <!-- END MENU -->
-
   <div class="slide">
-    <h1>Che cosa può andare storto</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
-    <div class="content-box">
-      <div class="inner-box">
-        <h2>Le anomalie principali</h2>
-        <div class="box">
-          <table>
-            <thead>
-              <tr><th>Anomalia</th><th>Idea di base</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Perdita di aggiornamento</td><td>un aggiornamento corretto viene sovrascritto da un altro</td></tr>
-              <tr><td>Lettura sporca</td><td>si legge un dato scritto da una transazione non ancora confermata</td></tr>
-              <tr><td>Lettura inconsistente</td><td>lo stesso dato letto due volte produce risultati diversi</td></tr>
-              <tr><td>Aggiornamento fantasma</td><td>una analisi aggregata usa dati cambiati durante il calcolo</td></tr>
-              <tr><td>Inserimento fantasma</td><td>tra due letture compaiono nuovi record che soddisfano un predicato</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Idea comune</h2>
-        <div class="box">
-          <p class="warn">In tutti i casi, il problema nasce dal fatto che una transazione non vede la base di dati in modo stabile e isolato.</p>
-          <p>Le anomalie hanno nomi diversi, ma raccontano tutte la stessa difficoltà: mantenere una visione coerente dei dati mentre altre transazioni stanno lavorando.</p>
-        </div>
+    <h1>Che cosa significa NP-completo</h1>
+    <div class="nav-buttons" style="margin-bottom:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
+    <div class="content-box"><div class="inner-box">
+      <h2>P, NP, NP-hard, NP-complete</h2>
+      <div class="box">
+        <table>
+          <thead><tr><th>Classe</th><th>Idea</th></tr></thead>
+          <tbody>
+            <tr><td><strong>P</strong></td><td>Problemi risolvibili in tempo polinomiale: sono considerati trattabili in teoria.</td></tr>
+            <tr><td><strong>NP</strong></td><td>Problemi per cui una soluzione candidata può essere verificata in tempo polinomiale.</td></tr>
+            <tr><td><strong>NP-hard</strong></td><td>Problemi almeno difficili quanto tutti i problemi in NP.</td></tr>
+            <tr><td><strong>NP-complete</strong></td><td>Problemi che sono sia in NP sia NP-hard.</td></tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+      <h2>Il ruolo delle riduzioni</h2>
+      <div class="box">
+        <p>Una riduzione polinomiale da un problema <code>A</code> a un problema <code>B</code> trasforma ogni istanza di <code>A</code> in un'istanza di <code>B</code>, preservando la risposta sì/no.</p>
+        <p class="note">Se <code>A ≤p B</code>, allora un risolutore efficiente per <code>B</code> darebbe anche un risolutore efficiente per <code>A</code>.</p>
+      </div>
+      <h2>Esempi classici</h2>
+      <div class="box">
+        <ul>
+          <li><strong>SAT</strong>: esiste un'assegnazione booleana che rende vera una formula?</li>
+          <li><strong>3-SAT</strong>: SAT con clausole di tre letterali.</li>
+          <li><strong>Clique</strong>: un grafo contiene un sottoinsieme di <code>k</code> nodi tutti collegati tra loro?</li>
+          <li><strong>Vertex Cover</strong>: esiste un insieme di <code>k</code> nodi che copre tutti gli archi?</li>
+          <li><strong>Hamiltonian Cycle</strong>: esiste un ciclo che visita ogni nodo una sola volta?</li>
+        </ul>
+        <p class="ok">SAT è il problema di riferimento: una volta noto che SAT è NP-completo, molti altri problemi si dimostrano difficili riducendo SAT a essi.</p>
+      </div>
+    </div></div>
+    <div class="nav-buttons" style="margin-top:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
   </div>
 </body>
 </html>

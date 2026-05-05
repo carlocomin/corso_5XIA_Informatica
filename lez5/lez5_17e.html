@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez5_17e · SAT solver</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez5_17d.html"; }
+    function nextSlide(){ window.location.href = "lez5_17f.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    document.addEventListener('DOMContentLoaded', function(){ var current=window.location.pathname.split('/').pop(); var link=document.querySelector('#menu a[href="'+current+'"]'); if(link) link.classList.add('active'); });
+  </script>
+  <style>.box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}.note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.inner-box,.inner-box p,.inner-box ul,.inner-box ol,.inner-box li,.inner-box pre,.inner-box code{text-align:left!important}.inner-box ul,.inner-box ol{margin:.5rem 0 .75rem 1rem;padding-left:1.25rem;list-style-position:outside}pre{white-space:pre;tab-size:4;margin:0 0 1rem 0;padding:.5rem .75rem}pre code{display:block;text-align:left!important}</style>
+</head>
+<body>
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu"><h2>Lezione 5 — Transazioni concorrenti</h2><ul>
+    <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li><li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li><li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li><li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li><li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li><li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li><li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li><li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li><li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li><li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li><li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li><li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li><li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li><li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li><li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li><li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li><li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li><li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li><li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li><li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li><li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li><li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li><li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li><li><a href="lez5_17h.html">Lez5.17h: Riduzione SAT a VSR</a></li><li><a href="lez5_17i.html">Lez5.17i: Correttezza della riduzione</a></li><li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li><li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li><li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li><li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li><li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li><li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li><li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+  </ul></div>
+  <div class="slide"><h1>Che cosa fa un SAT solver</h1>
+    <div class="nav-buttons" style="margin-bottom:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
+    <div class="content-box"><div class="inner-box">
+      <h2>Idea operativa</h2><div class="box">
+        <p>Un <strong>SAT solver</strong> riceve una formula booleana e cerca un'assegnazione che la renda vera. Se la trova, restituisce <code>SAT</code> e spesso anche un modello; se dimostra che non esiste, restituisce <code>UNSAT</code>.</p>
+        <p>La potenza pratica dei SAT solver nasce dal fatto che molti problemi combinatori possono essere codificati come formule booleane.</p>
+      </div>
+      <h2>Come useremo SAT</h2><div class="box">
+        <p>Per testare la view-serializability possiamo codificare la domanda "esiste un ordine seriale valido?" come formula SAT.</p>
+        <p>Le variabili della formula rappresentano relazioni di precedenza tra transazioni, per esempio <code>O_ij</code> = "<code>T_i</code> viene prima di <code>T_j</code>".</p>
+        <p class="note">Se la formula è soddisfacibile, il modello descrive un possibile ordine seriale view-equivalente.</p>
+      </div>
+      <h2>Limite teorico, utilità pratica</h2><div class="box">
+        <p>Ridurre VSR a SAT non rende il problema polinomiale: SAT è NP-completo.</p>
+        <p>Però la riduzione è utile concettualmente: mostra che il problema ha forma combinatoria, cioè richiede di scegliere un ordine tra transazioni rispettando molti vincoli.</p>
+        <p class="ok">Il SAT solver è quindi uno strumento pratico per istanze specifiche, non una dimostrazione che il problema generale sia facile.</p>
+      </div>
+      <h2>Esempi di SAT solver moderni</h2><div class="box">
+        <p>Alcuni solver usati come riferimento nella ricerca e nelle competizioni recenti:</p>
+        <ul>
+          <li><a href="https://github.com/arminbiere/kissat" target="_blank" rel="noopener">Kissat</a>: SAT solver CDCL moderno, molto competitivo nelle edizioni recenti della SAT Competition.</li>
+          <li><a href="https://github.com/arminbiere/cadical" target="_blank" rel="noopener">CaDiCaL</a>: solver CDCL progettato per essere efficiente ma anche relativamente leggibile e modificabile.</li>
+        </ul>
+        <p class="note">Per contestualizzare le prestazioni, si possono consultare anche i <a href="https://satcompetition.github.io/2024/results.html" target="_blank" rel="noopener">risultati della SAT Competition 2024</a>.</p>
+      </div>
+    </div></div>
+    <div class="nav-buttons" style="margin-top:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
+  </div>
+</body>
+</html>

@@ -63,10 +63,19 @@
       <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
       <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
       <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
+      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
+      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
+      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
+      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
+      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
+      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
+      <li><a href="lez5_17h.html">Lez5.17h: Riduzione SAT a VSR</a></li>
+      <li><a href="lez5_17i.html">Lez5.17i: Correttezza della riduzione</a></li>
       <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
       <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
       <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
       <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
+      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
       <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
       <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
     </ul>
@@ -83,6 +92,15 @@
 
     <div class="content-box">
       <div class="inner-box">
+        <h2>Che cos'è MVCC</h2>
+        <div class="box">
+          <p><strong>MVCC</strong> significa <em>Multi-Version Concurrency Control</em>, cioè controllo della concorrenza tramite versioni multiple dello stesso dato.</p>
+          <p>L'idea è che un aggiornamento non deve per forza sovrascrivere immediatamente l'unica copia visibile a tutti: il DBMS può mantenere più versioni di una riga, ciascuna associata al momento o alla transazione che l'ha prodotta.</p>
+          <p>In questo modo una transazione che legge può vedere una <strong>snapshot</strong> coerente del database, mentre un'altra transazione sta modificando alcuni dati.</p>
+          <p class="ok">Il vantaggio principale è che molte letture non devono bloccare le scritture e molte scritture non devono bloccare le letture.</p>
+          <p class="warn">Il prezzo è che il DBMS deve gestire versioni, visibilità, pulizia delle versioni vecchie e possibili conflitti tra scritture concorrenti.</p>
+        </div>
+
         <h2>PostgreSQL</h2>
         <div class="box">
           <p>PostgreSQL è utile come esempio perché mostra bene una cosa importante: i nomi dei livelli SQL restano gli stessi, ma il modo concreto in cui vengono realizzati dipende dalle tecniche interne del DBMS.</p>

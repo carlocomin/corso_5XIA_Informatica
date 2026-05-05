@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITST – 5ª · Lez5_17g · Riduzione VSR a SAT</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../default.css" />
+  <script src="../highlight.js"></script>
+  <script>
+    try { hljs.highlightAll(); } catch (e) {}
+    function prevSlide(){ window.location.href = "lez5_17f.html"; }
+    function nextSlide(){ window.location.href = "lez5_17h.html"; }
+    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+    document.addEventListener('DOMContentLoaded', function(){ var current=window.location.pathname.split('/').pop(); var link=document.querySelector('#menu a[href="'+current+'"]'); if(link) link.classList.add('active'); });
+  </script>
+  <style>.box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}.note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}.inner-box,.inner-box p,.inner-box ul,.inner-box ol,.inner-box li,.inner-box pre,.inner-box code{text-align:left!important}.inner-box ul,.inner-box ol{margin:.5rem 0 .75rem 1rem;padding-left:1.25rem;list-style-position:outside}pre{white-space:pre;tab-size:4;margin:0 0 1rem 0;padding:.5rem .75rem}pre code{display:block;text-align:left!important}</style>
+</head>
+<body>
+  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
+  <div class="sidebar" id="menu"><h2>Lezione 5 — Transazioni concorrenti</h2><ul>
+    <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li><li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li><li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li><li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li><li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li><li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li><li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li><li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li><li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li><li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li><li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li><li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li><li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li><li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li><li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li><li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li><li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li><li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li><li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li><li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li><li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li><li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li><li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li><li><a href="lez5_17h.html">Lez5.17h: Riduzione SAT a VSR</a></li><li><a href="lez5_17i.html">Lez5.17i: Correttezza della riduzione</a></li><li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li><li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li><li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li><li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li><li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li><li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li><li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+  </ul></div>
+  <div class="slide"><h1>Ridurre VSR a SAT: esiste un ordine seriale?</h1>
+    <div class="nav-buttons" style="margin-bottom:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
+    <div class="content-box"><div class="inner-box">
+      <h2>Variabili di ordine</h2><div class="box">
+        <p>Per ogni coppia di transazioni distinte <code>T_i</code>, <code>T_j</code>, introduciamo una variabile booleana:</p>
+<pre><code class="language-text">O_ij = true  ⇔  T_i viene prima di T_j nell'ordine seriale candidato</code></pre>
+        <p>Il SAT solver dovrà scegliere valori che descrivano un ordine totale coerente.</p>
+        <p class="note">Con <code>n</code> transazioni servono <code>O(n²)</code> variabili di ordine. I vincoli di transitività sono <code>O(n³)</code>, quindi la costruzione resta polinomiale.</p>
+      </div>
+      <h2>Vincoli di ordine totale</h2><div class="box">
+        <ul>
+          <li>Per ogni coppia <code>i ≠ j</code>, deve valere esattamente uno tra <code>O_ij</code> e <code>O_ji</code>.</li>
+          <li>Per ogni terna distinta, imponiamo la transitività: se <code>O_ij</code> e <code>O_jk</code>, allora <code>O_ik</code>.</li>
+        </ul>
+<pre><code class="language-text">transitività:  (O_ij ∧ O_jk) → O_ik
+in CNF:        ¬O_ij ∨ ¬O_jk ∨ O_ik</code></pre>
+        <p>Il vincolo "esattamente uno" si scrive in CNF come <code>(O_ij ∨ O_ji)</code> e <code>(¬O_ij ∨ ¬O_ji)</code>.</p>
+      </div>
+      <h2>Vincoli sulle letture-da</h2><div class="box">
+        <p>Se <code>r_i(x)</code> legge da <code>w_j(x)</code> con <code>i ≠ j</code>, allora nel seriale <code>T_j</code> deve precedere <code>T_i</code> e nessun altro writer di <code>x</code> può stare tra <code>T_j</code> e <code>T_i</code>.</p>
+<pre><code class="language-text">O_ji
+per ogni altro writer T_k di x, con k distinto da i e j:
+  non (T_j prima di T_k prima di T_i)
+  cioè: O_kj ∨ O_ik</code></pre>
+        <p>Se invece <code>r_i(x)</code> legge il valore iniziale, allora <code>T_i</code> deve precedere ogni altra transazione che scrive <code>x</code>.</p>
+        <p class="note">La codifica lavora sull'ordine tra transazioni diverse. Se una transazione legge una propria scrittura precedente, o scrive <code>x</code> dopo averlo letto, quel vincolo è interno alla transazione e non genera una variabile d'ordine tra transazioni.</p>
+      </div>
+      <h2>Vincoli sulle scritture finali</h2><div class="box">
+        <p>Se la scrittura finale su <code>x</code> nello schedule originale è di <code>T_f</code>, allora nel seriale ogni altro writer di <code>x</code> deve venire prima di <code>T_f</code>.</p>
+<pre><code class="language-text">per ogni writer T_k di x, k ≠ f:
+  O_kf</code></pre>
+        <p class="ok">La formula è soddisfacibile se e solo se esiste un ordine seriale che conserva letture-da e scritture finali: cioè se e solo se lo schedule è view-serializable.</p>
+        <p class="note">Questa riduzione mostra che <code>VSR-TEST</code> può essere espresso come SAT. Non prova la NP-hardness; la NP-hardness richiede la direzione opposta, cioè <code>SAT → VSR-TEST</code>.</p>
+      </div>
+      <h2>Esempio concreto con tre transazioni</h2><div class="box">
+<pre><code class="language-text">S: w1(x)  r2(x)  w3(y)  r1(y)  w2(x)  w3(x)</code></pre>
+        <p>Leggiamo lo schedule:</p>
+        <ul>
+          <li><code>r2(x)</code> legge da <code>w1(x)</code>, quindi nel seriale <code>T1</code> deve stare prima di <code>T2</code>.</li>
+          <li><code>r1(y)</code> legge da <code>w3(y)</code>, quindi nel seriale <code>T3</code> deve stare prima di <code>T1</code>.</li>
+          <li>La scrittura finale su <code>x</code> è <code>w3(x)</code>, quindi ogni altro writer di <code>x</code> deve stare prima di <code>T3</code>.</li>
+        </ul>
+      </div>
+      <h2>Formula SAT dell'esempio</h2><div class="box">
+        <p>Introduciamo le variabili di ordine <code>O_12</code>, <code>O_21</code>, <code>O_13</code>, <code>O_31</code>, <code>O_23</code>, <code>O_32</code>.</p>
+        <p>La formula SAT finale dell'esempio è la <strong>congiunzione</strong> di tutti i blocchi di clausole qui sotto: clausole di ordine totale, clausole di transitività, vincoli sulle letture-da e vincoli sulle scritture finali.</p>
+<pre><code class="language-text">ordine totale:
+(O_12 ∨ O_21) ∧ (¬O_12 ∨ ¬O_21)
+(O_13 ∨ O_31) ∧ (¬O_13 ∨ ¬O_31)
+(O_23 ∨ O_32) ∧ (¬O_23 ∨ ¬O_32)
+
+transitività completa per tre transazioni:
+(¬O_12 ∨ ¬O_23 ∨ O_13)
+(¬O_23 ∨ ¬O_31 ∨ O_21)
+(¬O_31 ∨ ¬O_12 ∨ O_32)
+(¬O_21 ∨ ¬O_13 ∨ O_23)
+(¬O_13 ∨ ¬O_32 ∨ O_12)
+(¬O_32 ∨ ¬O_21 ∨ O_31)
+
+lettura r2(x) da w1(x):
+O_12
+il writer T3 di x non può stare tra T1 e T2:
+O_31 ∨ O_23
+
+lettura r1(y) da w3(y):
+O_31
+
+scrittura finale su x da T3:
+O_13 ∧ O_23</code></pre>
+        <p>La formula contiene quindi, tra gli altri vincoli, <code>O_12</code>, <code>O_31</code>, <code>O_13</code> e <code>O_23</code>.</p>
+        <p class="warn">Questi vincoli sono incompatibili: per esempio impongono il ciclo <code>T3 → T1 → T2 → T3</code>. Inoltre <code>O_31</code> e <code>O_13</code> chiedono contemporaneamente <code>T3</code> prima di <code>T1</code> e <code>T1</code> prima di <code>T3</code>. La formula è insoddisfacibile, quindi questo schedule non è view-serializable.</p>
+        <p class="note">L'esempio mostra il senso della riduzione: il SAT solver non "capisce" i database, ma verifica se i vincoli d'ordine necessari per preservare la vista possono stare insieme.</p>
+      </div>
+    </div></div>
+    <div class="nav-buttons" style="margin-top:10px"><button onclick="prevSlide()">&#8592; Indietro</button><button onclick="nextSlide()">Avanti &#8594;</button></div>
+  </div>
+</body>
+</html>

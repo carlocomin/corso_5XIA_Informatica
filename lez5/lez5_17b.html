@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_19 · Grafo dei conflitti</title>
+  <title>ITST – 5ª · Lez5_17b · Perché entra la complessità</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez5_18.html"; }
-    function nextSlide(){ window.location.href = "lez5_20.html"; }
+    function prevSlide(){ window.location.href = "lez5_17.html"; }
+    function nextSlide(){ window.location.href = "lez5_17c.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
       const box = document.getElementById(boxId);
@@ -83,7 +83,7 @@
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Aciclico = schedule corretto rispetto ai conflitti</h1>
+    <h1>Quando una definizione corretta è difficile da usare</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -92,52 +92,26 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Equivalenza rispetto ai conflitti</h2>
+        <h2>Il punto delicato</h2>
         <div class="box">
-          <p>Due schedule sono equivalenti rispetto ai conflitti se mantengono lo stesso ordine per ogni coppia di operazioni che può davvero interferire, cioè per ogni coppia in conflitto.</p>
-          <p>Il punto chiave è questo: se due operazioni non entrano in conflitto, il loro scambio di posizione non cambia il risultato. Se invece entrano in conflitto, invertire il loro ordine può cambiare il valore letto o scritto.</p>
-          <p class="ok">Uno schedule è <strong>conflict-serializable</strong> se, pur essendo intrecciato, può essere ricondotto a uno schedule seriale senza alterare l'ordine delle coppie in conflitto.</p>
+          <p>La view-serializability è una nozione molto naturale: uno schedule è accettabile se ha la stessa "vista" di qualche esecuzione seriale.</p>
+          <p>Il problema non è la definizione in sé, ma il suo uso algoritmico: dato uno schedule qualsiasi, dobbiamo capire se esiste almeno un ordine seriale equivalente.</p>
+          <p class="warn">Questa domanda può richiedere di provare molte possibili permutazioni delle transazioni.</p>
         </div>
 
-        <h2>Il grafo dei conflitti</h2>
+        <h2>Decision problem</h2>
         <div class="box">
-          <p>Il grafo serve a trasformare un'idea astratta in uno strumento di controllo: ogni arco registra un vincolo di precedenza che lo schedule impone tra due transazioni.</p>
-          <ul>
-            <li>I nodi del grafo sono le transazioni.</li>
-            <li>C'è un arco <code>T_i → T_j</code> se una operazione di <code>T_i</code> deve precedere una operazione conflittuale di <code>T_j</code>.</li>
-          </ul>
-          <p>Quindi il grafo non descrive "tutte" le operazioni, ma solo i vincoli che non possiamo violare se vogliamo mantenere lo stesso comportamento sui dati.</p>
-          <p class="ok">Criterio fondamentale: <strong>se il grafo è aciclico, lo schedule è conflict-serializable</strong>.</p>
+          <p>Per parlare con rigore, trasformiamo il tema in un problema decisionale:</p>
+<pre><code class="language-text">Input:  uno schedule S di transazioni committate
+Output: esiste uno schedule seriale view-equivalente a S?</code></pre>
+          <p>La risposta è solo <strong>sì</strong> o <strong>no</strong>. Questo è il formato tipico dei problemi studiati nella teoria della complessità.</p>
         </div>
 
-        <h2>Running example guidato</h2>
+        <h2>Perché ci interessa</h2>
         <div class="box">
-<pre><code class="language-text">S: r1(x) w1(x) r2(x) r2(y) w2(y) r3(y) w3(y)</code></pre>
-          <p>Costruiamo il grafo passo dopo passo:</p>
-          <ul>
-            <li><code>w1(x)</code> precede <code>r2(x)</code> sullo stesso oggetto <code>x</code>, quindi abbiamo un conflitto e nasce l'arco <code>T1 → T2</code>.</li>
-            <li><code>w2(y)</code> precede <code>r3(y)</code> e anche <code>w3(y)</code> sullo stesso oggetto <code>y</code>, quindi nasce l'arco <code>T2 → T3</code>.</li>
-          </ul>
-          <p>Non compare nessun arco che torni indietro verso <code>T1</code> o <code>T2</code>, quindi il grafo impone solo l'ordine <code>T1</code> prima di <code>T2</code> prima di <code>T3</code>.</p>
-          <p class="ok">Il grafo è aciclico, quindi lo schedule è conflict-serializable ed è compatibile con il seriale <code>T1, T2, T3</code>.</p>
-        </div>
-
-        <h2>Perché il ciclo è decisivo</h2>
-        <div class="box">
-          <p>Se nel grafo compare un ciclo, significa che le precedenze si contraddicono: una transazione dovrebbe venire prima di un'altra, ma anche dopo di essa.</p>
-          <p>Per esempio, se avessimo sia <code>T1 → T2</code> sia <code>T2 → T1</code>, nessun ordinamento seriale potrebbe rispettare entrambe le richieste contemporaneamente.</p>
-          <p class="warn">Il ciclo segnala quindi che lo schedule <strong>non è conflict-serializable</strong>: l'intreccio delle operazioni impone vincoli incompatibili con qualunque esecuzione seriale.</p>
-        </div>
-
-        <h2>Procedura operativa</h2>
-        <div class="box">
-          <ol>
-            <li>Individua le coppie di operazioni in conflitto.</li>
-            <li>Disegna un arco dalla transazione che deve venire prima a quella che deve venire dopo.</li>
-            <li>Controlla se il grafo contiene un ciclo.</li>
-          </ol>
-          <p class="note">In pratica, il grafo riassume la domanda fondamentale: i vincoli d'ordine prodotti dai conflitti sono compatibili con un ordine seriale oppure no?</p>
-          <p class="ok">Se non c'è ciclo, puoi leggere il grafo come un ordine seriale compatibile. Se c'è ciclo, quello schedule non può essere accettato come conflict-serializable.</p>
+          <p>Se il problema fosse risolvibile sempre in tempo polinomiale, potremmo immaginare un DBMS che controlla direttamente la view-serializability.</p>
+          <p>Invece il risultato teorico è più duro: il test generale della view-serializability è <strong>NP-completo</strong>.</p>
+          <p class="ok">Questo spiega perché i DBMS preferiscono criteri più restrittivi ma più controllabili, come la conflict serializability e i protocolli di locking.</p>
         </div>
       </div>
     </div>
