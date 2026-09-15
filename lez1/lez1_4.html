@@ -1,203 +1,166 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez1_4 · Chiavi: superchiavi, candidate, primaria (definizioni formali)</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez1_3.html"; }
-    function nextSlide(){ window.location.href = "lez1_5.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Definizioni rigorose di superchiave, chiave candidata, chiave primaria e chiave alternativa.">
+  <title>Lezione 1.4 · Superchiavi e chiavi</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 1 — Modello Relazionale</h2>
-    <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
-      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
-      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
-      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Chiavi: superchiavi, candidate, primaria (definizioni formali)</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 1">
+      <h2>Lezione 1 · Modello relazionale</h2>
+      <ol>
+        <li><a href="lez1_1.html">Perché nasce</a></li>
+        <li><a href="lez1_2.html">Relazioni, tuple e domini</a></li>
+        <li><a href="lez1_3.html">Vincoli di integrità</a></li>
+        <li><a href="lez1_4.html" aria-current="page">Superchiavi e chiavi</a></li>
+        <li><a href="lez1_5.html">Chiavi esterne</a></li>
+        <li><a href="lez1_6.html">Logico e fisico</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 1 · Modello relazionale</p>
+      <h1>Superchiavi e chiavi</h1>
+      <p class="lesson-lead">Una chiave non è una colonna che oggi sembra unica: è un vincolo dello schema che deve identificare le tuple in ogni istanza legale.</p>
+      <div class="lesson-meta">
+        <span>Pagina 4 di 6</span>
+        <progress value="4" max="6" aria-label="Pagina 4 di 6">4 di 6</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez1_3.html">← Vincoli di integrità</a>
+      <a class="nav-button next" href="lez1_5.html">Chiavi esterne →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-        <h2>Notazione</h2>
-        <ul>
-          <li>Per una relazione <code>R(A<sub>1</sub>:D<sub>1</sub>, …, A<sub>n</sub>:D<sub>n</sub>)</code> indichiamo con <code>attr(R)</code> l'insieme degli attributi <code>{A<sub>1</sub>, …, A<sub>n</sub>}</code>.</li>
-          <li>Per una tupla <code>t ∈ R</code> e un insieme di attributi <code>X ⊆ attr(R)</code>, <code>t[X]</code> è la proiezione di <code>t</code> su <code>X</code>.</li>
-        </ul>
+      <section class="lesson-section" aria-labelledby="schema-istanza">
+        <h2 id="schema-istanza">Il vincolo vale sullo schema</h2>
+        <p>Sia <code>attr(R)</code> l'insieme degli attributi dello schema <code>R</code> e sia <code>S ⊆ attr(R)</code>. Per stabilire se <code>S</code> identifica le tuple non basta osservare una singola istanza: la proprietà deve valere per <strong>ogni istanza legale</strong>.</p>
+        <p class="callout warning"><strong>Un duplicato basta per smentire una chiave; l'assenza di duplicati nei dati attuali non basta per dimostrarla.</strong> La prova deve derivare dai vincoli del dominio applicativo.</p>
+      </section>
 
-        <h2>Definizioni formali</h2>
+      <section class="lesson-section" aria-labelledby="definizioni">
+        <h2 id="definizioni">Definizioni</h2>
         <div class="box">
-          <ul>
-            <li><span class="def">Superchiave</span> (di <code>R</code>): un insieme <code>S ⊆ attr(R)</code> tale che valga l'<strong>unicità</strong> su <code>S</code>:
-              <div class="ok" style="display:block; margin-top:.35rem"><code>∀ t ≠ t' ∈ R: t[S] ≠ t'[S]</code></div>
-              Equivalente: la funzione <code>φ<sub>S</sub> : R → ∏<sub>A∈S</sub> D<sub>A</sub></code> è <em>iniettiva</em>.
-            </li>
-            <li><span class="def">Chiave candidata</span>: una superchiave <strong>minimale</strong> per inclusione; cioè nessun sottoinsieme proprio di <code>S</code> è ancora superchiave.
-              <div class="ok" style="display:block; margin-top:.35rem"><code>∀ A ∈ S: S \ {A} non è una superchiave</code></div>
-            </li>
-            <li><span class="def">Chiave primaria</span>: una delle chiavi candidate scelta come identificatore <em>designato</em> dell'entità rappresentata da <code>R</code>.</li>
-          </ul>
+          <h3>Superchiave</h3>
+          <p><code>S</code> è una <strong>superchiave</strong> se, in ogni istanza legale, l'uguaglianza sui valori di <code>S</code> implica l'uguaglianza delle tuple.</p>
+          <div class="formula"><code>∀r legale, ∀t,u ∈ r(R): t[S] = u[S] ⇒ t = u</code></div>
+
+          <h3>Chiave candidata</h3>
+          <p><code>S</code> è una <strong>chiave candidata</strong> se è una superchiave <em>minimale per inclusione</em>: nessun suo sottoinsieme proprio è ancora una superchiave.</p>
+          <div class="formula"><code>S è superchiave ∧ ∀A ∈ S: S \ {A} non è superchiave</code></div>
+
+          <h3>Chiave primaria e chiavi alternative</h3>
+          <p>Tra le chiavi candidate se ne designa una come <strong>chiave primaria</strong>. Le candidate non scelte restano <strong>chiavi alternative</strong>: continuano a imporre unicità.</p>
         </div>
+      </section>
 
-        <h2>Proprietà immediate</h2>
+      <section class="lesson-section" aria-labelledby="proprieta">
+        <h2 id="proprieta">Conseguenze immediate</h2>
         <ul>
-          <li><code>attr(R)</code> è sempre una <strong>superchiave</strong> (unicità banale su tutte le colonne).</li>
-          <li>Ogni superset di una superchiave è ancora una superchiave.</li>
-          <li>Poiché <code>attr(R)</code> è finito, esistono sempre una o più <strong>chiavi candidate</strong> (minimalità per inclusione).</li>
-          <li>Gli attributi della <strong>chiave primaria</strong> non possono essere NULL (integrità di entità).</li>
+          <li><code>attr(R)</code> è sempre una superchiave, perché una relazione non ammette tuple duplicate.</li>
+          <li>Ogni insieme di attributi che contiene una superchiave è ancora una superchiave.</li>
+          <li>Una chiave candidata può essere composta da uno o più attributi.</li>
+          <li>La minimalità riguarda l'<strong>inclusione</strong>, non la lunghezza o il numero di byte.</li>
+          <li>Ogni attributo di una chiave candidata composta è necessario: va verificata la rimozione di <strong>ciascun</strong> attributo.</li>
         </ul>
+      </section>
 
-        <h2>Esempio base su <code>Studenti(Matr, Email, Nome)</code></h2>
-        <div class="box">
-          <p class="note" style="margin-bottom:.35rem">Ipotesi</p>
-          <ul>
-            <li><code>Matr</code> è assegnato in modo univoco a ciascuno studente.</li>
-            <li><code>Email</code> è unica nel database.</li>
-          </ul>
-          <div class="note" style="margin:.6rem 0 .3rem 0">Superchiavi</div>
-          <ul>
-            <li><code>{Matr}</code>, <code>{Email}</code>.</li>
-            <li>Ogni superset (p.es. <code>{Matr, Email}</code>, <code>{Matr, Nome}</code>) è ancora superchiave.</li>
-          </ul>
-          <div class="note" style="margin:.6rem 0 .3rem 0">Chiavi candidate</div>
-          <ul>
-            <li><code>{Matr}</code> e <code>{Email}</code> (non hanno sottoinsiemi non vuoti che siano superchiavi).</li>
-          </ul>
-          <div class="note" style="margin:.6rem 0 .3rem 0">Scelta di chiave primaria</div>
-          <ul>
-            <li>Si può designare <code>PK = {Matr}</code> (stabile, corto, semantica di identificatore amministrativo).</li>
-          </ul>
-          <div style="margin-top:.6rem">
-            <button id="btnK1" onclick="toggleBox('btnK1','ansK1')">Mostra esempi di (non) minimalità ▼</button>
+      <section class="lesson-section" aria-labelledby="esempio">
+        <h2 id="esempio">Esempio: STUDENTI</h2>
+        <p>Consideriamo <code>STUDENTI(Matr, Email, Nome)</code> e assumiamo come regole del dominio che sia <code>Matr</code> sia <code>Email</code> siano obbligatori e univoci.</p>
+
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Classificazione delle chiavi di Studenti">
+          <table>
+            <caption>Classificazione di alcuni insiemi di attributi</caption>
+            <thead>
+              <tr><th scope="col">Insieme</th><th scope="col">Superchiave?</th><th scope="col">Minimale?</th><th scope="col">Classificazione</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>{Matr}</code></td><td>Sì</td><td>Sì</td><td>Chiave candidata</td></tr>
+              <tr><td><code>{Email}</code></td><td>Sì</td><td>Sì</td><td>Chiave candidata</td></tr>
+              <tr><td><code>{Matr, Nome}</code></td><td>Sì</td><td>No</td><td>Superchiave non minimale</td></tr>
+              <tr><td><code>{Nome}</code></td><td>No</td><td>—</td><td>Non identifica gli studenti</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Possiamo scegliere <code>PK = {Matr}</code>; <code>{Email}</code> rimane una chiave alternativa e il suo vincolo di unicità non deve essere eliminato.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="dimostrare">
+        <h2 id="dimostrare">Come verificare una chiave candidata</h2>
+        <ol>
+          <li><strong>Unicità:</strong> ricava dai requisiti che due tuple con gli stessi valori su <code>S</code> non possono rappresentare due fatti distinti.</li>
+          <li><strong>Minimalità:</strong> per ogni <code>A ∈ S</code>, mostra che togliendo <code>A</code> diventano possibili due tuple distinte con uguali valori su <code>S \ {A}</code>.</li>
+        </ol>
+
+        <details class="reveal">
+          <summary>Esempio con una chiave composta</summary>
+          <div class="reveal-content">
+            <p>In <code>ISCRIZIONI(Matr, CodCorso, DataIscrizione)</code> supponiamo che uno studente possa iscriversi una sola volta a ciascun corso. Allora <code>{Matr, CodCorso}</code> è una candidata:</p>
+            <ul>
+              <li>la coppia identifica un'iscrizione;</li>
+              <li><code>{Matr}</code> non basta, perché uno studente segue più corsi;</li>
+              <li><code>{CodCorso}</code> non basta, perché un corso ha più studenti.</li>
+            </ul>
           </div>
-          <div id="ansK1" style="display:none; margin-top:.5rem">
-            <table>
-              <thead><tr><th>Insieme</th><th>Superchiave?</th><th>Minimale?</th><th>Note</th></tr></thead>
-              <tbody>
-                <tr><td>{Matr}</td><td class="ok">Sì</td><td class="ok">Sì</td><td>Chiave candidata</td></tr>
-                <tr><td>{Matr, Nome}</td><td class="ok">Sì</td><td class="warn">No</td><td>Contiene <code>{Matr}</code></td></tr>
-                <tr><td>{Nome}</td><td class="warn">No</td><td>—</td><td>Non garantisce unicità</td></tr>
-                <tr><td>{Email}</td><td class="ok">Sì</td><td class="ok">Sì</td><td>Chiave candidata</td></tr>
-              </tbody>
-            </table>
+        </details>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="scelta">
+        <h2 id="scelta">Naturale o surrogata?</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Chiave naturale</h3>
+            <p>Nasce dal dominio, come una matricola istituzionale. È una buona scelta se è davvero unica, obbligatoria, stabile e compatta.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Chiave surrogata</h3>
+            <p>È introdotta dal sistema, come un ID numerico. Semplifica i riferimenti, ma non sostituisce i vincoli <code>UNIQUE</code> sui dati naturalmente univoci.</p>
+          </article>
+        </div>
+        <p class="callout"><strong>Criterio equilibrato:</strong> scegli la primaria in base a stabilità, semplicità e significato; conserva sempre tutte le altre regole di unicità richieste dal dominio.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="sql">
+        <h2 id="sql">Traduzione SQL</h2>
+        <pre><code class="language-sql">CREATE TABLE Studenti (
+  Matr   INTEGER      PRIMARY KEY,
+  Email  VARCHAR(100) NOT NULL UNIQUE,
+  Nome   VARCHAR(50)  NOT NULL
+);</code></pre>
+        <p class="source-note">In SQL un vincolo <code>UNIQUE</code> e una chiave candidata non coincidono sempre, soprattutto in presenza di <code>NULL</code>. Qui <code>NOT NULL</code> rende esplicita l'obbligatorietà della chiave alternativa.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>Per provare la minimalità di <code>{A, B, C}</code> basta mostrare che <code>{A, B}</code> non è una superchiave?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>No. Bisogna verificare anche <code>{A, C}</code> e <code>{B, C}</code>, cioè la rimozione di ciascun attributo. Se anche uno solo di questi insiemi fosse una superchiave, <code>{A, B, C}</code> non sarebbe minimale.</p>
           </div>
-        </div>
-
-        <h2>Come provare che S è una chiave candidata</h2>
-        <div class="box">
-          <ol>
-            <li><strong>Unicità</strong>: mostra che <code>∀ t ≠ t' ∈ R: t[S] ≠ t'[S]</code> (per dati reali: nessun duplicato su <code>S</code>).</li>
-            <li><strong>Minimalità</strong>: per qualche attributo <code>A ∈ S</code>, dimostra che <code>S \ {A}</code> <em>non</em> è superchiave (esiste almeno una coppia distinta con stessa proiezione su <code>S \ {A}</code>).</li>
-          </ol>
-        </div>
-
-<div class="box">
-  <strong>Domanda-guida</strong>: quali criteri pratici usi per scegliere tra più chiavi candidate quale <em>chiave primaria</em>?
-  <div style="margin-top:.6rem">
-    <button id="btnDG4" onclick="toggleBox('btnDG4','ansDG4')">Mostra ▼</button>
-  </div>
-  <div id="ansDG4" style="display:none; margin-top:.5rem">
-    <ul>
-      <li><strong>Stabilità nel tempo</strong>
-        <ul>
-          <li>Preferisci una <em>chiave surrogata</em> (es. <code>INT</code> auto-increment o <code>UUID</code>) che non cambia mai lungo il ciclo di vita.</li>
-          <li>Evita chiavi naturali soggette a variazioni (email, telefono, indirizzo, codice corso che può essere rinominato).</li>
-          <li>Considera casi di <em>merge/split</em> entità: una PK immutabile semplifica fusioni e scissioni.</li>
-        </ul>
-      </li>
-      <li><strong>Semplicità e portabilità</strong>
-        <ul>
-          <li>Poche colonne, tipi primitivi e compatti (<code>INTEGER</code> o <code>UUID</code>): più facili da indicizzare e scambiare.</li>
-          <li>Evita PK “pesanti” (testi lunghi, campi calcolati) o dipendenti dal formato locale.</li>
-        </ul>
-      </li>
-      <li><strong>Privacy e semantica</strong>
-        <ul>
-          <li>Non usare dati personali diretti (CF, e-mail) come PK: rischi legali e vincoli di riservatezza.</li>
-          <li>Lascia tali attributi come <em>candidate keys</em> con vincoli <code>UNIQUE</code> separati.</li>
-        </ul>
-      </li>
-      <li><strong>Prestazioni e operatività</strong>
-        <ul>
-          <li>La PK è indicizzata: tipi corti e monocolonna velocizzano join e foreign key.</li>
-          <li>Distribuzione dei valori: evita PK con clusterizzazione “cattiva” (p.es. stringhe crescenti non uniformi); per sistemi distribuiti valuta <code>UUID v4/v7</code>.</li>
-          <li>Scritture concorrenti e sharding: PK surrogate riducono contese e collisioni rispetto a chiavi naturali composite.</li>
-        </ul>
-      </li>
-      <li><strong>Vincoli legali / di dominio</strong>
-        <ul>
-          <li>Se esiste un identificatore <em>istituzionale</em> obbligatorio e immutabile (es. ID ministeriale), può essere una buona PK.</li>
-          <li>In caso contrario: PK surrogata + vincolo <code>UNIQUE</code> sull’identificatore naturale richiesto dal dominio.</li>
-        </ul>
-      </li>
-    </ul>
-
-    <div class="note">Regola d’oro: usa una <strong>PK surrogata</strong> interna (INT/UUID) e applica <strong>UNIQUE</strong> sulle chiavi naturali utili (email, codice, ecc.).</div>
-    <div class="warn">Evita PK <strong>composite</strong> salvo necessarie per modellare identità composta; in alternativa valuta PK surrogata + <strong>UNIQUE</strong> sulla combinazione naturale.</div>
-    <div class="ok">Obiettivo: PK <em>immutabile</em>, <em>semplice</em>, <em>performante</em>, che non espone dati sensibili.</div>
-  </div>
-</div>
-
-        <!-- Facoltativo: SQL illustrativo -->
-        <pre><code class="language-sql">-- Illustrazione (non normativa rispetto al modello)
-CREATE TABLE Studenti (
-  Matr    INTEGER     NOT NULL,
-  Email   VARCHAR(100) NOT NULL,
-  Nome    VARCHAR(50)  NOT NULL,
-  CONSTRAINT PK_Studenti PRIMARY KEY (Matr),
-  CONSTRAINT UQ_Studenti_Email UNIQUE (Email)
-);
-</code></pre>
-
-      </div>
+        </details>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez1_3.html">← Vincoli di integrità</a>
+      <a class="nav-button next" href="lez1_5.html">Chiavi esterne →</a>
+    </nav>
+  </main>
 </body>
 </html>

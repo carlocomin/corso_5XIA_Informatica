@@ -121,5 +121,716 @@ li {
     text-decoration: underline;
 }
 
+/* ========================================================================== */
+/* Template revisionato delle webslide (adottato progressivamente dai moduli) */
+/* ========================================================================== */
+
+.lesson-page {
+    --ink: #173c3a;
+    --muted: #496765;
+    --brand: #087f73;
+    --brand-dark: #075f58;
+    --brand-soft: #e6f5f2;
+    --surface: #ffffff;
+    --surface-alt: #f5faf9;
+    --line: #c9dfdc;
+    --info: #175cd3;
+    --info-soft: #eff6ff;
+    --warning: #a15c07;
+    --warning-soft: #fff7e8;
+    --success: #18794e;
+    --success-soft: #edf9f1;
+    box-sizing: border-box;
+    margin: 0;
+    min-height: 100vh;
+    padding: clamp(12px, 2.5vw, 32px);
+    background:
+        radial-gradient(circle at top right, rgba(38, 166, 154, .16), transparent 34rem),
+        #edf8f6;
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    line-height: 1.58;
+    text-align: left;
+}
+
+.lesson-page *,
+.lesson-page *::before,
+.lesson-page *::after {
+    box-sizing: inherit;
+}
+
+.lesson-page a {
+    color: var(--brand-dark);
+}
+
+.lesson-page a:hover {
+    color: var(--brand);
+}
+
+.lesson-page :focus-visible {
+    outline: 3px solid #b45309;
+    outline-offset: 3px;
+}
+
+.lesson-page .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    z-index: 1300;
+    padding: .6rem .9rem;
+    border-radius: 8px;
+    background: #102a29;
+    color: #fff;
+    transform: translate(-50%, -180%);
+}
+
+.lesson-page .skip-link:focus {
+    transform: translate(-50%, 0);
+}
+
+.lesson-page .slide {
+    width: min(1120px, 100%);
+    min-width: 0;
+    max-width: none;
+    margin: 0 auto;
+    padding: clamp(22px, 4vw, 54px);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: 0 18px 55px rgba(18, 80, 74, .12);
+    text-align: left;
+}
+
+.lesson-page .lesson-kicker {
+    margin: 0 0 .35rem;
+    color: var(--brand);
+    font-size: .84rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-page h1 {
+    max-width: 24ch;
+    margin: 0;
+    color: #123d39;
+    font-size: clamp(2rem, 5vw, 3.55rem);
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+.lesson-page .lesson-lead {
+    max-width: 72ch;
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+}
+
+.lesson-page .lesson-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.4rem;
+    color: var(--muted);
+    font-size: .92rem;
+}
+
+.lesson-page .lesson-meta progress {
+    width: min(260px, 45vw);
+    height: .65rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: 99px;
+    background: var(--brand-soft);
+    accent-color: var(--brand);
+}
+
+.lesson-page .lesson-meta progress::-webkit-progress-bar {
+    background: var(--brand-soft);
+}
+
+.lesson-page .lesson-meta progress::-webkit-progress-value {
+    background: var(--brand);
+}
+
+.lesson-page .lesson-meta progress::-moz-progress-bar {
+    background: var(--brand);
+}
+
+.lesson-page .slide-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 1.75rem 0 0;
+}
+
+.lesson-page .slide-navigation.bottom {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+}
+
+.lesson-page .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .65rem 1rem;
+    border: 1px solid var(--brand);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--brand-dark);
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.lesson-page .nav-button.next {
+    margin-left: auto;
+    background: var(--brand);
+    color: #fff;
+}
+
+.lesson-page .nav-button:hover {
+    background: var(--brand-dark);
+    color: #fff;
+}
+
+.lesson-page .content-box,
+.lesson-page .inner-box {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    text-align: left;
+}
+
+.lesson-page .content-box {
+    margin-top: 2rem;
+}
+
+.lesson-page .lesson-section {
+    padding: 1.85rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.lesson-page .lesson-section:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.lesson-page h2 {
+    margin: 0 0 .85rem;
+    color: #164e49;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.lesson-page h3 {
+    margin: 1.25rem 0 .6rem;
+    color: #245a55;
+    font-size: 1.12rem;
+}
+
+.lesson-page p {
+    max-width: 78ch;
+    margin: .55rem 0 1rem;
+}
+
+.lesson-page ul,
+.lesson-page ol {
+    max-width: 82ch;
+    margin: .55rem 0 1rem;
+    padding-left: 1.45rem;
+}
+
+.lesson-page li {
+    margin: .45rem 0;
+    padding-left: .25rem;
+}
+
+.lesson-page .compact-list li {
+    margin: .25rem 0;
+}
+
+.lesson-page .concept-grid {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 1rem 0;
+}
+
+.lesson-page .concept-grid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lesson-page .box,
+.lesson-page .concept-card {
+    max-width: none;
+    margin: 1rem 0;
+    padding: clamp(14px, 2vw, 20px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-alt);
+    box-shadow: none;
+}
+
+.lesson-page .concept-grid .concept-card {
+    margin: 0;
+}
+
+.lesson-page .concept-grid > * {
+    min-width: 0;
+}
+
+.lesson-page .concept-card h3 {
+    margin-top: 0;
+}
+
+.lesson-page .callout,
+.lesson-page .note,
+.lesson-page .warn,
+.lesson-page .ok {
+    display: block;
+    max-width: 82ch;
+    margin: 1rem 0;
+    padding: .8rem 1rem;
+    border: 0;
+    border-left: 5px solid var(--info);
+    border-radius: 8px;
+    background: var(--info-soft);
+    color: var(--ink);
+}
+
+.lesson-page .callout.warning,
+.lesson-page .warn {
+    border-left-color: var(--warning);
+    background: var(--warning-soft);
+}
+
+.lesson-page .callout.success,
+.lesson-page .ok {
+    border-left-color: var(--success);
+    background: var(--success-soft);
+}
+
+.lesson-page .callout strong:first-child {
+    color: currentColor;
+}
+
+.lesson-page .def {
+    font-weight: 700;
+}
+
+.lesson-page code {
+    padding: .08em .28em;
+    border-radius: 5px;
+    background: #eef4f3;
+    color: #173c3a;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: .94em;
+}
+
+.lesson-page .formula {
+    max-width: 100%;
+    margin: .85rem 0;
+    padding: .8rem 1rem;
+    overflow-x: auto;
+    border: 1px solid #b8d8d4;
+    border-radius: 9px;
+    background: #eef8f6;
+    font-size: 1.02rem;
+}
+
+.lesson-page .formula code {
+    padding: 0;
+    background: transparent;
+    white-space: nowrap;
+}
+
+.lesson-page pre {
+    max-width: 100%;
+    margin: 1rem 0;
+    padding: 0;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #f3f3f3;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.lesson-page pre code {
+    display: block;
+    min-width: max-content;
+    padding: 1rem;
+    background: transparent;
+    text-align: left;
+}
+
+.lesson-page .table-scroll {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 1rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.lesson-page table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    background: var(--surface);
+}
+
+.lesson-page caption {
+    padding: .8rem 1rem;
+    background: var(--brand-soft);
+    color: var(--brand-dark);
+    font-weight: 700;
+    text-align: left;
+}
+
+.lesson-page th,
+.lesson-page td {
+    padding: .7rem .8rem;
+    border-bottom: 1px solid #dbe8e6;
+    vertical-align: top;
+    text-align: left;
+}
+
+.lesson-page th {
+    background: #f1f8f7;
+    color: #204d49;
+}
+
+.lesson-page tbody tr:last-child th,
+.lesson-page tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.lesson-page details.reveal {
+    max-width: 86ch;
+    margin: 1rem 0;
+    border: 1px solid #abcfc9;
+    border-radius: 12px;
+    background: var(--surface);
+}
+
+.lesson-page details.reveal > summary {
+    padding: .75rem 1rem;
+    cursor: pointer;
+    color: var(--brand-dark);
+    font-weight: 700;
+}
+
+.lesson-page details.reveal > summary::after {
+    content: " +";
+    float: right;
+}
+
+.lesson-page details.reveal[open] > summary::after {
+    content: " −";
+}
+
+.lesson-page .reveal-content {
+    padding: .2rem 1rem 1rem;
+    border-top: 1px solid var(--line);
+}
+
+.lesson-page .term {
+    display: inline-block;
+    margin-right: .25rem;
+    color: var(--brand-dark);
+    font-weight: 700;
+}
+
+.lesson-page .source-note {
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.lesson-page .diagram {
+    width: 100%;
+    min-width: 0;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fbfefd;
+}
+
+.lesson-page .diagram svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    height: auto;
+}
+
+.lesson-page .diagram.compact svg {
+    min-width: 440px;
+}
+
+.lesson-page .diagram figcaption {
+    padding: .75rem 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.lesson-page .er-entity {
+    fill: #e6f5f2;
+    stroke: #087f73;
+    stroke-width: 2.5;
+}
+
+.lesson-page .er-weak-entity {
+    fill: #fff7e8;
+    stroke: #a15c07;
+    stroke-width: 2.5;
+}
+
+.lesson-page .er-relationship {
+    fill: #eff6ff;
+    stroke: #175cd3;
+    stroke-width: 2.5;
+}
+
+.lesson-page .er-attribute {
+    fill: #fff;
+    stroke: #496765;
+    stroke-width: 2;
+}
+
+.lesson-page .er-isa {
+    fill: #edf9f1;
+    stroke: #18794e;
+    stroke-width: 2.5;
+}
+
+.lesson-page .er-link {
+    fill: none;
+    stroke: #496765;
+    stroke-width: 2;
+}
+
+.lesson-page .er-link.total {
+    stroke-width: 5;
+}
+
+.lesson-page .er-label {
+    fill: #173c3a;
+    font: 600 16px Arial, Helvetica, sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.lesson-page .er-small-label {
+    fill: #496765;
+    font: 600 14px Arial, Helvetica, sans-serif;
+    text-anchor: middle;
+}
+
+.lesson-page .er-key-label {
+    text-decoration: underline;
+}
+
+.lesson-page .er-partial-key-label {
+    text-decoration: none;
+}
+
+.lesson-page .mapping {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .55rem;
+    margin: 1rem 0;
+}
+
+.lesson-page .mapping > code {
+    padding: .5rem .7rem;
+    border: 1px solid var(--line);
+}
+
+.lesson-page .mapping .arrow {
+    color: var(--brand);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+/* Menu nativo: il contenuto di un <details> chiuso non entra nel focus order. */
+.lesson-page .course-menu > summary {
+    list-style: none;
+}
+
+.lesson-page .course-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.lesson-page .menu-toggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1200;
+    min-height: 44px;
+    padding: .65rem .85rem;
+    border: 0;
+    border-radius: 10px;
+    background: #173f3c;
+    color: #fff;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .2);
+    cursor: pointer;
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+.lesson-page .course-menu[open] .menu-toggle {
+    background: var(--brand);
+}
+
+.lesson-page .course-menu[open]::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    background: rgba(5, 31, 29, .42);
+}
+
+.lesson-page .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    width: min(360px, calc(100vw - 36px));
+    height: 100vh;
+    padding: 76px 24px 28px;
+    overflow-y: auto;
+    background: #f7fcfb;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, .22);
+}
+
+.lesson-page .sidebar h2 {
+    font-size: 1.25rem;
+}
+
+.lesson-page .sidebar ol {
+    margin: 0;
+    padding-left: 1.35rem;
+}
+
+.lesson-page .sidebar li {
+    margin: .25rem 0;
+    padding-left: .15rem;
+}
+
+.lesson-page .sidebar a {
+    display: block;
+    padding: .55rem .65rem;
+    border-radius: 8px;
+    color: #254d49;
+    line-height: 1.3;
+    text-decoration: none;
+}
+
+.lesson-page .sidebar a:hover {
+    background: var(--brand-soft);
+}
+
+.lesson-page .sidebar a[aria-current="page"],
+.lesson-page .sidebar a.active {
+    background: #cdebe6;
+    color: #064f49;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.lesson-page.menu-open {
+    overflow: hidden;
+}
+
+@media (max-width: 760px) {
+    .lesson-page {
+        padding: 58px 8px 8px;
+        font-size: 16px;
+    }
+
+    .lesson-page .slide {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+
+    .lesson-page h1 {
+        font-size: clamp(1.8rem, 10vw, 2.6rem);
+    }
+
+    .lesson-page .lesson-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .lesson-page .lesson-meta progress {
+        width: 100%;
+    }
+
+    .lesson-page .concept-grid,
+    .lesson-page .concept-grid.three {
+        grid-template-columns: 1fr;
+    }
+
+    .lesson-page .nav-button {
+        flex: 1 1 100%;
+    }
+
+    .lesson-page .nav-button.next {
+        margin-left: 0;
+    }
+
+    .lesson-page table {
+        min-width: 520px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lesson-page *,
+    .lesson-page *::before,
+    .lesson-page *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+@media print {
+    .lesson-page {
+        padding: 0;
+        background: #fff;
+        color: #000;
+    }
+
+    .lesson-page .course-menu,
+    .lesson-page .slide-navigation,
+    .lesson-page .skip-link {
+        display: none;
+    }
+
+    .lesson-page .slide {
+        width: 100%;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .lesson-page details.reveal:not([open]) > *:not(summary) {
+        display: block;
+    }
+}
+
 
 

@@ -1,147 +1,138 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez2_1 · Introduzione al modello Entità-Relazione (Chen)</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ if (history.length > 1) { history.back(); } else { window.location.href = "../programma.html"; } }
-    function nextSlide(){ window.location.href = "lez2_2.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Scopo del modello Entità-Relazione e ruolo della progettazione concettuale.">
+  <title>Lezione 2.1 · Dal dominio al modello E-R</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
-    <ul>
-      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
-      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
-      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
-      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
-      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
-      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
-      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Introduzione e motivazioni al modello Entità-Relazione (Chen)</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 2">
+      <h2>Lezione 2 · Modello E-R</h2>
+      <ol>
+        <li><a href="lez2_1.html" aria-current="page">Dal dominio al modello E-R</a></li>
+        <li><a href="lez2_2.html">Entità, attributi e identificatori</a></li>
+        <li><a href="lez2_3.html">Relazioni, ruoli e cardinalità</a></li>
+        <li><a href="lez2_4.html">Entità deboli</a></li>
+        <li><a href="lez2_5.html">Tipi di attributo</a></li>
+        <li><a href="lez2_6.html">Gerarchie EER</a></li>
+        <li><a href="lez2_7.html">Traduzione relazionale</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 2 · Modello E-R</p>
+      <h1>Dal dominio al modello E-R</h1>
+      <p class="lesson-lead">Prima delle tabelle viene il significato: quali oggetti interessano, quali proprietà hanno e quali fatti li collegano?</p>
+      <div class="lesson-meta">
+        <span>Pagina 1 di 7</span>
+        <progress value="1" max="7" aria-label="Pagina 1 di 7">1 di 7</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="../lez1/lez1_6.html">← Logico e fisico</a>
+      <a class="nav-button next" href="lez2_2.html">Entità e attributi →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Da dove arriviamo</h2>
-        <div class="box">
-          <p>
-            Nel modulo 1 abbiamo visto il <strong>modello relazionale</strong> come linguaggio logico per organizzare i dati
-            in tabelle, chiavi e vincoli.
-          </p>
-          <p>
-            Prima di arrivare alle tabelle, pero, serve una domanda piu semplice:
-            <strong>quali oggetti del mondo reale vogliamo rappresentare e quali legami esistono tra loro?</strong>
-          </p>
-          <p>
-            Il <strong>modello Entita-Relazione</strong> proposto da <strong>Peter Chen</strong> nel 1976 serve proprio a questo:
-            descrivere il dominio in modo <em>concettuale</em>, prima della traduzione nello schema relazionale.
-          </p>
-          <p class="note">Questa lezione fa da ponte tra il livello logico studiato nel modulo 1 e la progettazione del dominio prima della traduzione in tabelle.</p>
+      <section class="lesson-section" aria-labelledby="problema">
+        <h2 id="problema">Il problema viene prima dello schema</h2>
+        <p>Nella lezione precedente siamo partiti dal <strong>modello relazionale</strong>: relazioni, tuple, chiavi e vincoli. Durante la progettazione, però, non conviene tradurre subito i requisiti in tabelle. Prima dobbiamo costruire una rappresentazione condivisa del dominio.</p>
+        <div class="concept-grid three">
+          <article class="concept-card">
+            <h3>Oggetti</h3>
+            <p>Quali persone, luoghi, eventi o concetti vogliamo distinguere?</p>
+          </article>
+          <article class="concept-card">
+            <h3>Proprietà</h3>
+            <p>Quali informazioni descrivono ciascun oggetto e quali lo identificano?</p>
+          </article>
+          <article class="concept-card">
+            <h3>Legami</h3>
+            <p>Quali fatti collegano gli oggetti e con quali regole di partecipazione?</p>
+          </article>
         </div>
+        <p class="callout warning"><strong>Errore tipico:</strong> decidere subito colonne e chiavi esterne fa apparire come requisito una scelta di implementazione che potrebbe essere cambiata.</p>
+      </section>
 
-        <h2>Perche serve il modello E-R</h2>
-        <div class="box">
-          <ul>
-            <li>Separare in modo chiaro la <strong>fase concettuale</strong> dalla successiva traduzione logica e fisica.</li>
-            <li>Esplicitare gli elementi del dominio: <strong>entita</strong>, <strong>attributi</strong> e <strong>relazioni</strong>.</li>
-            <li>Discutere il modello anche con chi non ragiona ancora in termini di tabelle e colonne.</li>
-            <li>Preparare una traduzione piu controllata e coerente verso lo <strong>schema relazionale</strong>.</li>
-          </ul>
-          <p class="warn">Se si parte subito dalle tabelle, e facile confondere il problema reale con una possibile implementazione.</p>
-        </div>
+      <section class="lesson-section" aria-labelledby="modello">
+        <h2 id="modello">Che cos'è il modello E-R</h2>
+        <p>Il modello <strong>Entità-Relazione</strong> (E-R) descrive il dominio mediante tipi di entità, attributi, relazioni e vincoli. Peter P. Chen lo presentò nel 1976 come modello capace di rappresentare informazione semantica sul mondo reale e come base per la progettazione di basi di dati.</p>
+        <p>Un diagramma E-R è una <strong>rappresentazione del modello</strong>, non il modello stesso e neppure una fotografia completa della realtà. Seleziona soltanto i fatti rilevanti per gli obiettivi del sistema.</p>
+        <p class="source-note">Riferimento storico: P. P. Chen, <a href="https://doi.org/10.1145/320434.320440">The Entity-Relationship Model—Toward a Unified View of Data</a>, ACM TODS, 1976.</p>
+      </section>
 
-        <h2>I tre livelli di astrazione dei dati</h2>
-        <div class="box">
+      <section class="lesson-section" aria-labelledby="livelli">
+        <h2 id="livelli">Tre livelli, tre domande</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Confronto tra progettazione concettuale, logica e fisica">
           <table>
+            <caption>Dal significato alla realizzazione</caption>
             <thead>
-              <tr><th>Livello</th><th>Descrizione</th><th>Esempio</th></tr>
+              <tr><th scope="col">Livello</th><th scope="col">Domanda</th><th scope="col">Risultato possibile</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td><strong>Concettuale</strong></td>
-                <td>Definisce il significato dei dati indipendentemente dal DBMS.</td>
-                <td>Diagramma E-R</td>
-              </tr>
-              <tr>
-                <td><strong>Logico</strong></td>
-                <td>Traduce il modello concettuale in strutture relazionali (tabelle, chiavi, vincoli).</td>
-                <td>Schema relazionale</td>
-              </tr>
-              <tr>
-                <td><strong>Fisico</strong></td>
-                <td>Definisce come i dati sono memorizzati e indicizzati su disco.</td>
-                <td>Implementazione nel DBMS</td>
-              </tr>
+              <tr><th scope="row">Concettuale</th><td>Che cosa dobbiamo rappresentare?</td><td>Schema E-R con vincoli</td></tr>
+              <tr><th scope="row">Logico</th><td>Con quali strutture del modello scelto?</td><td>Schema relazionale</td></tr>
+              <tr><th scope="row">Fisico</th><td>Come lo realizziamo nel DBMS?</td><td>Tipi concreti, indici, partizioni e parametri</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="callout"><strong>Indipendenza non significa neutralità assoluta:</strong> il modello concettuale evita dettagli del DBMS, ma dipende dagli obiettivi, dalle regole e dal perimetro informativo dell'organizzazione.</p>
+      </section>
 
-        <h2>Analogia intuitiva</h2>
+      <section class="lesson-section" aria-labelledby="esempio">
+        <h2 id="esempio">Un requisito, prima delle tabelle</h2>
         <div class="box">
-          <p>
-            Il modello E-R svolge per i dati lo stesso ruolo che un <strong>disegno tecnico</strong> ha per un edificio:
-            rappresenta la struttura logica prima della costruzione fisica.
-          </p>
-          <p class="ok">Permette di ragionare su cosa rappresentare, non ancora su come implementarlo.</p>
+          <p>«Gli studenti si iscrivono ai corsi. Per ogni iscrizione registriamo la data. Uno studente può non essere ancora iscritto; ogni corso può ricevere molte iscrizioni.»</p>
         </div>
+        <ul>
+          <li><span class="term">Candidati a entità:</span> studente e corso.</li>
+          <li><span class="term">Fatto che li collega:</span> l'iscrizione.</li>
+          <li><span class="term">Proprietà del fatto:</span> la data di iscrizione.</li>
+          <li><span class="term">Vincoli da chiarire:</span> quante iscrizioni può avere ogni studente? Un corso senza iscritti è ammesso?</li>
+        </ul>
+        <p>Non abbiamo ancora deciso quante tabelle usare. Questa scelta verrà dopo, quando tradurremo il significato in strutture relazionali.</p>
+      </section>
 
-        <h2>Sequenza del modulo 2</h2>
-        <div class="box">
-          <ol>
-            <li>Capire <strong>entita, attributi e relazioni</strong> come strumenti di descrizione del dominio.</li>
-            <li>Ragionare su <strong>cardinalita, partecipazione, entita deboli e specializzazione</strong>.</li>
-            <li>Arrivare alla <strong>traduzione E-R -> relazionale</strong> in modo ordinato, senza saltare passaggi.</li>
-          </ol>
-          <p class="ok">Il modulo 2 e quindi il ponte naturale tra analisi concettuale e costruzione dello schema che verra poi usato nel modulo 3.</p>
-        </div>
+      <section class="lesson-section" aria-labelledby="metodo">
+        <h2 id="metodo">Il metodo della lezione</h2>
+        <ol>
+          <li>individuare entità e attributi senza confondere tipi e singole occorrenze;</li>
+          <li>modellare relazioni, ruoli e cardinalità minime e massime;</li>
+          <li>riconoscere entità deboli, attributi non semplici e gerarchie;</li>
+          <li>tradurre lo schema E-R conservandone i vincoli, dichiarando ciò che SQL non esprime localmente.</li>
+        </ol>
+        <p class="callout success"><strong>Criterio di qualità:</strong> ogni simbolo nel diagramma deve corrispondere a una frase comprensibile nei requisiti, e ogni regola rilevante deve comparire come vincolo esplicito.</p>
+      </section>
 
-        <h2>Domanda-guida</h2>
-        <div class="box">
-          <p><strong>In che senso il modello E-R è indipendente dalla tecnologia?</strong></p>
-          <button id="btnDG21" onclick="toggleBox('btnDG21','ansDG21')">Mostra ▼</button>
-          <div id="ansDG21" style="display:none; margin-top:.5rem">
-            <ul>
-              <li>Perché descrive concetti <strong>semantici</strong> (entità, attributi, relazioni), non strutture fisiche.</li>
-              <li>Lo stesso diagramma può essere implementato su diversi DBMS (relazionali, a oggetti, documentali).</li>
-              <li>Il modello E-R è una <strong>fase di analisi</strong>, non di implementazione.</li>
-            </ul>
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>Perché «creiamo una tabella ISCRIZIONI» non è ancora un requisito concettuale?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>Perché nomina già una struttura del modello relazionale. Il requisito concettuale è il fatto che studenti e corsi partecipano a iscrizioni, con una data e precise cardinalità; una tabella associativa è una possibile traduzione successiva.</p>
           </div>
-        </div>
-
-      </div>
+        </details>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="../lez1/lez1_6.html">← Logico e fisico</a>
+      <a class="nav-button next" href="lez2_2.html">Entità e attributi →</a>
+    </nav>
+  </main>
 </body>
 </html>

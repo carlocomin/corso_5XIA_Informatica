@@ -1,200 +1,145 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez2_3 · Relazioni e cardinalità nel modello E-R</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-    <style>
-    .cardinality-table {
-      width: 80%;
-      border-collapse: collapse;
-    }
-
-    .cardinality-table th,
-    .cardinality-table td {
-      border: 1px solid #2563eb;
-      padding: 0.5rem 0.75rem;
-      text-align: left;
-    }
-
-    .cardinality-table thead th {
-      background-color: #e0f2fe;
-    }
-  </style>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez2_2.html"; }
-    function nextSlide(){ window.location.href = "lez2_4.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Relazioni E-R, ruoli, grado e cardinalità minime e massime.">
+  <title>Lezione 2.3 · Relazioni, ruoli e cardinalità</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
-    <ul>
-      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
-      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
-      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
-      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
-      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
-      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
-      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Relazioni e cardinalità nel modello E-R</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 2">
+      <h2>Lezione 2 · Modello E-R</h2>
+      <ol>
+        <li><a href="lez2_1.html">Dal dominio al modello E-R</a></li>
+        <li><a href="lez2_2.html">Entità, attributi e identificatori</a></li>
+        <li><a href="lez2_3.html" aria-current="page">Relazioni, ruoli e cardinalità</a></li>
+        <li><a href="lez2_4.html">Entità deboli</a></li>
+        <li><a href="lez2_5.html">Tipi di attributo</a></li>
+        <li><a href="lez2_6.html">Gerarchie EER</a></li>
+        <li><a href="lez2_7.html">Traduzione relazionale</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 2 · Modello E-R</p>
+      <h1>Relazioni, ruoli e cardinalità</h1>
+      <p class="lesson-lead">Una relazione rappresenta un fatto che coinvolge entità; le cardinalità stabiliscono quante volte ciascuna può prendervi parte.</p>
+      <div class="lesson-meta">
+        <span>Pagina 3 di 7</span>
+        <progress value="3" max="7" aria-label="Pagina 3 di 7">3 di 7</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez2_2.html">← Entità e attributi</a>
+      <a class="nav-button next" href="lez2_4.html">Entità deboli →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
+      <section class="lesson-section" aria-labelledby="relazione">
+        <h2 id="relazione">Un insieme di fatti</h2>
+        <p>Un <strong>tipo di relazione</strong> descrive un legame significativo tra tipi di entità. Una sua <strong>occorrenza</strong> collega specifiche occorrenze partecipanti.</p>
+        <p>Per una relazione binaria tra i tipi <code>E₁</code> ed <code>E₂</code>, in un dato momento:</p>
+        <div class="formula"><code>R ⊆ E₁ × E₂</code></div>
+        <p>Ogni coppia in <code>R</code> è un fatto presente. Per esempio, <code>(Ada, BasiDiDati) ∈ ISCRIZIONE</code> significa che quella studentessa è iscritta a quel corso.</p>
+        <p class="callout"><strong>Relazione E-R e relazione matematica:</strong> la prima ha anche un nome, ruoli, eventuali attributi e vincoli. La seconda ne esprime l'estensione come insieme di tuple.</p>
+      </section>
 
-        <h2>Definizione formale di relazione (Chen, 1976)</h2>
-        <div class="box">
-          <p>
-            Una <strong>relazione</strong> collega due o più insiemi di entità.  
-            Se <code>E₁, E₂, …, Eₙ</code> sono insiemi di entità, una relazione <code>R</code> è definita come
-            un <strong>sottoinsieme del prodotto cartesiano</strong>:
-          </p>
-          <p class="ok"><code>R ⊆ E₁ × E₂ × … × Eₙ</code></p>
-          <p>
-            Ogni elemento <code>(e₁, e₂, …, eₙ)</code> di <code>R</code> rappresenta una <strong>istanza di relazione</strong>,
-            cioè un collegamento logico tra istanze delle entità coinvolte.
-          </p>
+      <section class="lesson-section" aria-labelledby="ruoli-grado">
+        <h2 id="ruoli-grado">Ruoli e grado</h2>
+        <ul>
+          <li>Il <strong>grado</strong> è il numero di partecipazioni del tipo di relazione: binario, ternario e così via.</li>
+          <li>Il <strong>ruolo</strong> spiega la funzione svolta da un partecipante nel fatto.</li>
+          <li>In una relazione ricorsiva lo stesso tipo compare più volte, quindi i ruoli sono indispensabili: <code>PERSONA</code> supervisiona <code>PERSONA</code> nei ruoli di supervisore e collaboratore.</li>
+        </ul>
+        <p class="callout warning"><strong>Non scomporre alla cieca:</strong> una relazione ternaria esprime un unico fatto fra tre partecipanti. Tre relazioni binarie possono ammettere combinazioni che il fatto originario non consentiva.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="min-max">
+        <h2 id="min-max">Cardinalità minima e massima</h2>
+        <p>In questa lezione scriviamo vicino a ogni tipo partecipante una coppia <code>(min, max)</code>. Essa indica quante occorrenze della relazione può coinvolgere <strong>ciascuna</strong> occorrenza di quel tipo.</p>
+        <div class="formula"><code>min<sub>E</sub> ≤ n<sub>R</sub>(e) ≤ max<sub>E</sub>, con n<sub>R</sub>(e) = |{r ∈ R : e partecipa a r}|</code></div>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Minimo</h3>
+            <p><code>0</code> significa partecipazione facoltativa; <code>1</code> significa partecipazione obbligatoria o totale.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Massimo</h3>
+            <p><code>1</code> limita a una sola occorrenza della relazione; <code>N</code> indica un numero arbitrario di occorrenze.</p>
+          </article>
         </div>
 
-        <h2>Grado e ruolo</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Grado</strong> (<em>arity</em>): numero di entità partecipanti alla relazione.
-              <ul>
-                <li>Grado 2 → relazione binaria (es. <code>Studente–Corso</code>)</li>
-                <li>Grado 3 → relazione ternaria (es. <code>Studente–Corso–Docente</code>)</li>
-              </ul>
-            </li>
-            <li><strong>Ruolo</strong>: la funzione o prospettiva che un’entità assume nella relazione.
-              <div class="note">Il ruolo distingue entità della stessa classe che partecipano con significati diversi.</div>
-            </li>
-          </ul>
-        </div>
+        <figure class="diagram" aria-labelledby="fig-card-caption">
+          <svg viewBox="0 0 920 260" role="img" aria-labelledby="fig-card-title fig-card-desc">
+            <title id="fig-card-title">Relazione uno a molti tra Dipartimento e Impiegato</title>
+            <desc id="fig-card-desc">Dipartimento partecipa a Lavora in da zero a molte volte. Impiegato partecipa esattamente una volta.</desc>
+            <line class="er-link" x1="260" y1="130" x2="385" y2="130"></line>
+            <line class="er-link total" x1="535" y1="130" x2="660" y2="130"></line>
+            <rect class="er-entity" x="40" y="85" width="220" height="90" rx="4"></rect>
+            <polygon class="er-relationship" points="460,75 535,130 460,185 385,130"></polygon>
+            <rect class="er-entity" x="660" y="85" width="220" height="90" rx="4"></rect>
+            <text class="er-label" x="150" y="130">DIPARTIMENTO</text>
+            <text class="er-label" x="460" y="130">LAVORA_IN</text>
+            <text class="er-label" x="770" y="130">IMPIEGATO</text>
+            <text class="er-small-label" x="315" y="110">(0, N)</text>
+            <text class="er-small-label" x="605" y="110">(1, 1)</text>
+          </svg>
+          <figcaption id="fig-card-caption">Ogni dipartimento può avere zero o molti impiegati; ogni impiegato deve lavorare in uno e un solo dipartimento. La linea più spessa evidenzia la partecipazione totale di IMPIEGATO.</figcaption>
+        </figure>
+      </section>
 
-        <h2>Rappresentazione grafica</h2>
-<div class="box">
-  <p>
-    Nel diagramma E-R, una relazione è rappresentata da un <strong>rombo</strong> collegato ai rettangoli delle entità partecipanti.
-  </p>
-
-  <svg width="600" height="200" viewBox="0 0 600 200">
-    <!-- Entità STUDENTE -->
-    <rect x="40" y="70" width="140" height="50" rx="8" ry="8"
-          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-    <text x="110" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">STUDENTE</text>
-
-    <!-- Relazione ISCRITTO -->
-    <polygon points="270,80 320,50 370,80 320,110"
-             fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
-    <text x="320" y="82" font-size="14" text-anchor="middle" fill="#78350f">ISCRITTO</text>
-
-    <!-- Entità CORSO -->
-    <rect x="440" y="70" width="140" height="50" rx="8" ry="8"
-          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-    <text x="510" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">CORSO</text>
-
-    <!-- Collegamenti -->
-    <line x1="180" y1="95" x2="270" y2="85" stroke="#2563eb" stroke-width="2"/>
-    <line x1="370" y1="85" x2="440" y2="95" stroke="#2563eb" stroke-width="2"/>
-  </svg>
-
-  <p class="ok">Esempio: la relazione <code>ISCRITTO</code> collega le entità <code>STUDENTE</code> e <code>CORSO</code>.</p>
-</div>
-
-
-        <h2>Cardinalità</h2>
-        <div class="box">
-          <p>
-            Le <strong>cardinalità</strong> specificano quante istanze di un’entità possono partecipare a una o più
-            istanze della relazione.  
-            Sono espresse come coppie <code>(min, max)</code> su ciascun lato del collegamento.
-          </p>
-
-           <table class="cardinality-table">
-            <thead><tr><th>Tipo</th><th>Forma</th><th>Significato</th></tr></thead>
+      <section class="lesson-section" aria-labelledby="classificazione">
+        <h2 id="classificazione">1:1, 1:N e N:M descrivono i massimi</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Classificazione delle cardinalità massime">
+          <table>
+            <caption>Le cardinalità minime vanno dichiarate separatamente</caption>
+            <thead>
+              <tr><th scope="col">Classe</th><th scope="col">Massimi</th><th scope="col">Esempio plausibile</th></tr>
+            </thead>
             <tbody>
-              <tr><td>1 : 1</td><td>Uno a uno</td><td>Ogni istanza di A è associata a una sola istanza di B e viceversa.</td></tr>
-              <tr><td>1 : N</td><td>Uno a molti</td><td>Ogni istanza di A può essere associata a più istanze di B, ma ogni B a un solo A.</td></tr>
-              <tr><td>N : M</td><td>Molti a molti</td><td>Le istanze di A e B possono essere associate in modo multiplo reciproco.</td></tr>
+              <tr><th scope="row">1:1</th><td>uno da entrambi i lati</td><td>PERSONA — possiede — PATENTE, nel dominio semplificato considerato</td></tr>
+              <tr><th scope="row">1:N</th><td>uno da un lato, molti dall'altro</td><td>DIPARTIMENTO — impiega — IMPIEGATO</td></tr>
+              <tr><th scope="row">N:M</th><td>molti da entrambi i lati</td><td>STUDENTE — si iscrive — CORSO</td></tr>
             </tbody>
           </table>
-
-          <p class="note">La notazione di Chen non usa simboli (come “zampe di corvo”), ma esprime le cardinalità con etichette o valori.</p>
-
-          <div style="margin-top:.6rem">
-            <button id="btnCard" onclick="toggleBox('btnCard','ansCard')">Mostra formalizzazione ▼</button>
-          </div>
-          <div id="ansCard" style="display:none; margin-top:.5rem">
-            <pre><code class="language-text">
-Sia R ⊆ A × B una relazione binaria:
-- Per ogni a ∈ A, esiste un sottoinsieme R(a) = { b ∈ B | (a,b) ∈ R }.
-- Per ogni b ∈ B, esiste un sottoinsieme R⁻¹(b) = { a ∈ A | (a,b) ∈ R }.
-
-Allora:
-- R è 1:1 se |R(a)| ≤ 1 e |R⁻¹(b)| ≤ 1
-- R è 1:N se |R(a)| ≥ 0, |R⁻¹(b)| ≤ 1
-- R è N:M se entrambe le cardinalità possono superare 1
-            </code></pre>
-          </div>
         </div>
+        <p>Dire soltanto «è una 1:N» non dice se la partecipazione sia obbligatoria. Le coppie min–max comunicano entrambe le informazioni e riducono le ambiguità di orientamento.</p>
+      </section>
 
-        <h2>Vincoli di partecipazione (obbligatorietà)</h2>
-        <div class="box">
-          <p>
-            Ogni partecipazione di un’entità a una relazione può essere <strong>totale</strong> (obbligatoria) o
-            <strong>parziale</strong> (facoltativa):
-          </p>
-          <ul>
-            <li><strong>Totale</strong>: ogni istanza dell’entità partecipa almeno a una relazione (<code>min ≥ 1</code>).</li>
-            <li><strong>Parziale</strong>: alcune istanze possono non partecipare (<code>min = 0</code>).</li>
-          </ul>
-          <p class="ok">Esempio: ogni iscrizione richiede uno studente (totale su Studente), ma non tutti gli studenti sono iscritti (parziale su Corso).</p>
-        </div>
+      <section class="lesson-section" aria-labelledby="attributi-relazione">
+        <h2 id="attributi-relazione">Attributi della relazione</h2>
+        <p>Un attributo appartiene alla relazione quando descrive il <strong>fatto</strong>, non uno dei partecipanti preso da solo. In <code>STUDENTE — ISCRIZIONE — CORSO</code>, <code>DataIscrizione</code> dipende dalla coppia studente-corso.</p>
+        <p class="callout warning"><strong>Test utile:</strong> se spostassimo <code>DataIscrizione</code> su STUDENTE, quale corso riguarderebbe? Se la risposta richiede entrambi i partecipanti, l'attributo è della relazione.</p>
+      </section>
 
-        <h2>Domanda-guida</h2>
-        <div class="box">
-          <p><strong>Perché nel modello E-R si preferisce rappresentare le relazioni come insiemi di tuple invece che come collegamenti diretti?</strong></p>
-          <button id="btnDG23" onclick="toggleBox('btnDG23','ansDG23')">Mostra ▼</button>
-          <div id="ansDG23" style="display:none; margin-top:.5rem">
-            <ul>
-              <li>Perché una relazione è un <strong>oggetto semantico autonomo</strong>, non solo un arco tra due entità.</li>
-              <li>Consente di modellare <strong>attributi propri della relazione</strong> (es. DataIscrizione, Voto).</li>
-              <li>Garantisce coerenza con il modello relazionale, dove le relazioni diventano tabelle di tuple.</li>
-            </ul>
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>Nell'esempio DIPARTIMENTO–IMPIEGATO, che cosa impone <code>(1,1)</code> accanto a IMPIEGATO?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>Ogni occorrenza di IMPIEGATO deve comparire in almeno e al massimo una occorrenza di LAVORA_IN: appartiene quindi esattamente a un dipartimento. Non significa che ogni dipartimento abbia un solo impiegato.</p>
           </div>
-        </div>
-
-      </div>
+        </details>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez2_2.html">← Entità e attributi</a>
+      <a class="nav-button next" href="lez2_4.html">Entità deboli →</a>
+    </nav>
+  </main>
 </body>
 </html>

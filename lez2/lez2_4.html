@@ -1,220 +1,161 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez2_4 · Entità deboli e identificazione</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez2_3.html"; }
-    function nextSlide(){ window.location.href = "lez2_5.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Entità deboli, relazione identificante e identificatore parziale nel modello E-R.">
+  <title>Lezione 2.4 · Entità deboli e identificazione</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
-    <ul>
-      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
-      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
-      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
-      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
-      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
-      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
-      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Entità deboli e identificazione</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 2">
+      <h2>Lezione 2 · Modello E-R</h2>
+      <ol>
+        <li><a href="lez2_1.html">Dal dominio al modello E-R</a></li>
+        <li><a href="lez2_2.html">Entità, attributi e identificatori</a></li>
+        <li><a href="lez2_3.html">Relazioni, ruoli e cardinalità</a></li>
+        <li><a href="lez2_4.html" aria-current="page">Entità deboli</a></li>
+        <li><a href="lez2_5.html">Tipi di attributo</a></li>
+        <li><a href="lez2_6.html">Gerarchie EER</a></li>
+        <li><a href="lez2_7.html">Traduzione relazionale</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 2 · Modello E-R</p>
+      <h1>Entità deboli e identificazione</h1>
+      <p class="lesson-lead">Alcuni oggetti sono distinguibili solo all'interno del loro proprietario: numero di riga 3 ha senso soltanto insieme a uno specifico ordine.</p>
+      <div class="lesson-meta">
+        <span>Pagina 4 di 7</span>
+        <progress value="4" max="7" aria-label="Pagina 4 di 7">4 di 7</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez2_3.html">← Relazioni e cardinalità</a>
+      <a class="nav-button next" href="lez2_5.html">Tipi di attributo →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Entità forte e entità debole</h2>
-        <div class="box">
-          <p>
-            Un’<strong>entità forte</strong> possiede una <em>chiave primaria autonoma</em> che identifica univocamente
-            ciascuna istanza del suo insieme.
-          </p>
-          <p>
-            Un’<strong>entità debole</strong> (<em>weak entity</em>) invece non può essere identificata univocamente solo
-            dai propri attributi: la sua identificazione dipende da un’altra entità, detta <strong>entità proprietaria</strong>
-            o <strong>identificante</strong>.
-          </p>
-          <p>
-            Formalmente: se <code>Ew</code> è l’insieme delle entità deboli e <code>Es</code> quello delle entità forti
-            che le identificano, allora:
-          </p>
-          <p class="ok"><code>∀ e<sub>w</sub> ∈ Ew, ∃ e<sub>s</sub> ∈ Es : (e<sub>s</sub>, e<sub>w</sub>) ∈ R</code></p>
-          <p>dove <code>R</code> è una relazione di identificazione obbligatoria e 1:N da <code>Es</code> a <code>Ew</code>.</p>
+      <section class="lesson-section" aria-labelledby="definizione">
+        <h2 id="definizione">Identità dipendente</h2>
+        <p>Un tipo di entità è <strong>debole</strong> quando le sue occorrenze non possono essere identificate completamente usando soltanto i propri attributi: l'identificazione richiede anche l'occorrente di un tipo proprietario.</p>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Entità proprietaria</h3>
+            <p>Ha un proprio identificatore e fornisce il contesto necessario a identificare l'entità debole.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Identificatore parziale</h3>
+            <p>Distingue le occorrenze deboli che appartengono allo <strong>stesso</strong> proprietario, ma può ripetersi presso proprietari diversi.</p>
+          </article>
         </div>
+        <p>Nel caso usuale con un solo proprietario, ogni occorrenza debole deve dipendere da uno e un solo proprietario:</p>
+        <div class="formula"><code>proprietario : W → S</code></div>
+        <p>La funzione è totale: per ogni <code>w ∈ W</code> esiste esattamente un <code>s ∈ S</code> che lo identifica. Un proprietario, invece, può possedere zero o molte occorrenze deboli.</p>
+      </section>
 
-        <h2>Chiave parziale e relazione identificante</h2>
-        <div class="box">
-          <p>
-            Ogni entità debole possiede una <strong>chiave parziale</strong>, cioè un insieme di attributi
-            che la distingue <em>solo all’interno</em> del contesto della sua entità identificante.
-          </p>
-          <p>
-            La coppia formata da:
-          </p>
-          <ul>
-            <li>la chiave primaria dell’entità forte, e</li>
-            <li>la chiave parziale dell’entità debole</li>
-          </ul>
-          <p>costituisce una <strong>chiave completa</strong> per identificare univocamente le istanze dell’entità debole.</p>
+      <section class="lesson-section" aria-labelledby="esempio">
+        <h2 id="esempio">Esempio: righe di un ordine</h2>
+        <p><code>NumeroRiga</code> può valere 1 in moltissimi ordini. È univoco soltanto entro il medesimo <code>ORDINE</code>; l'identificatore completo di <code>RIGA_ORDINE</code> è quindi la coppia <code>(NumeroOrdine, NumeroRiga)</code>.</p>
 
-          <p class="note">Nel diagramma E-R, le entità deboli sono rappresentate con <strong>rettangoli doppi</strong>
-            e la relazione di identificazione con un <strong>rombo doppio</strong>.</p>
+        <figure class="diagram" aria-labelledby="fig-debole-caption">
+          <svg viewBox="0 0 1040 340" role="img" aria-labelledby="fig-debole-title fig-debole-desc">
+            <title id="fig-debole-title">Entità debole Riga Ordine identificata da Ordine</title>
+            <desc id="fig-debole-desc">Ordine è collegato da una relazione identificante Contiene a Riga Ordine, rappresentata con rettangolo doppio. Numero Riga è l'identificatore parziale.</desc>
+            <line class="er-link" x1="255" y1="170" x2="410" y2="170"></line>
+            <line class="er-link total" x1="590" y1="170" x2="745" y2="170"></line>
+            <line class="er-link" x1="145" y1="125" x2="145" y2="65"></line>
+            <line class="er-link" x1="855" y1="125" x2="855" y2="65"></line>
 
-          <svg width="600" height="200" viewBox="0 0 600 200">
-            <!-- Entità forte -->
-            <rect x="80" y="70" width="140" height="50" rx="8" ry="8"
-                  fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-            <text x="150" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">ORDINE</text>
+            <ellipse class="er-attribute" cx="145" cy="45" rx="115" ry="34"></ellipse>
+            <text class="er-label er-key-label" x="145" y="45">NumeroOrdine</text>
+            <rect class="er-entity" x="35" y="125" width="220" height="90" rx="4"></rect>
+            <text class="er-label" x="145" y="170">ORDINE</text>
 
-            <!-- Relazione identificante -->
-            <polygon points="300,80 350,50 400,80 350,110"
-                     fill="#fff7ed" stroke="#f59e0b" stroke-width="4"/>
-            <text x="350" y="82" font-size="14" text-anchor="middle" fill="#78350f">CONTIENTE</text>
+            <polygon class="er-relationship" points="500,105 590,170 500,235 410,170"></polygon>
+            <polygon class="er-relationship" points="500,117 574,170 500,223 426,170"></polygon>
+            <text class="er-label" x="500" y="170">CONTIENE</text>
 
-            <!-- Entità debole -->
-            <rect x="460" y="70" width="140" height="50" rx="8" ry="8"
-                  fill="#f0f9ff" stroke="#2563eb" stroke-width="4"/>
-            <text x="530" y="100" font-size="15" text-anchor="middle" fill="#1e3a8a">DETTAGLIO</text>
+            <rect class="er-weak-entity" x="745" y="125" width="220" height="90" rx="4"></rect>
+            <rect class="er-weak-entity" x="755" y="135" width="200" height="70" rx="2"></rect>
+            <text class="er-label" x="855" y="170">RIGA_ORDINE</text>
+            <ellipse class="er-attribute" cx="855" cy="45" rx="110" ry="34"></ellipse>
+            <text class="er-label er-partial-key-label" x="855" y="45">NumeroRiga</text>
+            <line class="er-link" x1="807" y1="58" x2="903" y2="58" stroke-dasharray="5 4"></line>
 
-            <!-- Collegamenti -->
-            <line x1="220" y1="95" x2="300" y2="85" stroke="#2563eb" stroke-width="2"/>
-            <line x1="400" y1="85" x2="460" y2="95" stroke="#2563eb" stroke-width="2"/>
+            <text class="er-small-label" x="330" y="150">(0, N)</text>
+            <text class="er-small-label" x="670" y="150">(1, 1)</text>
           </svg>
+          <figcaption id="fig-debole-caption">Convenzione grafica del corso: doppio rettangolo per il tipo debole, doppio rombo per la relazione identificante e sottolineatura tratteggiata per l'identificatore parziale.</figcaption>
+        </figure>
+      </section>
 
-          <p class="ok">
-            Esempio: un <code>DETTAGLIO</code> d’ordine non esiste senza il suo <code>ORDINE</code>.  
-            La chiave di <code>DETTAGLIO</code> = (NumeroOrdine, NumeroRiga).
-          </p>
+      <section class="lesson-section" aria-labelledby="condizioni">
+        <h2 id="condizioni">Che cosa deve essere vero</h2>
+        <ol>
+          <li><strong>Partecipazione totale:</strong> una riga d'ordine non può esistere senza partecipare a CONTIENE.</li>
+          <li><strong>Un solo proprietario:</strong> ogni riga appartiene a un unico ordine nel modello considerato.</li>
+          <li><strong>Unicità locale:</strong> nello stesso ordine non possono esserci due righe con uguale <code>NumeroRiga</code>.</li>
+          <li><strong>Identificazione completa:</strong> proprietario e discriminante parziale, insieme, individuano una sola occorrenza debole.</li>
+        </ol>
+        <div class="formula"><code>(id(S), idParziale(W)) → W</code></div>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="non-debole">
+        <h2 id="non-debole">Una chiave esterna non rende debole un'entità</h2>
+        <p>Dipendere da un'altra entità per un vincolo di esistenza non basta. Se <code>RIGA_ORDINE</code> possedesse un identificatore globale autonomo <code>IdRiga</code>, potrebbe essere modellata come entità forte collegata obbligatoriamente a ORDINE.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Confronto tra entità debole ed entità forte collegata">
+          <table>
+            <caption>La domanda decisiva riguarda l'identità</caption>
+            <thead>
+              <tr><th scope="col">Caso</th><th scope="col">Come si identifica?</th><th scope="col">Modello</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Numero riga unico solo nell'ordine</td><td><code>NumeroOrdine + NumeroRiga</code></td><td>Entità debole</td></tr>
+              <tr><td><code>IdRiga</code> unico in tutto il sistema</td><td><code>IdRiga</code></td><td>Entità forte con partecipazione obbligatoria</td></tr>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <h2>Formalizzazione</h2>
-        <div class="box">
-          <pre><code class="language-text">
-Sia:
-  ORDINE(Oid, Data)
-  DETTAGLIO(NumeroRiga, Quantità, Prezzo)
-
-Relazione di identificazione:
-  CONTIENTE ⊆ ORDINE × DETTAGLIO
-
-Vincoli:
-  ∀ d ∈ DETTAGLIO, ∃! o ∈ ORDINE : (o, d) ∈ CONTIENTE
-  Chiave(DETTAGLIO) = Oid ∪ {NumeroRiga}
-          </code></pre>
-          <p class="note">La chiave dell’entità debole incorpora la chiave della sua entità forte.</p>
+      <section class="lesson-section" aria-labelledby="traduzione">
+        <h2 id="traduzione">Anticipo della traduzione</h2>
+        <p>La relazione ottenuta per l'entità debole contiene l'identificatore del proprietario, che è contemporaneamente chiave esterna e parte della chiave primaria.</p>
+        <div class="mapping">
+          <code>ORDINE(<u>NumeroOrdine</u>, Data)</code>
+          <span class="arrow" aria-hidden="true">→</span>
+          <code>RIGA_ORDINE(<u>NumeroOrdine, NumeroRiga</u>, Quantita)</code>
         </div>
+        <p class="callout">Nella seconda relazione, <code>NumeroOrdine</code> riferisce <code>ORDINE</code>. La chiave primaria composta conserva l'unicità locale espressa nel modello concettuale.</p>
+      </section>
 
-        <h2>Cardinalità tipica</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Da forte a debole:</strong> 1 → N (un ordine ha molti dettagli).</li>
-            <li><strong>Da debole a forte:</strong> ogni entità debole appartiene esattamente a una entità forte (partecipazione totale).</li>
-          </ul>
-        </div>
-		
-		<h2>Notazione grafica di Chen per entità deboli</h2>
-<div class="box">
-  <p>
-    Nel modello originale di <strong>Peter Chen (1976)</strong>, le entità deboli e le loro relazioni identificanti
-    hanno una rappresentazione grafica specifica:
-  </p>
-  <ul>
-    <li><strong>Entità debole</strong>: rettangolo con doppio bordo.</li>
-    <li><strong>Relazione identificante</strong>: rombo con doppio bordo.</li>
-    <li><strong>Chiave parziale</strong>: attributo indicato con linea tratteggiata o sottolineatura parziale.</li>
-    <li><strong>Partecipazione totale</strong> dell’entità debole: linea doppia che la collega alla relazione.</li>
-  </ul>
-
-  <svg width="650" height="260" viewBox="0 0 650 260">
-    <!-- Entità forte -->
-    <rect x="70" y="100" width="140" height="50" rx="8" ry="8"
-          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-    <text x="140" y="130" font-size="15" text-anchor="middle" fill="#1e3a8a">ORDINE</text>
-
-    <!-- Relazione identificante (rombo doppio) -->
-    <polygon points="290,110 340,80 390,110 340,140"
-             fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
-    <polygon points="295,115 340,87 385,115 340,143"
-             fill="none" stroke="#f59e0b" stroke-width="2"/>
-    <text x="340" y="112" font-size="14" text-anchor="middle" fill="#78350f">CONTIENTE</text>
-
-    <!-- Entità debole (rettangolo doppio) -->
-    <rect x="450" y="100" width="140" height="50" rx="8" ry="8"
-          fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-    <rect x="456" y="106" width="128" height="38" rx="6" ry="6"
-          fill="none" stroke="#2563eb" stroke-width="2"/>
-    <text x="520" y="130" font-size="15" text-anchor="middle" fill="#1e3a8a">DETTAGLIO</text>
-
-    <!-- Collegamenti -->
-    <line x1="210" y1="125" x2="290" y2="115" stroke="#2563eb" stroke-width="2"/>
-    <line x1="390" y1="115" x2="450" y2="125" stroke="#2563eb" stroke-width="4"/>
-
-    <!-- Attributo chiave parziale -->
-    <ellipse cx="520" cy="200" rx="70" ry="25"
-             fill="#ecfdf5" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,3"/>
-    <text x="520" y="205" text-anchor="middle" font-size="13" fill="#166534">NumeroRiga (chiave parziale)</text>
-    <line x1="520" y1="150" x2="520" y2="175" stroke="#2563eb" stroke-width="2"/>
-
-    <!-- Didascalie -->
-    <text x="90" y="90" font-size="13" fill="#1e3a8a">Entità forte</text>
-    <text x="460" y="90" font-size="13" fill="#1e3a8a">Entità debole</text>
-    <text x="340" y="60" font-size="13" fill="#78350f">Relazione identificante</text>
-    <text x="520" y="235" font-size="12" fill="#166534">(attributo chiave parziale tratteggiato)</text>
-  </svg>
-
-  <p class="ok" style="margin-top:.6rem">
-    Questo schema riproduce la notazione classica di Chen, in cui la debolezza semantica è visibile
-    nel doppio contorno e nella relazione identificante obbligatoria.
-  </p>
-</div>
-
-
-        <h2>Domanda-guida</h2>
-        <div class="box">
-          <p><strong>Perché nel modello E-R è necessaria la distinzione tra entità forte e debole?</strong></p>
-          <button id="btnDG24" onclick="toggleBox('btnDG24','ansDG24')">Mostra ▼</button>
-          <div id="ansDG24" style="display:none; margin-top:.5rem">
-            <ul>
-              <li>Perché alcune entità non hanno un’identità autonoma e dipendono logicamente da altre.</li>
-              <li>Serve a rappresentare correttamente vincoli di esistenza e identificazione nel dominio reale.</li>
-              <li>La distinzione prepara la traduzione corretta verso il modello relazionale (chiavi parziali → FK + PK composite).</li>
-            </ul>
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>Due ordini diversi possono entrambi avere una riga con <code>NumeroRiga = 1</code>?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>Sì. L'identificatore parziale è unico soltanto entro ciascun proprietario. Non possono invece esistere due righe numero 1 appartenenti allo stesso ordine.</p>
           </div>
-        </div>
-
-      </div>
+        </details>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez2_3.html">← Relazioni e cardinalità</a>
+      <a class="nav-button next" href="lez2_5.html">Tipi di attributo →</a>
+    </nav>
+  </main>
 </body>
 </html>

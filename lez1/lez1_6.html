@@ -1,151 +1,157 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez1_6 · Livello logico vs livello fisico</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez1_5.html"; }
-    function nextSlide(){ window.location.href = "../lez2/lez2_1.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Distinzione tra progettazione concettuale, schema logico, livello fisico e architettura ANSI/SPARC.">
+  <title>Lezione 1.6 · Livello logico e livello fisico</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 1 — Modello Relazionale</h2>
-    <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
-      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
-      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
-      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Livello logico vs livello fisico</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 1">
+      <h2>Lezione 1 · Modello relazionale</h2>
+      <ol>
+        <li><a href="lez1_1.html">Perché nasce</a></li>
+        <li><a href="lez1_2.html">Relazioni, tuple e domini</a></li>
+        <li><a href="lez1_3.html">Vincoli di integrità</a></li>
+        <li><a href="lez1_4.html">Superchiavi e chiavi</a></li>
+        <li><a href="lez1_5.html">Chiavi esterne</a></li>
+        <li><a href="lez1_6.html" aria-current="page">Logico e fisico</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 1 · Modello relazionale</p>
+      <h1>Livello logico e livello fisico</h1>
+      <p class="lesson-lead">Vincoli e strutture di memorizzazione rispondono a domande diverse. Separarli permette al database di evolvere senza perdere significato.</p>
+      <div class="lesson-meta">
+        <span>Pagina 6 di 6</span>
+        <progress value="6" max="6" aria-label="Pagina 6 di 6">6 di 6</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez1_5.html">← Chiavi esterne</a>
+      <a class="nav-button next" href="../lez2/lez2_1.html">Vai al modello E-R →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-        <h2>Obiettivo</h2>
-        <ul>
-          <li>Distinguere in modo rigoroso <strong>schema logico</strong> e <strong>schema fisico</strong>.</li>
-          <li>Capire che cosa significa <strong>indipendenza dei dati</strong> e perche conta.</li>
-          <li>Chiudere il modulo 1 collegando il formalismo relazionale alla progettazione dei moduli successivi.</li>
-        </ul>
-
-        <h2>Domanda di partenza</h2>
-        <div class="box">
-          <p>Perche nel modello relazionale insistiamo cosi tanto sulla distinzione tra <strong>logico</strong> e <strong>fisico</strong>?</p>
-          <p class="note">Perche il cuore del modello relazionale sta proprio qui: poter ragionare sui dati senza legarsi da subito al modo in cui il DBMS li memorizza.</p>
+      <section class="lesson-section" aria-labelledby="due-domande">
+        <h2 id="due-domande">Due domande, due livelli</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Livello logico</h3>
+            <p><strong>Quali fatti rappresentiamo e quali regole devono rispettare?</strong></p>
+            <p>Relazioni, attributi, domini, chiavi e altri vincoli appartengono allo schema logico.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Livello fisico</h3>
+            <p><strong>Come vengono memorizzati e recuperati efficientemente?</strong></p>
+            <p>File, pagine, indici, partizioni, compressione e piani di accesso appartengono al livello fisico.</p>
+          </article>
         </div>
+        <p class="callout warning"><strong>Chiave primaria e indice non sono sinonimi.</strong> La prima esprime un vincolo logico; il secondo è una struttura fisica. Un DBMS può creare un indice per applicare efficientemente il vincolo, ma i due concetti restano distinti.</p>
+      </section>
 
-        <h2>Architettura ANSI/SPARC (richiamo essenziale)</h2>
-        <div class="box">
-          <ul>
-            <li><span class="def">Esterno</span>: viste e interfacce utente/applicazione (sottoinsiemi/riformulazioni dello schema concettuale).</li>
-            <li><span class="def">Concettuale</span> (logico): schemi di relazione, domini, vincoli (PK, FK, ecc.).</li>
-            <li><span class="def">Interno</span> (fisico): strutture di memorizzazione, pagine, indici, partizioni, compressione.</li>
-          </ul>
-          <p class="note">In questo corso il modello relazionale vive soprattutto al <strong>livello concettuale</strong>. Il livello interno esiste, ma non e il punto da cui partiamo per progettare.</p>
-        </div>
-
-        <h2>Confronto diretto: logico vs fisico</h2>
-        <div class="box">
+      <section class="lesson-section" aria-labelledby="progettazione">
+        <h2 id="progettazione">Le fasi della progettazione</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Fasi di progettazione di una base di dati">
           <table>
-            <thead>
-              <tr><th>Piano</th><th>Domanda tipica</th><th>Esempi</th></tr>
-            </thead>
+            <caption>Dal dominio reale all'implementazione</caption>
+            <thead><tr><th scope="col">Fase</th><th scope="col">Domanda</th><th scope="col">Prodotto tipico</th></tr></thead>
             <tbody>
-              <tr><td><strong>Logico</strong></td><td>Quali dati rappresento e con quali vincoli?</td><td>relazioni, attributi, chiavi, vincoli</td></tr>
-              <tr><td><strong>Fisico</strong></td><td>Come il DBMS memorizza e recupera quei dati?</td><td>indici, pagine, file, piani di esecuzione</td></tr>
+              <tr><th scope="row">Concettuale</th><td>Quali oggetti, proprietà e associazioni esistono nel dominio?</td><td>Schema E-R</td></tr>
+              <tr><th scope="row">Logica</th><td>Come li rappresentiamo nel modello scelto?</td><td>Schema relazionale con vincoli</td></tr>
+              <tr><th scope="row">Fisica</th><td>Come li memorizziamo e rendiamo efficienti le operazioni?</td><td>Indici, partizioni e organizzazione dello storage</td></tr>
             </tbody>
           </table>
         </div>
+        <p>Il modulo 2 partirà dalla prima riga, costruendo un modello E-R; successivamente lo tradurrà nello schema relazionale studiato in questa lezione.</p>
+      </section>
 
-        <h2>Indipendenza dei dati</h2>
-        <div class="box">
-          <ul>
-            <li><span class="def">Indipendenza fisica</span>: posso cambiare aspetti interni del DBMS senza riscrivere lo schema logico o le query applicative.</li>
-            <li><span class="def">Indipendenza logica</span>: posso evolvere lo schema concettuale in modo controllato senza rompere tutte le viste esterne.</li>
-          </ul>
-          <p class="warn">La chiave primaria e un concetto <strong>logico</strong>; l’indice e una scelta <strong>fisica</strong>. Nella pratica possono collaborare, ma non coincidono.</p>
+      <section class="lesson-section" aria-labelledby="ansi-sparc">
+        <h2 id="ansi-sparc">I tre livelli ANSI/SPARC</h2>
+        <p>L'architettura ANSI/SPARC usa una terminologia simile, ma osserva il database dal punto di vista delle sue rappresentazioni:</p>
+        <ul>
+          <li><span class="term">Livello esterno:</span> viste specifiche per utenti o applicazioni.</li>
+          <li><span class="term">Livello concettuale:</span> schema globale della base di dati, indipendente dallo storage.</li>
+          <li><span class="term">Livello interno:</span> organizzazione fisica dei dati.</li>
+        </ul>
+        <p class="callout"><strong>Attenzione al lessico:</strong> il “livello concettuale” ANSI/SPARC corrisponde allo schema globale del DBMS ed è spesso descritto mediante uno schema logico. Nelle <em>fasi di progettazione</em>, invece, “concettuale” indica il modello del dominio, per esempio lo schema E-R. Il contesto chiarisce quale significato stiamo usando.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="indipendenza">
+        <h2 id="indipendenza">Indipendenza dei dati</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Indipendenza fisica</h3>
+            <p>È possibile cambiare il livello interno senza modificare lo schema logico o le applicazioni. Per esempio, aggiungere un indice non cambia il significato di una relazione.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Indipendenza logica</h3>
+            <p>È possibile evolvere lo schema globale limitando l'impatto sulle viste esterne e sui programmi. È generalmente più difficile da ottenere.</p>
+          </article>
         </div>
 
-        <h2>Esempio minimo</h2>
         <div class="box">
-          <ul>
-            <li><strong>Livello logico</strong>: <code>STUDENTE(Matr, Nome, Email)</code> con <code>PK{Matr}</code>.</li>
-            <li><strong>Livello fisico</strong>: il DBMS puo decidere se usare o no un indice, come organizzare le pagine e quale piano scegliere.</li>
-            <li>La definizione logica della relazione non cambia se il DBA aggiunge un indice su <code>Email</code>.</li>
-          </ul>
+          <h3>Esempio</h3>
+          <p><strong>Schema logico:</strong> <code>STUDENTI(Matr, Nome, Email)</code>, con <code>PK = {Matr}</code>.</p>
+          <p><strong>Scelta fisica:</strong> il DBA aggiunge un indice su <code>Email</code> per velocizzare una ricerca frequente.</p>
+          <p>La relazione, i suoi vincoli e il risultato delle query restano gli stessi: cambia soltanto una possibile strategia di accesso.</p>
         </div>
+      </section>
 
-        <h2>Cosa conta davvero per noi</h2>
-        <div class="box">
-          <ul>
-            <li>Quando progetti, parti dal <strong>significato dei dati</strong> e dai <strong>vincoli</strong>.</li>
-            <li>Quando implementi, il DBMS sceglie strutture e piani fisici per eseguire bene le operazioni.</li>
-            <li>Confondere i due piani porta a schemi poco robusti e piu difficili da evolvere.</li>
-          </ul>
-        </div>
+      <section class="lesson-section" aria-labelledby="mappa">
+        <h2 id="mappa">Mappa della lezione</h2>
+        <ol>
+          <li>Il modello relazionale separa la descrizione logica dall'organizzazione fisica.</li>
+          <li>Uno schema assegna domini agli attributi; un'istanza è un insieme di tuple conformi.</li>
+          <li>I vincoli distinguono le istanze legali da quelle non ammesse.</li>
+          <li>Le chiavi identificano le tuple in ogni istanza legale.</li>
+          <li>Le chiavi esterne mantengono la coerenza tra relazioni.</li>
+        </ol>
+      </section>
 
-        <h2>Chiusura del modulo 1</h2>
-        <div class="box">
-          <ul>
-            <li>Il <strong>modello relazionale</strong> lavora sul piano logico: relazioni, attributi, tuple, vincoli, chiavi.</li>
-            <li>Il <strong>livello fisico</strong> serve all’implementazione, ma non deve guidare la modellazione iniziale.</li>
-            <li>Questa separazione e la ragione per cui il modello relazionale e stato cosi importante sul piano teorico e pratico.</li>
-          </ul>
-        </div>
-
-        <h2>Ponte al modulo 2</h2>
-        <div class="box">
-          <p>Nel modulo 2 ci sposteremo ancora piu indietro nel processo: non partiremo da relazioni gia pronte, ma dal <strong>dominio reale</strong> da rappresentare.</p>
-          <p class="ok">In altre parole: qui abbiamo chiarito il linguaggio del modello relazionale; nel prossimo modulo chiariremo come si arriva a uno schema concettuale prima della traduzione relazionale.</p>
-        </div>
-
-      </div>
+      <section class="lesson-section" aria-labelledby="autoverifica">
+        <h2 id="autoverifica">Autoverifica finale</h2>
+        <p>Prova a rispondere senza riaprire le pagine precedenti:</p>
+        <ul>
+          <li>Qual è la differenza tra schema e istanza?</li>
+          <li>Perché i dati attuali non bastano a dimostrare una chiave?</li>
+          <li>Che cosa rende candidata una superchiave?</li>
+          <li>Quale inclusione esprime l'integrità referenziale?</li>
+          <li>Perché un indice non è una chiave primaria?</li>
+        </ul>
+        <details class="reveal">
+          <summary>Mostra una sintesi delle risposte</summary>
+          <div class="reveal-content">
+            <ol>
+              <li>Lo schema descrive struttura e vincoli; l'istanza contiene le tuple presenti in un dato momento.</li>
+              <li>Una chiave deve garantire unicità in tutte le istanze legali, non solo in quella osservata.</li>
+              <li>È candidata quando è minimale per inclusione.</li>
+              <li>I valori della FK devono essere inclusi nei valori della chiave referenziata, considerando la semantica SQL dei nulli.</li>
+              <li>La chiave è un vincolo logico; l'indice è una struttura fisica usata per accedere ai dati.</li>
+            </ol>
+          </div>
+        </details>
+        <p class="callout success"><strong>Passo successivo:</strong> costruiremo uno schema concettuale E-R a partire dal dominio reale e vedremo come tradurlo in relazioni.</p>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez1_5.html">← Chiavi esterne</a>
+      <a class="nav-button next" href="../lez2/lez2_1.html">Vai al modello E-R →</a>
+    </nav>
+  </main>
 </body>
 </html>

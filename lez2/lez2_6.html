@@ -1,216 +1,160 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez2_6 · Generalizzazione e specializzazione</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez2_5.html"; }
-    function nextSlide(){ window.location.href = "lez2_7.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generalizzazione e specializzazione nel modello EER: disgiunzione, sovrapposizione, totalità e parzialità.">
+  <title>Lezione 2.6 · Generalizzazioni e specializzazioni</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 2 — Diagramma E-R di Chen</h2>
-    <ul>
-      <li><a href="lez2_1.html">Lez2.1: Introduzione e motivazioni</a></li>
-      <li><a href="lez2_2.html">Lez2.2: Concetti fondamentali</a></li>
-      <li><a href="lez2_3.html">Lez2.3: Relazioni e cardinalità</a></li>
-      <li><a href="lez2_4.html">Lez2.4: Entità deboli e identificazione</a></li>
-      <li><a href="lez2_5.html">Lez2.5: Attributi derivati e composti</a></li>
-      <li><a href="lez2_6.html">Lez2.6: Generalizzazione e specializzazione</a></li>
-      <li><a href="lez2_7.html">Lez2.7: Traduzione E-R → Relazionale</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Generalizzazione e specializzazione</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 2">
+      <h2>Lezione 2 · Modello E-R</h2>
+      <ol>
+        <li><a href="lez2_1.html">Dal dominio al modello E-R</a></li>
+        <li><a href="lez2_2.html">Entità, attributi e identificatori</a></li>
+        <li><a href="lez2_3.html">Relazioni, ruoli e cardinalità</a></li>
+        <li><a href="lez2_4.html">Entità deboli</a></li>
+        <li><a href="lez2_5.html">Tipi di attributo</a></li>
+        <li><a href="lez2_6.html" aria-current="page">Gerarchie EER</a></li>
+        <li><a href="lez2_7.html">Traduzione relazionale</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 2 · Modello E-R esteso</p>
+      <h1>Generalizzazioni e specializzazioni</h1>
+      <p class="lesson-lead">Le gerarchie rappresentano categorie più specifiche che ereditano identità, attributi e relazioni da una categoria generale.</p>
+      <div class="lesson-meta">
+        <span>Pagina 6 di 7</span>
+        <progress value="6" max="7" aria-label="Pagina 6 di 7">6 di 7</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez2_5.html">← Tipi di attributo</a>
+      <a class="nav-button next" href="lez2_7.html">Traduzione relazionale →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Definizioni</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Specializzazione</strong> (top-down): da un’entità <code>S</code> (supertipo) si definiscono sottoinsiemi <code>S₁, …, Sₖ</code> (sottotipi) con proprietà aggiuntive.</li>
-            <li><strong>Generalizzazione</strong> (bottom-up): da entità affini <code>S₁, …, Sₖ</code> si astrae un supertipo comune <code>S</code> che cattura attributi/relazioni condivisi.</li>
-            <li><strong>Ereditarietà</strong>: ogni sottotipo <code>Sᵢ</code> <em>eredita</em> gli attributi e le relazioni di <code>S</code> e può aggiungerne di propri.</li>
-          </ul>
+      <section class="lesson-section" aria-labelledby="esteso">
+        <h2 id="esteso">Un'estensione del nucleo E-R</h2>
+        <p>Generalizzazione e specializzazione appartengono comunemente al modello <strong>EER</strong> (<em>Enhanced Entity-Relationship</em>), che estende il nucleo della notazione E-R. Le usiamo quando più tipi condividono una stessa identità e alcune proprietà.</p>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Specializzazione</h3>
+            <p>Dal supertipo generale ricaviamo sottotipi più specifici: da PERSONA a STUDENTE e DOCENTE.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Generalizzazione</h3>
+            <p>Riconosciamo proprietà comuni di tipi distinti e le raccogliamo in un supertipo.</p>
+          </article>
         </div>
+        <div class="formula"><code>STUDENTE ⊆ PERSONA &nbsp;&nbsp; e &nbsp;&nbsp; DOCENTE ⊆ PERSONA</code></div>
+      </section>
 
-        <h2>Vincoli sulla specializzazione</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Disgiunzione (D)</strong> vs <strong>Sovrapposizione (O)</strong>:
-              <ul>
-                <li><em>Disgiunta</em>: <code>Sᵢ ∩ Sⱼ = ∅</code> per <code>i ≠ j</code>.</li>
-                <li><em>Sovrapposta</em>: è ammesso <code>Sᵢ ∩ Sⱼ ≠ ∅</code>.</li>
-              </ul>
-            </li>
-            <li><strong>Copertura Totale (T)</strong> vs <strong>Parziale (P)</strong>:
-              <ul>
-                <li><em>Totale</em>: <code>S = S₁ ∪ ··· ∪ Sₖ</code> (ogni istanza di <code>S</code> appartiene almeno a un sottotipo).</li>
-                <li><em>Parziale</em>: <code>S ⊇ S₁ ∪ ··· ∪ Sₖ</code> (alcune istanze di <code>S</code> non appartengono a nessun sottotipo).</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+      <section class="lesson-section" aria-labelledby="ereditarieta">
+        <h2 id="ereditarieta">Ereditarietà e identità condivisa</h2>
+        <p>Ogni occorrenza di un sottotipo è anche un'occorrenza del supertipo. Eredita quindi:</p>
+        <ul>
+          <li>l'identificatore del supertipo;</li>
+          <li>gli attributi comuni, come <code>Nome</code> e <code>DataNascita</code>;</li>
+          <li>la partecipazione alle relazioni definite per il supertipo.</li>
+        </ul>
+        <p>Il sottotipo aggiunge attributi o relazioni specifici. Può anche possedere ulteriori identificatori candidati, ma la sua identità nella gerarchia rimane quella dell'occorrenza del supertipo.</p>
 
-        <h2>Ereditarietà di chiavi e attributi</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Chiave</strong>: la chiave del supertipo <code>K(S)</code> è anche chiave dei sottotipi (<code>K(Sᵢ) = K(S)</code>); i sottotipi <em>non</em> introducono chiavi autonome.</li>
-            <li><strong>Attributi</strong>: ogni <code>Sᵢ</code> eredita tutti gli attributi/relazioni di <code>S</code> e può aggiungere attributi propri (es. <code>Matricola</code> per <code>STUDENTE</code>).</li>
-            <li><strong>Vincoli</strong>: i vincoli su <code>S</code> si applicano anche a <code>Sᵢ</code>; quelli definiti su <code>Sᵢ</code> restringono ulteriormente.</li>
-          </ul>
-          <div class="note">Questa semantica è coerente con la trasformazione verso il modello relazionale (regole in Lez2.7).</div>
-        </div>
-
-        <h2>Rappresentazione grafica</h2>
-        <div class="box">
-          <p>Usiamo una notazione Chen-like con nodo ISA (triangolo). La <strong>doppia linea</strong> dal supertipo al nodo indica <strong>copertura totale</strong>. Le etichette <strong>D</strong> e <strong>O</strong> distinguono i casi disgiunti e sovrapposti.</p>
-
-          <svg viewBox="0 0 820 280" width="100%" height="300" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto">
-            <!-- Supertipo PERSONA -->
-            <rect x="340" y="30" width="140" height="50" rx="8" ry="8"
-                  fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-            <text x="410" y="60" font-size="15" text-anchor="middle" fill="#1e3a8a">PERSONA</text>
-
-            <!-- Nodo ISA (triangolo) -->
-            <polygon points="370,120 410,80 450,120"
-                     fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
-            <text x="410" y="112" font-size="12" text-anchor="middle" fill="#78350f">ISA</text>
-
-            <!-- Doppia linea per copertura TOTALE (PERSONA ⇒ ISA) -->
-            <line x1="404" y1="80" x2="404" y2="94" stroke="#2563eb" stroke-width="2"/>
-            <line x1="416" y1="80" x2="416" y2="94" stroke="#2563eb" stroke-width="2"/>
-
-            <!-- Etichetta del caso mostrato: disgiunta e totale -->
-            <text x="458" y="102" font-size="12" fill="#78350f">D + T</text>
-
-            <!-- Sottotipo STUDENTE -->
-            <rect x="150" y="200" width="160" height="50" rx="8" ry="8"
-                  fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-            <text x="230" y="230" font-size="15" text-anchor="middle" fill="#1e3a8a">STUDENTE</text>
-
-            <!-- Sottotipo DOCENTE -->
-            <rect x="510" y="200" width="160" height="50" rx="8" ry="8"
-                  fill="#f0f9ff" stroke="#2563eb" stroke-width="2"/>
-            <text x="590" y="230" font-size="15" text-anchor="middle" fill="#1e3a8a">DOCENTE</text>
-
-            <!-- Collegamenti ISA -> sottotipi -->
-            <line x1="394" y1="120" x2="310" y2="200" stroke="#2563eb" stroke-width="2"/>
-            <line x1="426" y1="120" x2="510" y2="200" stroke="#2563eb" stroke-width="2"/>
+        <figure class="diagram compact" aria-labelledby="fig-isa-caption">
+          <svg viewBox="0 0 760 420" role="img" aria-labelledby="fig-isa-title fig-isa-desc">
+            <title id="fig-isa-title">Specializzazione totale e disgiunta di Persona</title>
+            <desc id="fig-isa-desc">Persona è il supertipo. Un triangolo ISA con d e t indica una gerarchia disgiunta e totale verso Studente e Docente.</desc>
+            <rect class="er-entity" x="270" y="35" width="220" height="82" rx="4"></rect>
+            <text class="er-label" x="380" y="76">PERSONA</text>
+            <line class="er-link total" x1="380" y1="117" x2="380" y2="180"></line>
+            <polygon class="er-isa" points="380,180 325,260 435,260"></polygon>
+            <text class="er-label" x="380" y="227">ISA</text>
+            <text class="er-small-label" x="455" y="225">d, totale</text>
+            <line class="er-link" x1="345" y1="260" x2="205" y2="325"></line>
+            <line class="er-link" x1="415" y1="260" x2="555" y2="325"></line>
+            <rect class="er-entity" x="95" y="325" width="220" height="78" rx="4"></rect>
+            <rect class="er-entity" x="445" y="325" width="220" height="78" rx="4"></rect>
+            <text class="er-label" x="205" y="364">STUDENTE</text>
+            <text class="er-label" x="555" y="364">DOCENTE</text>
           </svg>
+          <figcaption id="fig-isa-caption">Esempio di convenzione EER: ogni PERSONA deve appartenere esattamente a uno dei due sottotipi. Le varianti di notazione grafica sono numerose: i vincoli vanno anche documentati a parole.</figcaption>
+        </figure>
+      </section>
 
-          <p class="ok">Esempio: <code>PERSONA</code> specializzata in <code>STUDENTE</code> e <code>DOCENTE</code>, <strong>disgiunta</strong> e a <strong>copertura totale</strong>.</p>
-
-          <div style="margin-top:.6rem">
-            <button id="btnVAR" onclick="toggleBox('btnVAR','ansVAR')">Mostra altre varianti ▼</button>
-          </div>
-          <div id="ansVAR" style="display:none; margin-top:.5rem">
-            <ul>
-              <li><strong>Parziale (P)</strong>: singola linea da <code>PERSONA</code> al nodo ISA (alcune persone non sono né studenti né docenti).</li>
-              <li><strong>Sovrapposta (O)</strong>: etichetta “O”; è ammesso che una persona sia sia <em>studente</em> sia <em>docente</em> (insiemi che si intersecano).</li>
-            </ul>
-          </div>
+      <section class="lesson-section" aria-labelledby="vincoli">
+        <h2 id="vincoli">Due vincoli indipendenti</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Disgiunta o sovrapposta?</h3>
+            <p><strong>Disgiunta:</strong> una stessa occorrenza appartiene al massimo a un sottotipo. <strong>Sovrapposta:</strong> può appartenere a più sottotipi.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Totale o parziale?</h3>
+            <p><strong>Totale:</strong> ogni occorrenza del supertipo appartiene ad almeno un sottotipo. <strong>Parziale:</strong> questa appartenenza non è obbligatoria.</p>
+          </article>
         </div>
+        <div class="formula"><code>disgiunta: ∀i ≠ j, Sᵢ ∩ Sⱼ = ∅</code></div>
+        <div class="formula"><code>totale: S = S₁ ∪ … ∪ Sₖ</code></div>
+        <p class="callout warning"><strong>Precisazione:</strong> “sovrapposta” significa che l'intersezione è <em>ammessa</em>, non che debba essere non vuota in ogni istanza. Analogamente, una gerarchia parziale non impone che esistano sempre occorrenze fuori dai sottotipi.</p>
+      </section>
 
-        <h2>Formalizzazione</h2>
-        <div class="box">
-          <pre><code class="language-text">Sia S l'insieme del supertipo e S1,...,Sk i sottotipi.
-- Inclusione: ∀ i,  Si ⊆ S
-- Disgiunta:  ∀ i≠j,  Si ∩ Sj = ∅
-- Sovrapposta: ∃ i≠j, Si ∩ Sj ≠ ∅
-- Totale:     S = S1 ∪ ··· ∪ Sk
-- Parziale:   S ⊇ S1 ∪ ··· ∪ Sk
-
-Ereditarietà di chiave:
-- K(Si) = K(S)  (la chiave del supertipo identifica anche le istanze del sottotipo)
-          </code></pre>
+      <section class="lesson-section" aria-labelledby="combinazioni">
+        <h2 id="combinazioni">Le quattro combinazioni</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Combinazioni dei vincoli di specializzazione">
+          <table>
+            <caption>Esempi da verificare con i requisiti reali</caption>
+            <thead>
+              <tr><th scope="col">Vincolo</th><th scope="col">Significato</th><th scope="col">Esempio</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Disgiunta, totale</th><td>Esattamente un sottotipo</td><td>PAGAMENTO è CARTA oppure BONIFICO, nel dominio scelto</td></tr>
+              <tr><th scope="row">Disgiunta, parziale</th><td>Zero oppure un sottotipo</td><td>DIPENDENTE può essere DIRIGENTE o TECNICO</td></tr>
+              <tr><th scope="row">Sovrapposta, totale</th><td>Uno o più sottotipi</td><td>CONTATTO è almeno CLIENTE o FORNITORE e può essere entrambi</td></tr>
+              <tr><th scope="row">Sovrapposta, parziale</th><td>Zero, uno o più sottotipi</td><td>PERSONA può essere STUDENTE, LAVORATORE, entrambi o nessuno</td></tr>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <h2>Implicazioni progettuali</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Nel supertipo</strong> vanno solo attributi e relazioni che valgono per tutte le istanze.</li>
-            <li><strong>Nel sottotipo</strong> vanno gli attributi che esistono solo per una parte delle istanze o che hanno vincoli specifici.</li>
-            <li>Se la specializzazione e <strong>disgiunta</strong>, una stessa istanza non puo stare in due sottotipi diversi.</li>
-            <li>Se la specializzazione e a <strong>copertura totale</strong>, nessuna istanza del supertipo puo restare fuori da tutti i sottotipi.</li>
-            <li>La chiave del supertipo resta la chiave anche nei sottotipi: non si introducono chiavi autonome.</li>
-          </ul>
-          <p class="warn">Un solo tipo con molti campi opzionali tende a nascondere regole importanti; la specializzazione serve proprio a renderle esplicite.</p>
-        </div>
+      <section class="lesson-section" aria-labelledby="quando">
+        <h2 id="quando">Quando una gerarchia è utile</h2>
+        <p>Conviene introdurla quando i sottotipi condividono davvero identità e proprietà, ma hanno anche fatti specifici. Non basta che esistano categorie nominali.</p>
+        <ul>
+          <li>Se cambia soltanto un'etichetta e non esistono proprietà o relazioni specifiche, può bastare un attributo <code>Tipo</code>.</li>
+          <li>Se le categorie hanno identità e cicli di vita indipendenti, potrebbero essere tipi separati collegati da relazioni.</li>
+          <li>La regola di appartenenza deve provenire dai requisiti; il diagramma non la inventa.</li>
+        </ul>
+      </section>
 
-        <h2>Impatto sulla traduzione (preview Lez2.7)</h2>
-        <div class="box">
-          <ul>
-            <li>La scelta <strong>D/O</strong> e <strong>T/P</strong> influenza la strategia di traduzione nel modello relazionale.</li>
-            <li>Con <strong>D + T</strong> il caso e di solito piu semplice da controllare e spiegare.</li>
-            <li>Con <strong>O</strong> oppure <strong>P</strong> servono piu attenzione e vincoli aggiuntivi.</li>
-          </ul>
-          <div class="note">Le regole operative di trasformazione sono dettagliate nella Lez2.7.</div>
-
-          <div style="margin-top:.6rem">
-            <button id="btnCHK26" onclick="toggleBox('btnCHK26','ansCHK26')">Checklist decisionale rapida ▼</button>
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>In una gerarchia sovrapposta CLIENTE/FORNITORE, un soggetto deve essere necessariamente entrambi?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>No. Sovrapposta permette l'appartenenza contemporanea, ma non la impone. Il vincolo totale o parziale stabilisce invece se ogni occorrenza del supertipo debba appartenere ad almeno un sottotipo.</p>
           </div>
-          <div id="ansCHK26" style="display:none; margin-top:.5rem">
-            <ul>
-              <li><strong>Attributi molto opzionali?</strong> → valuta la specializzazione.</li>
-              <li><strong>Vincoli diversi tra sottoinsiemi?</strong> → specializza e localizza i vincoli.</li>
-              <li><strong>Relazioni diverse per sottoinsiemi?</strong> → specializza.</li>
-              <li><strong>Query spesso filtrate per tipo?</strong> → la specializzazione aiuta la leggibilita del modello.</li>
-            </ul>
-          </div>
-        </div>
-
-<h2>Domanda-guida</h2>
-<div class="box">
-  <p><strong>Quando è preferibile introdurre una specializzazione invece di un unico tipo con attributi opzionali?</strong></p>
-  <button id="btnDG26" onclick="toggleBox('btnDG26','ansDG26')">Mostra ▼</button>
-  <div id="ansDG26" style="display:none; margin-top:.5rem">
-    <ul>
-      <li><strong>Regole diverse</strong>: se sottoinsiemi richiedono domini, obbligatorietà o vincoli propri (es. <code>Docente.PagaOraria ≥ 0</code> che non esiste per <code>Studente</code>), la specializzazione rende esplicite tali regole.</li>
-      <li><strong>Relazioni esclusive</strong>: quando alcuni ruoli/relazioni valgono solo per un sottoinsieme (es. <code>Docente</code> partecipa a <em>Insegna</em>, <code>Studente</code> a <em>Iscritto</em>), i sottotipi separano correttamente le partecipazioni.</li>
-      <li><strong>Identità uniforme</strong>: se l’identificatore è comune (chiave di <code>PERSONA</code>) ma i dati variano per ruolo, i sottotipi ereditano la stessa chiave e aggiungono attributi pertinenti.</li>
-      <li><strong>Manutenibilità</strong>: riduce “campi-null-per-sempre”, evita validazioni condizionali complicate e semplifica la comprensione del modello.</li>
-      <li><strong>Decisione pratica</strong>: se ≥2 di queste condizioni sono vere, <em>introduci la specializzazione</em>; altrimenti mantieni un solo tipo con pochi opzionali ben motivati.</li>
-    </ul>
-
-    <div class="ok" style="margin-top:.5rem">
-      <strong>Esempio</strong>: <code>PERSONA</code> con attributi opzionali <em>Matricola</em> (solo studenti) e <em>Dipartimento</em> (solo docenti) e relazioni distinte → <strong>specializza</strong> in <code>STUDENTE</code> e <code>DOCENTE</code> (D, T).
-    </div>
-  </div>
-</div>
-
-
-      </div>
+        </details>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez2_5.html">← Tipi di attributo</a>
+      <a class="nav-button next" href="lez2_7.html">Traduzione relazionale →</a>
+    </nav>
+  </main>
 </body>
 </html>

@@ -1,237 +1,190 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez1_5 · Chiavi esterne e integrità referenziale</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez1_4.html"; }
-    function nextSlide(){ window.location.href = "lez1_6.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Chiavi esterne, integrità referenziale, valori nulli e azioni ON DELETE e ON UPDATE.">
+  <title>Lezione 1.5 · Chiavi esterne e integrità referenziale</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 1 — Modello Relazionale</h2>
-    <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
-      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
-      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
-      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Chiavi esterne e integrità referenziale</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 1">
+      <h2>Lezione 1 · Modello relazionale</h2>
+      <ol>
+        <li><a href="lez1_1.html">Perché nasce</a></li>
+        <li><a href="lez1_2.html">Relazioni, tuple e domini</a></li>
+        <li><a href="lez1_3.html">Vincoli di integrità</a></li>
+        <li><a href="lez1_4.html">Superchiavi e chiavi</a></li>
+        <li><a href="lez1_5.html" aria-current="page">Chiavi esterne</a></li>
+        <li><a href="lez1_6.html">Logico e fisico</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 1 · Modello relazionale</p>
+      <h1>Chiavi esterne e integrità referenziale</h1>
+      <p class="lesson-lead">Una chiave esterna collega fatti memorizzati in relazioni diverse e impedisce riferimenti a tuple inesistenti.</p>
+      <div class="lesson-meta">
+        <span>Pagina 5 di 6</span>
+        <progress value="5" max="6" aria-label="Pagina 5 di 6">5 di 6</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="lez1_4.html">← Superchiavi e chiavi</a>
+      <a class="nav-button next" href="lez1_6.html">Logico e fisico →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-        <h2>Definizione intuitiva</h2>
+      <section class="lesson-section" aria-labelledby="idea">
+        <h2 id="idea">L'idea</h2>
+        <p>La relazione <strong>referenziante</strong>, detta informalmente figlia, contiene attributi che richiamano una chiave della relazione <strong>referenziata</strong>, detta genitore.</p>
         <div class="box">
-          <p>
-            Una <strong>chiave esterna (FK)</strong> è un legame tra due relazioni: una <em>figlia</em> <code>S</code> e una <em>genitore</em> <code>R</code>.
-            In <code>S</code> c’è un insieme di attributi <code>F</code> che deve “puntare” alla chiave (primaria o candidata) <code>K</code> di <code>R</code>.
-          </p>
-          <ul>
-            <li><strong>Significato</strong>: per ogni tupla di <code>S</code>, i valori su <code>F</code> devono o essere tutti <code>NULL</code> (se il legame è opzionale), oppure coincidere con i valori di <code>K</code> in una tupla esistente di <code>R</code>.</li>
-            <li><strong>Compatibilità</strong>: gli attributi di <code>F</code> e quelli corrispondenti di <code>K</code> devono essere confrontabili correttamente.</li>
-            <li><strong>Chiavi composte</strong>: se la chiave in <code>R</code> ha più colonne, la corrispondenza deve valere per tutti i componenti insieme.</li>
-            <li><strong>Coerenza</strong>: non devono esistere righe “orfane” in <code>S</code>.</li>
-            <li><strong>Auto-riferimento</strong>: la FK può riferire la stessa relazione, per esempio <code>PadreId → Id</code>.</li>
-          </ul>
-          <div class="note">In breve: ogni riga figlia o non riferisce nessuno, se il legame è opzionale, oppure riferisce una riga reale del genitore.</div>
+          <p><code>STUDENTI(Matr, Nome)</code> con <code>PK = {Matr}</code></p>
+          <p><code>ISCRIZIONI(Matr, CodCorso)</code> con <code>FK {Matr} → STUDENTI{Matr}</code></p>
         </div>
+        <p>Ogni matricola presente in <code>ISCRIZIONI</code> deve quindi individuare uno studente esistente. Una riga con <code>Matr = 999</code> è ammessa solo se esiste lo studente 999.</p>
+      </section>
 
-        <h2>Definizione formale</h2>
-        <div class="box">
-          <p>Considera due schemi di relazione:</p>
-          <ul>
-            <li><code>R(X ∪ K)</code>, con <span class="def">K</span> chiave (candidata o primaria) di <code>R</code>.</li>
-            <li><code>S(Y ∪ F)</code>, con <span class="def">F</span> insieme di attributi in <code>S</code>.</li>
-          </ul>
-          <p><span class="def">F è una chiave esterna in S che riferisce R su K</span> se esiste una corrispondenza biunivoca <code>θ: F → K</code> tale che:</p>
-          <ul>
-            <li><strong>Compatibilità dei domini</strong>: ∀ A ∈ F, <code>dom(A) = dom(θ(A))</code>.</li>
-            <li><strong>Vincolo referenziale</strong> (forma generale): per ogni tupla <code>s ∈ S</code> vale
-              <div class="ok" style="display:block; margin-top:.35rem"><code>(opzionale(F) ∧ ∃ A ∈ F: s[A] = NULL) ∨ (∃ r ∈ R: ∀ A ∈ F, s[A] = r[θ(A)])</code></div>
-              cioè: se F è <em>opzionale</em> e qualche attributo di F è NULL, il riferimento può mancare; altrimenti deve esistere una tupla <code>r</code> di <code>R</code> con valori corrispondenti.</li>
-          </ul>
-        </div>
-
-        <h2>Note importanti</h2>
+      <section class="lesson-section" aria-labelledby="formale">
+        <h2 id="formale">Definizione formale</h2>
+        <p>Siano:</p>
         <ul>
-          <li><strong>Obbligatorietà</strong>: se F non ammette NULL (tutti gli attributi di F sono NOT NULL) allora il riferimento è <em>obbligatorio</em> (totale).</li>
-          <li><strong>Composizione</strong>: F e K possono essere <em>composte</em> (più attributi). La corrispondenza è componente per componente.</li>
-          <li><strong>Auto-riferimento</strong>: una FK può riferire la <em>stessa</em> relazione (albero gerarchico espresso in forma relazionale).</li>
-          <li><strong>Semantica vs implementazione</strong>: il modello definisce il predicato referenziale; le azioni su modifica/cancellazione (CASCADE, RESTRICT…) sono scelte implementative.</li>
+          <li><code>R</code> lo schema referenziato, con chiave candidata <code>K = {A₁, …, Aₘ}</code>;</li>
+          <li><code>S</code> lo schema referenziante, con attributi <code>F = {B₁, …, Bₘ}</code>;</li>
+          <li>una corrispondenza <code>Bᵢ ↔ Aᵢ</code>, con domini compatibili, per ogni componente.</li>
         </ul>
+        <p>In assenza di valori nulli, il vincolo referenziale richiede:</p>
+        <div class="formula"><code>∀t ∈ r<sub>S</sub>, ∃u ∈ r<sub>R</sub>: t[B₁]=u[A₁] ∧ … ∧ t[Bₘ]=u[Aₘ]</code></div>
+        <p>Equivalentemente, dopo aver allineato i nomi degli attributi, i valori di <code>F</code> presenti in <code>S</code> devono essere inclusi nei valori della chiave <code>K</code> presenti in <code>R</code>.</p>
+        <div class="formula"><code>π<sub>F</sub>(r<sub>S</sub>) ⊆ π<sub>K</sub>(r<sub>R</sub>)</code></div>
+        <p class="callout"><strong>Perché si riferisce una chiave candidata?</strong> Perché il valore referenziato deve individuare al massimo una tupla. In SQL, per portabilità, si riferiscono colonne dichiarate <code>PRIMARY KEY</code> oppure <code>UNIQUE</code>.</p>
+      </section>
 
-        <h2>Esempio base</h2>
-        <div class="box">
-          <div class="note" style="margin-bottom:.4rem">Schema</div>
-          <code>Studenti(Matr: INT, Nome: STRING, Email: STRING), PK = {Matr}</code><br>
-          <code>Iscrizioni(Matr: INT, CodCorso: STRING), FK F = {Matr} → Studenti(K = {Matr})</code>
-          <div style="margin-top:.6rem">
-            <button id="btnFK1" onclick="toggleBox('btnFK1','ansFK1')">Mostra istanza valida/invalidata ▼</button>
-          </div>
-          <div id="ansFK1" style="display:none; margin-top:.5rem">
+      <section class="lesson-section" aria-labelledby="esempio">
+        <h2 id="esempio">Istanza valida e violazione</h2>
+        <div class="concept-grid">
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Tabella Studenti">
             <table>
-              <thead><tr><th colspan="3">Studenti</th></tr></thead>
+              <caption>STUDENTI</caption>
+              <thead><tr><th scope="col">Matr</th><th scope="col">Nome</th></tr></thead>
               <tbody>
-                <tr><td>Matr</td><td>Nome</td><td>Email</td></tr>
-                <tr><td>101</td><td>Ada</td><td>ada@example.org</td></tr>
-                <tr><td>102</td><td>Alan</td><td>alan@example.org</td></tr>
+                <tr><td>101</td><td>Ada</td></tr>
+                <tr><td>102</td><td>Alan</td></tr>
               </tbody>
             </table>
-            <table style="margin-top:.5rem">
-              <thead><tr><th colspan="2">Iscrizioni</th><th>Esito</th></tr></thead>
+          </div>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Tabella Iscrizioni con esiti">
+            <table>
+              <caption>ISCRIZIONI</caption>
+              <thead><tr><th scope="col">Matr</th><th scope="col">CodCorso</th><th scope="col">Esito</th></tr></thead>
               <tbody>
-                <tr><td>101</td><td>CS101</td><td class="ok">Valida (101 esiste in Studenti)</td></tr>
-                <tr><td>999</td><td>CS101</td><td class="warn">Violazione: 999 ∉ π<sub>Matr</sub>(Studenti)</td></tr>
-                <tr><td><em>NULL</em></td><td>CS101</td><td class="note">Ammessa solo se F è opzionale (NULL permesso)</td></tr>
+                <tr><td>101</td><td>BD01</td><td>Valida</td></tr>
+                <tr><td>999</td><td>BD01</td><td>Violazione: 999 non esiste</td></tr>
               </tbody>
             </table>
           </div>
         </div>
+      </section>
 
-        <h2>Chiavi esterne composte e auto-riferite</h2>
-        <div class="box">
-          <div class="note" style="margin-bottom:.35rem">FK composta</div>
-          <p><code>Offerte(CodCorso, Anno, Aule)</code> con <code>FK (CodCorso, Anno) → CorsiAnnuali(CodCorso, Anno)</code>. La compatibilità è per-campo; entrambi i valori devono corrispondere a una tupla esistente in <code>CorsiAnnuali</code>.</p>
-          <div class="note" style="margin:.6rem 0 .3rem 0">FK auto-riferita</div>
-          <p><code>Categorie(Id, Nome, PadreId)</code> con <code>FK PadreId → Categorie(Id)</code> (albero/gerarchia). Se <code>PadreId</code> è NULL, la categoria è radice.</p>
+      <section class="lesson-section" aria-labelledby="null">
+        <h2 id="null">Foreign key opzionale e NULL in SQL</h2>
+        <p>Una foreign key è <strong>obbligatoria</strong> quando tutte le sue colonne sono <code>NOT NULL</code>. Se una colonna può essere <code>NULL</code>, il riferimento può essere assente.</p>
+        <p>Per una foreign key composta SQL distingue il modo in cui vengono trattati i nulli:</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Confronto tra MATCH SIMPLE e MATCH FULL">
+          <table>
+            <caption>Semantica dei nulli in una FK composta</caption>
+            <thead><tr><th scope="col">Modalità</th><th scope="col">Comportamento</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>MATCH SIMPLE</code></th><td>È la modalità predefinita: se almeno un componente è <code>NULL</code>, la riga non deve trovare una corrispondenza.</td></tr>
+              <tr><th scope="row"><code>MATCH FULL</code></th><td>Ammette l'assenza del riferimento solo quando tutti i componenti sono <code>NULL</code>; una combinazione parzialmente nulla è rifiutata.</td></tr>
+            </tbody>
+          </table>
         </div>
+        <p class="source-note">Il supporto a <code>MATCH FULL</code> varia tra DBMS. Per un legame obbligatorio e portabile, la scelta più chiara resta dichiarare tutte le colonne <code>NOT NULL</code>.</p>
+      </section>
 
-<h2>Azioni referenziali (interpretabili)</h2>
-<div class="box">
-  <p>
-    Le azioni definiscono cosa accade in <strong>R</strong> (genitore) quando una sua tupla referenziata da <strong>S</strong> (figlia)
-    viene <em>eliminata</em> o la sua chiave viene <em>modificata</em>. Si impostano separatamente per
-    <code>ON DELETE</code> e <code>ON UPDATE</code>.
-  </p>
+      <section class="lesson-section" aria-labelledby="casi">
+        <h2 id="casi">FK composte e auto-riferite</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Composta</h3>
+            <p><code>APPELLI(CodCorso, Anno, Data)</code> può riferire <code>CORSI_ANNUALI(CodCorso, Anno)</code>. La corrispondenza riguarda la coppia, non i due valori separatamente.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Auto-riferita</h3>
+            <p><code>CATEGORIE(Id, Nome, IdPadre)</code> può avere <code>IdPadre → CATEGORIE(Id)</code>. Un <code>IdPadre</code> nullo può rappresentare una categoria radice.</p>
+          </article>
+        </div>
+      </section>
 
-  <table>
-    <thead>
-      <tr><th>Azione</th><th>Su DELETE</th><th>Su UPDATE della chiave</th><th>Prerequisiti</th><th>Pro / Contro</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="def">RESTRICT</span></td>
-        <td>Vieta l’eliminazione se esistono figli.</td>
-        <td>Vieta l’update se esistono figli.</td>
-        <td>—</td>
-        <td><span class="ok">Massima sicurezza;</span> <span class="warn">blocchi applicativi più frequenti.</span></td>
-      </tr>
-      <tr>
-        <td><span class="def">NO ACTION</span></td>
-        <td>Come RESTRICT, ma controllato al <em>commit</em> (se il DB supporta vincoli differibili).</td>
-        <td>Come RESTRICT, con verifica differita.</td>
-        <td>Supporto a vincoli <em>DEFERRABLE</em>.</td>
-        <td><span class="ok">Flessibile in transazioni complesse;</span> <span class="warn">errori al commit, non immediati.</span></td>
-      </tr>
-      <tr>
-        <td><span class="def">CASCADE</span></td>
-        <td>Elimina automaticamente i figli collegati.</td>
-        <td>Propaga il nuovo valore della chiave ai figli.</td>
-        <td>Integrità a catena coerente.</td>
-        <td><span class="ok">Mantiene coerenza;</span> <span class="warn">rischio “delete a cascata” massivo.</span></td>
-      </tr>
-      <tr>
-        <td><span class="def">SET NULL</span></td>
-        <td>Imposta a <code>NULL</code> gli attributi FK dei figli.</td>
-        <td>Imposta a <code>NULL</code> gli attributi FK dei figli.</td>
-        <td>Colonne FK <em>nullable</em>; per FK composta si <em>nullano tutte</em> le colonne.</td>
-        <td><span class="ok">Niente orfani logici;</span> <span class="warn">semantica “sconosciuto/non applicabile” richiesta.</span></td>
-      </tr>
-      <tr>
-        <td><span class="def">SET DEFAULT</span></td>
-        <td>Imposta un valore di default predefinito.</td>
-        <td>Come su DELETE.</td>
-        <td>Default valido: deve riferire un genitore esistente o essere consentito come <code>NULL</code>.</td>
-        <td><span class="ok">Evita nulli;</span> <span class="warn">rischio valori sentinella impropri.</span></td>
-      </tr>
-    </tbody>
-  </table>
+      <section class="lesson-section" aria-labelledby="azioni">
+        <h2 id="azioni">Che cosa accade quando cambia il riferimento?</h2>
+        <p>Le azioni referenziali stabiliscono come reagire a un <code>DELETE</code> o a un <code>UPDATE</code> della chiave referenziata.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Azioni referenziali SQL">
+          <table>
+            <caption>Azioni referenziali principali</caption>
+            <thead><tr><th scope="col">Azione</th><th scope="col">Effetto</th><th scope="col">Quando ha senso</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>RESTRICT</code> / <code>NO ACTION</code></th><td>Rifiuta l'operazione se produrrebbe riferimenti invalidi.</td><td>Scelta prudente quando i dati figli devono essere gestiti esplicitamente.</td></tr>
+              <tr><th scope="row"><code>CASCADE</code></th><td>Propaga la cancellazione o il nuovo valore alle righe referenzianti.</td><td>Quando la riga figlia non ha significato autonomo.</td></tr>
+              <tr><th scope="row"><code>SET NULL</code></th><td>Rimuove il riferimento impostando a <code>NULL</code> le colonne interessate.</td><td>Solo se le colonne sono nullable e l'assenza ha un significato corretto.</td></tr>
+              <tr><th scope="row"><code>SET DEFAULT</code></th><td>Imposta il valore predefinito, che deve comunque soddisfare il vincolo.</td><td>Raro e non supportato da tutti i DBMS.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="callout warning"><strong>Dettaglio implementativo:</strong> la differenza temporale tra <code>RESTRICT</code> e <code>NO ACTION</code> dipende dal DBMS e dalla possibilità di differire i vincoli. In MySQL/InnoDB le due azioni hanno effetto immediato equivalente.</p>
+      </section>
 
-  <div class="note">Linee guida: usa <strong>RESTRICT/NO ACTION</strong> come default; abilita <strong>CASCADE</strong> dove la figlia non ha senso senza il genitore; scegli <strong>SET NULL/DEFAULT</strong> solo se il dominio attribuisce un significato corretto a “nessun genitore”. Preferisci PK <em>immutabili</em>, così <code>ON UPDATE CASCADE</code> diventa raro.</div>
-</div>
-
-
-        <!-- SQL illustrativo -->
-        <pre><code class="language-sql">-- Esempio DDL (illustrativo)
-CREATE TABLE Studenti (
-  Matr   INTEGER PRIMARY KEY,
-  Nome   VARCHAR(50) NOT NULL,
-  Email  VARCHAR(100) NOT NULL
+      <section class="lesson-section" aria-labelledby="sql">
+        <h2 id="sql">Esempio SQL completo</h2>
+        <pre><code class="language-sql">CREATE TABLE Studenti (
+  Matr  INTEGER     PRIMARY KEY,
+  Nome  VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Iscrizioni (
-  Matr      INTEGER,
-  CodCorso  VARCHAR(20) NOT NULL,
-  CONSTRAINT FK_Iscrizioni_Studenti
-    FOREIGN KEY (Matr)
-    REFERENCES Studenti(Matr)
+  Matr       INTEGER     NOT NULL,
+  CodCorso   VARCHAR(20) NOT NULL,
+  PRIMARY KEY (Matr, CodCorso),
+  FOREIGN KEY (Matr)
+    REFERENCES Studenti (Matr)
     ON DELETE RESTRICT
-    ON UPDATE CASCADE
-);
-</code></pre>
+    ON UPDATE RESTRICT
+);</code></pre>
+      </section>
 
-        <div class="box">
-          <strong>Domanda-guida</strong>: quando conviene rendere <em>obbligatoria</em> una chiave esterna e quando è preferibile renderla <em>opzionale</em>?
-          <div style="margin-top:.6rem">
-            <button id="btnDG5" onclick="toggleBox('btnDG5','ansDG5')">Mostra ▼</button>
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>In una FK composta <code>(A, B)</code> con la modalità predefinita, la coppia <code>(NULL, 7)</code> deve trovare una riga referenziata?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>No: con <code>MATCH SIMPLE</code> la presenza di almeno un componente nullo sospende il controllo per quella riga. Con <code>MATCH FULL</code>, invece, la coppia parzialmente nulla sarebbe rifiutata.</p>
           </div>
-          <div id="ansDG5" style="display:none; margin-top:.5rem">
-            <ul>
-              <li><strong>Obbligatoria</strong>: relazione figlia non ha senso senza il genitore (es. dettaglio ordine → ordine); garantisce integrità totale e semplifica le query.</li>
-              <li><strong>Opzionale</strong>: legame condizionale o tardivo (es. <em>utente</em> che potrà associarsi a <em>docente</em> in seguito), o quando <em>NULL</em> rappresenta davvero «non applicabile».</li>
-              <li>Valuta anche <strong>prestazioni</strong> e <strong>lato applicativo</strong>: FK obbligatorie riducono stati incoerenti; opzionali evitano placeholder fittizi.</li>
-            </ul>
-          </div>
-        </div>
+        </details>
+      </section>
 
-      </div>
+      <section class="lesson-section" aria-labelledby="fonti">
+        <h2 id="fonti">Riferimenti SQL</h2>
+        <p class="source-note"><a href="https://www.postgresql.org/docs/18/ddl-constraints.html">PostgreSQL · Constraints</a> · <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html">MySQL 8.0 · FOREIGN KEY Constraints</a></p>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="lez1_4.html">← Superchiavi e chiavi</a>
+      <a class="nav-button next" href="lez1_6.html">Logico e fisico →</a>
+    </nav>
+  </main>
 </body>
 </html>

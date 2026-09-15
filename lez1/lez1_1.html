@@ -1,146 +1,128 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez1_1 · Modello Relazionale: obiettivi e contesto storico</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ if (history.length > 1) { history.back(); } else { window.location.href = "../programma.html"; } }
-    function nextSlide(){ window.location.href = "lez1_2.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Perché nasce il modello relazionale: contesto storico, indipendenza dei dati e idee fondamentali.">
+  <title>Lezione 1.1 · Perché nasce il modello relazionale</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 1 — Modello Relazionale</h2>
-    <ul>
-      <li><a href="lez1_1.html">Lez1.1: Obiettivi e contesto storico</a></li>
-      <li><a href="lez1_2.html">Lez1.2: Fondamenti formali</a></li>
-      <li><a href="lez1_3.html">Lez1.3: Integrità di dominio e di entità</a></li>
-      <li><a href="lez1_4.html">Lez1.4: Chiavi (superchiavi, candidate, primaria)</a></li>
-      <li><a href="lez1_5.html">Lez1.5: Chiavi esterne e integrità referenziale</a></li>
-      <li><a href="lez1_6.html">Lez1.6: Logico vs fisico</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
 
-  <div class="slide">
-    <h1>Modello Relazionale: obiettivi e contesto storico</h1>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 1">
+      <h2>Lezione 1 · Modello relazionale</h2>
+      <ol>
+        <li><a href="lez1_1.html" aria-current="page">Perché nasce</a></li>
+        <li><a href="lez1_2.html">Relazioni, tuple e domini</a></li>
+        <li><a href="lez1_3.html">Vincoli di integrità</a></li>
+        <li><a href="lez1_4.html">Superchiavi e chiavi</a></li>
+        <li><a href="lez1_5.html">Chiavi esterne</a></li>
+        <li><a href="lez1_6.html">Logico e fisico</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
 
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 1 · Modello relazionale</p>
+      <h1>Perché nasce il modello relazionale</h1>
+      <p class="lesson-lead">Il cambiamento decisivo non è la forma a tabella: è la possibilità di descrivere e interrogare i dati senza dipendere dai percorsi con cui sono memorizzati.</p>
+      <div class="lesson-meta">
+        <span>Pagina 1 di 6</span>
+        <progress value="1" max="6" aria-label="Pagina 1 di 6">1 di 6</progress>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="../programma.html">← Programma</a>
+      <a class="nav-button next" href="lez1_2.html">Relazioni, tuple e domini →</a>
+    </nav>
 
     <div class="content-box">
-      <div class="inner-box">
-        <h2>Obiettivi della lezione</h2>
+      <section class="lesson-section" aria-labelledby="obiettivi">
+        <h2 id="obiettivi">Obiettivi</h2>
         <ul>
-          <li>Capire <strong>perché</strong> nasce il modello relazionale e quale problema storico risolve.</li>
-          <li>Distinguere fin da subito il livello <strong>logico</strong> dal livello <strong>fisico</strong>.</li>
-          <li>Preparare il terreno ai concetti formali che verranno fissati nelle slide successive.</li>
+          <li>Comprendere il problema affrontato dal modello relazionale.</li>
+          <li>Distinguere una descrizione <strong>logica</strong> dei dati dalla loro organizzazione <strong>fisica</strong>.</li>
+          <li>Riconoscere il ruolo di relazioni, linguaggi dichiarativi e vincoli.</li>
         </ul>
+      </section>
 
-        <h2>Problema di partenza</h2>
+      <section class="lesson-section" aria-labelledby="prima">
+        <h2 id="prima">Prima del modello relazionale</h2>
         <div class="box">
-          <ul>
-            <li>Nei modelli <strong>gerarchico</strong> e <strong>reticolare</strong> l’accesso ai dati dipendeva molto da percorsi, puntatori e organizzazione fisica.</li>
-            <li>Questo rendeva piu difficile far evolvere applicazioni e basi di dati: cambiare struttura voleva spesso dire cambiare anche il codice.</li>
-            <li>Il problema centrale, quindi, non era solo memorizzare dati, ma farlo in modo <strong>piu indipendente dalla fisica</strong> e <strong>piu rigoroso sul piano logico</strong>.</li>
-          </ul>
-          <p class="warn">Idea chiave: se il programma dipende dal modo in cui i dati sono memorizzati, manutenzione e portabilita diventano fragili.</p>
+          <p>Nei sistemi gerarchici e reticolari l'applicazione accedeva spesso ai dati seguendo cammini prestabiliti tra record. Il programma doveva quindi conoscere non solo <em>quali</em> dati cercare, ma anche <em>come raggiungerli</em>.</p>
+          <p>Una modifica alla struttura dei dati o ai percorsi di accesso poteva richiedere modifiche al codice applicativo. Questo forte accoppiamento rendeva evoluzione e manutenzione più difficili.</p>
+        </div>
+        <p class="callout warning"><strong>Problema chiave:</strong> se l'applicazione dipende dall'organizzazione interna dei dati, una scelta di memorizzazione diventa anche un vincolo sul software.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="svolta">
+        <h2 id="svolta">La svolta del 1970</h2>
+        <p>Nel 1970 Edgar F. Codd propone di rappresentare i dati mediante <strong>relazioni</strong> e di separare il livello logico dalle strutture di accesso interne. L'utente formula il risultato desiderato; il DBMS decide come ottenerlo.</p>
+
+        <div class="concept-grid three">
+          <article class="concept-card">
+            <h3>Rappresentazione logica</h3>
+            <p>I dati sono descritti tramite domini, attributi, tuple e relazioni.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Operazioni dichiarative</h3>
+            <p>Si specifica <em>che cosa</em> ottenere, senza imporre un percorso fisico.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Vincoli espliciti</h3>
+            <p>Le regole di correttezza fanno parte dello schema e non restano disperse nel codice.</p>
+          </article>
         </div>
 
-        <div class="box">
-          <strong>Passaggi storici essenziali</strong>
-          <div style="margin-top:.6rem">
-            <button id="btnTL1" onclick="toggleBox('btnTL1','ansTL1')">Mostra ▼</button>
-          </div>
-          <div id="ansTL1" style="display:none; margin-top:.5rem">
-            <table>
-              <thead>
-                <tr><th>Fase</th><th>Idea da ricordare</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Pre-relazionale</td><td>Dati gestiti con forte dipendenza da percorsi e strutture fisiche.</td></tr>
-                <tr><td>1970</td><td>Codd propone il modello relazionale: dati come relazioni e separazione logico/fisico.</td></tr>
-                <tr><td>Anni ’70–’80</td><td>Prototipi e primi RDBMS mostrano che il modello e praticabile.</td></tr>
-                <tr><td>Standardizzazione SQL</td><td>Il modello si consolida anche sul piano operativo e industriale.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <h2>Perché il modello relazionale?</h2>
-        <ul>
-          <li><strong>Semplicità concettuale</strong>: i dati si descrivono come relazioni, attributi e tuple.</li>
-          <li><strong>Indipendenza logico/fisica</strong>: il modello ragiona sul significato dei dati, non sulla loro memorizzazione concreta.</li>
-          <li><strong>Integrità e coerenza</strong>: i vincoli si dichiarano a livello di schema.</li>
-          <li><strong>Base teorica solida</strong>: insiemistica e logica permettono definizioni e operazioni rigorose.</li>
-        </ul>
-
-        <h2>Micro-nota</h2>
-        <p class="note">In questo corso distingueremo con rigore tra <em>schema</em> (intestazione) e <em>istanza</em> (insieme di tuple in un dato istante), mantenendo una prospettiva insiemistica coerente con Codd.</p>
-
-        <h2>Cosa prepara questa slide</h2>
-        <div class="box">
-          <ul>
-            <li>Nella prossima slide fisseremo in modo rigoroso i termini <strong>dominio</strong>, <strong>attributo</strong>, <strong>relazione</strong> e <strong>tupla</strong>.</li>
-            <li>Alla fine del modulo 1 useremo questa distinzione per capire meglio il passaggio tra <strong>livello logico</strong> e <strong>livello fisico</strong>.</li>
-            <li>Nel modulo 2, invece, il focus si sposterà dal modello relazionale al <strong>modello concettuale E-R</strong>.</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <strong>Domanda-guida</strong>: quali caratteristiche dei modelli precedenti (gerarchico/reticolare) rendono difficile l’evoluzione di un’applicazione rispetto al relazionale?
-          <div style="margin-top:.6rem">
-            <button id="btnDG1" onclick="toggleBox('btnDG1','ansDG1')">Mostra ▼</button>
-          </div>
-          <div id="ansDG1" style="display:none; margin-top:.5rem">
-            <ul>
-              <li><strong>Accoppiamento fisico</strong>: schema e accesso ai dati dipendono da percorsi e puntatori fisici → ogni variazione fisica richiede modifiche applicative.</li>
-              <li><strong>Navigazione procedurale</strong>: query basate su percorsi (padre-figlio, set CODASYL) invece di espressioni dichiarative → scarsa flessibilità e riuso.</li>
-              <li><strong>Ridondanza strutturale</strong>: duplicazione di dati per modellare relazioni molte-a-molte → rischio di inconsistenze.</li>
-              <li><strong>Vincoli deboli</strong>: integrità spesso gestita a livello applicativo, non dichiarata nello schema → maggiore probabilità di errori.</li>
-              <li><strong>Scarsa indipendenza logica/fisica</strong>: evoluzioni dello storage o degli indici rompono le applicazioni esistenti.</li>
-              <li><strong>Modello relazionale</strong>: separa livello logico e fisico, offre algebra e vincoli dichiarativi, favorendo evoluzione e manutenzione.</li>
+        <details class="reveal">
+          <summary>Linea del tempo essenziale</summary>
+          <div class="reveal-content">
+            <ul class="compact-list">
+              <li><strong>Anni '60:</strong> diffusione di sistemi gerarchici e reticolari, basati su accesso navigazionale.</li>
+              <li><strong>1970:</strong> pubblicazione dell'articolo di Codd sul modello relazionale.</li>
+              <li><strong>Anni '70:</strong> progetti sperimentali come System R e Ingres ne mostrano l'applicabilità.</li>
+              <li><strong>Anni '80:</strong> i DBMS relazionali e SQL si consolidano e vengono standardizzati.</li>
             </ul>
           </div>
-        </div>
+        </details>
+      </section>
 
-      </div>
+      <section class="lesson-section" aria-labelledby="non-tabella">
+        <h2 id="non-tabella">Una relazione non è soltanto una tabella</h2>
+        <p>La tabella è una rappresentazione visiva utile. Il concetto matematico, però, è più preciso: una relazione è un insieme di tuple definito su attributi con domini stabiliti. Da questa definizione derivano proprietà e operazioni verificabili formalmente.</p>
+        <p class="callout"><strong>Da ricordare:</strong> la forza del modello nasce dalla combinazione di semplicità visiva, base matematica e indipendenza dai dettagli fisici.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="verifica">
+        <h2 id="verifica">Verifica rapida</h2>
+        <p><strong>Perché un linguaggio dichiarativo favorisce l'indipendenza fisica?</strong></p>
+        <details class="reveal">
+          <summary>Controlla la risposta</summary>
+          <div class="reveal-content">
+            <p>Perché la richiesta descrive il risultato logico, mentre il DBMS può cambiare indici, strutture di memorizzazione e strategie di esecuzione senza cambiare il significato della richiesta.</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="fonte">
+        <h2 id="fonte">Riferimento</h2>
+        <p class="source-note">E. F. Codd, <a href="https://research.ibm.com/publications/a-relational-model-of-data-for-large-shared-data-banks"><cite>A Relational Model of Data for Large Shared Data Banks</cite></a>, Communications of the ACM, 1970.</p>
+      </section>
     </div>
 
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="../programma.html">← Programma</a>
+      <a class="nav-button next" href="lez1_2.html">Relazioni, tuple e domini →</a>
+    </nav>
+  </main>
 </body>
 </html>
