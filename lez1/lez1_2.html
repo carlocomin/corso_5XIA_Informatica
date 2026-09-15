@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Definizioni formali di dominio, attributo, tupla, relazione, schema e istanza.">
+  <meta name="description" content="La tabella come rappresentazione di una relazione matematica: domini, prodotto cartesiano, tuple, schema e istanza.">
   <title>Lezione 1.2 · Relazioni, tuple e domini</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../default.css">
@@ -33,7 +33,7 @@
     <header>
       <p class="lesson-kicker">Lezione 1 · Modello relazionale</p>
       <h1>Relazioni, tuple e domini</h1>
-      <p class="lesson-lead">Diamo un significato preciso alle parole che, nel linguaggio quotidiano, chiamiamo tabella, colonna e riga.</p>
+      <p class="lesson-lead">L'oggetto intuitivo che vogliamo modellare è una tabella; il modello relazionale le dà un fondamento preciso usando la nozione matematica di relazione.</p>
       <div class="lesson-meta">
         <span>Pagina 2 di 6</span>
         <progress value="2" max="6" aria-label="Pagina 2 di 6">2 di 6</progress>
@@ -46,43 +46,94 @@
     </nav>
 
     <div class="content-box">
-      <section class="lesson-section" aria-labelledby="vocabolario">
-        <h2 id="vocabolario">Il vocabolario formale</h2>
-        <div class="concept-grid">
-          <article class="concept-card">
-            <h3>Dominio</h3>
-            <p>Un <strong>dominio</strong> è un insieme di valori ammessi e dotati dello stesso significato. Esempi: gli interi positivi, le date valide, l'insieme <code>{CS, MAT, BIO}</code>.</p>
-          </article>
-          <article class="concept-card">
-            <h3>Attributo</h3>
-            <p>Un <strong>attributo</strong> è un nome associato a un dominio. Per esempio, <code>Matr</code> può avere come dominio gli interi positivi.</p>
-          </article>
-          <article class="concept-card">
-            <h3>Intestazione</h3>
-            <p>L'<strong>intestazione</strong>, o <em>heading</em>, è un insieme finito di attributi con nomi distinti.</p>
-          </article>
-          <article class="concept-card">
-            <h3>Schema di relazione</h3>
-            <p>Uno <strong>schema</strong> assegna un nome alla relazione e un dominio a ogni attributo: <code>R(A₁:D₁, …, Aₙ:Dₙ)</code>.</p>
-          </article>
+      <section class="lesson-section" aria-labelledby="idea">
+        <h2 id="idea">L'idea fondamentale: formalizzare una tabella</h2>
+        <p>Una tabella è facile da leggere: possiede un nome, un'intestazione, alcune colonne e alcune righe. Da sola, però, è soltanto una rappresentazione grafica. Per ragionare senza ambiguità su dati, interrogazioni e vincoli serve un oggetto formale.</p>
+        <div class="mapping">
+          <code>tabella</code>
+          <span class="arrow" aria-hidden="true">↔</span>
+          <code>relazione matematica</code>
         </div>
-        <p class="callout"><strong>Modello e SQL:</strong> un tipo SQL come <code>INTEGER</code> approssima un dominio; il dominio logico comprende anche il significato e le eventuali regole sui valori.</p>
+        <p>Il <strong>modello relazionale</strong> interpreta quindi il contenuto di una tabella come una relazione: un insieme di tuple costruite su domini. La tabella è il modo abituale di visualizzare quell'oggetto logico; non ne definisce il significato attraverso posizione, ordine grafico o memorizzazione fisica.</p>
+        <p class="callout success"><strong>Frase da ricordare:</strong> una tabella relazionale rappresenta un insieme di fatti omogenei; formalmente, la sua istanza è un sottoinsieme di un prodotto cartesiano.</p>
       </section>
 
-      <section class="lesson-section" aria-labelledby="tupla">
-        <h2 id="tupla">Tupla e istanza di relazione</h2>
-        <p>Data l'intestazione <code>H</code>, una <strong>tupla</strong> <code>t</code> associa a ciascun attributo un valore del dominio corrispondente:</p>
+      <section class="lesson-section" aria-labelledby="relazione-matematica">
+        <h2 id="relazione-matematica">La relazione matematica</h2>
+        <p>Siano <code>D₁, D₂, …, Dₙ</code> insiemi di valori, detti <strong>domini</strong>. Il loro prodotto cartesiano contiene tutte le tuple ordinate che scelgono un valore da ciascun dominio:</p>
+        <div class="formula"><code>D₁ × D₂ × … × Dₙ = {(v₁, v₂, …, vₙ) | vᵢ ∈ Dᵢ per ogni i}</code></div>
+        <p>Una <strong>relazione n-aria</strong> sui domini <code>D₁, …, Dₙ</code> è un qualunque sottoinsieme del prodotto cartesiano:</p>
+        <div class="formula"><code>r ⊆ D₁ × D₂ × … × Dₙ</code></div>
+        <p>Il prodotto elenca tutte le combinazioni <em>formalmente possibili</em>; la relazione seleziona quelle che rappresentano fatti effettivamente presenti. Una tupla può quindi appartenere al prodotto perché i suoi valori hanno i tipi corretti, ma non appartenere alla relazione perché quel fatto non è registrato.</p>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Grado o arietà</h3>
+            <p>È il numero <code>n</code> di componenti di ogni tupla, quindi il numero di attributi della tabella.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Cardinalità</h3>
+            <p>È il numero di tuple presenti in <code>r</code>, quindi il numero di righe dell'istanza corrente.</p>
+          </article>
+        </div>
+        <p class="callout"><strong>Nel database:</strong> consideriamo istanze finite della relazione, perché in ogni istante il database contiene un numero finito di tuple.</p>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="schema">
+        <h2 id="schema">Dal prodotto cartesiano allo schema relazionale</h2>
+        <p>Nel modello relazionale non vogliamo identificare una componente soltanto tramite la sua posizione. Assegniamo quindi un nome a ogni componente e associamo ogni <strong>attributo</strong> al proprio dominio:</p>
+        <div class="formula"><code>R(A₁:D₁, A₂:D₂, …, Aₙ:Dₙ)</code></div>
+        <p>Questa espressione è lo <strong>schema di relazione</strong>: <code>R</code> è il nome e <code>H = {A₁, A₂, …, Aₙ}</code> è l'intestazione, o <em>heading</em>. Lo schema descrive la forma stabile; <code>r(R)</code> indica una possibile <strong>istanza</strong>, cioè il contenuto in un dato momento.</p>
+
+        <h3>Tupla con attributi nominati</h3>
+        <p>Una tupla <code>t</code> associa a ciascun attributo il valore della sua cella, rispettando il dominio dichiarato:</p>
         <div class="formula"><code>t : H → ⋃<sub>A∈H</sub> dom(A), con t(A) ∈ dom(A) per ogni A ∈ H</code></div>
-        <p>Un'<strong>istanza di relazione</strong> <code>r(R)</code> è un insieme finito di tuple conformi allo schema <code>R</code>. L'istanza cambia nel tempo; lo schema rimane stabile finché non viene modificata la struttura del database.</p>
-        <p class="callout warning"><strong>Attenzione all'ordine:</strong> scrivere una tupla come <code>(101, "Ada", CS)</code> è una scorciatoia valida solo dopo aver fissato l'ordine degli attributi. A livello logico i valori sono identificati dai nomi <code>Matr</code>, <code>Nome</code> e <code>Corso</code>.</p>
+        <p>L'insieme di tutte le tuple conformi all'intestazione è:</p>
+        <div class="formula"><code>T(H) = {t | dom(t) = H ∧ ∀A ∈ H, t(A) ∈ dom(A)}</code></div>
+        <p>Una istanza della relazione è allora un insieme finito di tuple conformi:</p>
+        <div class="formula"><code>r(R) ⊆ T(H)</code></div>
+
+        <details class="reveal">
+          <summary>Come si collega questa forma al prodotto cartesiano?</summary>
+          <div class="reveal-content">
+            <p>Fissato per scrivere un ordine <code>(A₁, …, Aₙ)</code>, ogni tupla nominata <code>t</code> corrisponde alla tupla posizionale:</p>
+            <div class="formula"><code>(t(A₁), t(A₂), …, t(Aₙ)) ∈ D₁ × D₂ × … × Dₙ</code></div>
+            <p>Le due formulazioni descrivono gli stessi fatti. Il prodotto cartesiano usa posizioni ordinate; il modello relazionale usa i nomi degli attributi per dare significato alle componenti. Cambiare l'ordine con cui mostriamo le colonne non cambia la relazione, purché restino uguali le associazioni attributo-valore.</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="lesson-section" aria-labelledby="mappa">
+        <h2 id="mappa">Come la tabella viene mappata nella relazione</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Corrispondenza fra tabella e relazione">
+          <table>
+            <caption>Dalla rappresentazione tabellare all'oggetto formale</caption>
+            <thead>
+              <tr><th scope="col">Nella tabella</th><th scope="col">Nel modello relazionale</th><th scope="col">Significato</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Nome della tabella</th><td>Nome dello schema <code>R</code></td><td>Identifica il tipo di fatti rappresentati.</td></tr>
+              <tr><th scope="row">Intestazione</th><td>Heading <code>H</code></td><td>Insieme degli attributi con nomi distinti.</td></tr>
+              <tr><th scope="row">Colonna <code>A</code></th><td>Attributo e dominio <code>dom(A)</code></td><td>Tutte le celle della colonna assumono valori dello stesso dominio logico.</td></tr>
+              <tr><th scope="row">Riga</th><td>Tupla <code>t</code></td><td>Un fatto completo; la cella nella colonna <code>A</code> è <code>t(A)</code>.</td></tr>
+              <tr><th scope="row">Corpo della tabella</th><td>Istanza <code>r(R)</code></td><td>Insieme finito delle tuple presenti in quel momento.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="callout warning"><strong>Schema ≠ contenuto:</strong> aggiungere o eliminare righe cambia <code>r(R)</code>, non lo schema <code>R</code>. Aggiungere una colonna, invece, modifica lo schema e l'intestazione.</p>
       </section>
 
       <section class="lesson-section" aria-labelledby="esempio">
-        <h2 id="esempio">Esempio completo</h2>
-        <p><code>STUDENTI(Matr: INTERI_POSITIVI, Nome: STRINGHE, Corso: {CS, MAT, BIO})</code></p>
-        <div class="table-scroll" tabindex="0" role="region" aria-label="Esempio di istanza della relazione Studenti">
+        <h2 id="esempio">Esempio completo: STUDENTI</h2>
+        <p>Definiamo lo schema:</p>
+        <div class="formula"><code>STUDENTI(Matr: INTERI_POSITIVI, Nome: STRINGHE, Corso: {CS, MAT, BIO})</code></div>
+        <p>Dopo aver fissato l'ordine <code>(Matr, Nome, Corso)</code>, tutte le righe formalmente ben tipate appartengono al prodotto:</p>
+        <div class="formula"><code>INTERI_POSITIVI × STRINGHE × {CS, MAT, BIO}</code></div>
+        <p>L'istanza corrente contiene soltanto le tuple che rappresentano studenti registrati:</p>
+        <div class="formula"><code>r(STUDENTI) = {(101, "Ada", CS), (102, "Alan", MAT), (103, "Grace", CS)}</code></div>
+
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Rappresentazione tabellare della relazione Studenti">
           <table>
-            <caption>Istanza r(STUDENTI)</caption>
+            <caption>Rappresentazione tabellare di r(STUDENTI)</caption>
             <thead>
               <tr><th scope="col">Matr</th><th scope="col">Nome</th><th scope="col">Corso</th></tr>
             </thead>
@@ -93,45 +144,52 @@
             </tbody>
           </table>
         </div>
+        <p>La tupla <code>(104, "Linus", CS)</code> appartiene al prodotto cartesiano, perché ogni valore appartiene al dominio corretto, ma non appartiene all'istanza mostrata: la corrispondente riga non è presente.</p>
         <details class="reveal">
-          <summary>Mostra la notazione insiemistica</summary>
+          <summary>Leggi una riga come tupla nominata</summary>
           <div class="reveal-content">
-            <div class="formula"><code>r(STUDENTI) = {t₁, t₂, t₃}</code></div>
-            <p>Per esempio, <code>t₁[Matr] = 101</code>, <code>t₁[Nome] = "Ada"</code> e <code>t₁[Corso] = CS</code>. Se <code>X = {Matr, Corso}</code>, allora <code>t₁[X]</code> è la restrizione della tupla ai due attributi indicati.</p>
+            <p>Per la prima riga, <code>t₁[Matr] = 101</code>, <code>t₁[Nome] = "Ada"</code> e <code>t₁[Corso] = CS</code>. Se <code>X = {Matr, Corso}</code>, allora <code>t₁[X]</code> è la restrizione della tupla ai due attributi indicati.</p>
           </div>
         </details>
       </section>
 
-      <section class="lesson-section" aria-labelledby="proprieta">
-        <h2 id="proprieta">Proprietà strutturali</h2>
+      <section class="lesson-section" aria-labelledby="sottigliezze">
+        <h2 id="sottigliezze">Le sottigliezze del mapping</h2>
+        <p>Dire che «una relazione è una tabella» è utile come prima immagine, ma non è una definizione sufficiente. Una tabella rappresenta fedelmente una relazione soltanto se rispetta le proprietà dell'oggetto matematico.</p>
         <ul>
-          <li><span class="term">Grado o arietà:</span> numero di attributi dello schema. Nell'esempio è 3.</li>
-          <li><span class="term">Cardinalità:</span> numero di tuple dell'istanza. Nell'esempio è 3.</li>
-          <li><span class="term">Assenza di duplicati:</span> una relazione è un insieme, quindi non contiene due tuple identiche.</li>
-          <li><span class="term">Nessun ordine logico:</span> né le tuple né gli attributi possiedono un ordine significativo nel modello.</li>
+          <li><span class="term">Le righe non sono ordinate:</span> spostare una riga sopra o sotto un'altra non cambia l'insieme di tuple.</li>
+          <li><span class="term">Le colonne non hanno ordine logico:</span> conta il nome dell'attributo associato al valore, non la sua posizione sullo schermo.</li>
+          <li><span class="term">Non esistono tuple duplicate:</span> un insieme non contiene due volte lo stesso elemento. Le chiavi, che vedremo dopo, impongono anche che tuple diverse non condividano lo stesso identificatore.</li>
+          <li><span class="term">Ogni componente appartiene a un dominio:</span> una cella contiene un solo valore ammesso per quell'attributo, non una lista o una tabella annidata nel modello relazionale classico.</li>
+          <li><span class="term">I vincoli restringono le istanze ammesse:</span> domini, chiavi e riferimenti stabiliscono quali sottoinsiemi del prodotto cartesiano rappresentano stati validi del database.</li>
         </ul>
 
-        <details class="reveal">
-          <summary>Relazione e tabella SQL coincidono?</summary>
-          <div class="reveal-content">
-            <p>Non perfettamente. SQL può produrre duplicati se non si usa <code>DISTINCT</code> o non intervengono vincoli adeguati; inoltre introduce <code>NULL</code> e una logica a tre valori. Per questo distingueremo sempre il <strong>modello relazionale</strong> dalla sua realizzazione nei DBMS SQL.</p>
-          </div>
-        </details>
-      </section>
-
-      <section class="lesson-section" aria-labelledby="null">
-        <h2 id="null">Una nota necessaria su NULL</h2>
-        <p>Nel modello relazionale classico ogni componente di una tupla è un valore del proprio dominio. <code>NULL</code>, invece, è un marcatore introdotto da SQL per rappresentare informazione mancante, sconosciuta o non applicabile: non va trattato come un normale valore.</p>
-        <p class="callout warning">Poiché significati diversi vengono rappresentati dallo stesso marcatore, conviene ammettere <code>NULL</code> solo quando l'assenza ha un significato chiaro.</p>
+        <h3>Relazione del modello e tabella SQL non coincidono sempre</h3>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Differenze tra relazione matematica e tabella SQL">
+          <table>
+            <caption>Il DBMS realizza il modello, ma introduce caratteristiche proprie</caption>
+            <thead>
+              <tr><th scope="col">Relazione classica</th><th scope="col">Tabella o risultato SQL</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>È un insieme: niente tuple duplicate.</td><td>Può contenere duplicati se i vincoli non li impediscono; una query può usare semantica multinsieme.</td></tr>
+              <tr><td>Tuple e attributi non hanno ordine logico.</td><td>Il DBMS può mostrare righe e colonne in un ordine, che non diventa significativo senza una richiesta esplicita.</td></tr>
+              <tr><td>Ogni componente è un valore del dominio.</td><td><code>NULL</code> è un marcatore per informazione assente o sconosciuta, non un normale valore del dominio classico.</td></tr>
+              <tr><td>Il dominio comprende tipo e significato.</td><td>Un tipo come <code>INTEGER</code> descrive la rappresentazione, ma spesso servono ulteriori vincoli per catturare il dominio logico.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="callout warning"><strong>Attenzione alle parole:</strong> la <em>relazione</em> del modello relazionale è l'insieme di tuple appena definito. Non va confusa con una <em>relationship</em> del modello E-R, cioè un legame concettuale fra entità.</p>
+        <p class="source-note">Riferimento storico: E. F. Codd, <a href="https://research.ibm.com/publications/a-relational-model-of-data-for-large-shared-data-banks">A Relational Model of Data for Large Shared Data Banks</a>, 1970.</p>
       </section>
 
       <section class="lesson-section" aria-labelledby="verifica">
-        <h2 id="verifica">Verifica rapida</h2>
-        <p><strong>Che cosa cambia e che cosa resta stabile quando aggiungiamo una nuova tupla?</strong></p>
+        <h2 id="verifica">Verifica della definizione</h2>
+        <p><strong>Qual è la differenza tra prodotto cartesiano, relazione e tabella?</strong></p>
         <details class="reveal">
           <summary>Controlla la risposta</summary>
           <div class="reveal-content">
-            <p>Cambia l'istanza e quindi può cambiare la sua cardinalità. Restano invariati lo schema, i domini e i vincoli, a meno che non venga eseguita un'esplicita modifica strutturale.</p>
+            <p>Il prodotto cartesiano contiene tutte le tuple ottenibili scegliendo un valore da ciascun dominio. La relazione è il sottoinsieme delle tuple che costituiscono i fatti presenti. La tabella è la rappresentazione, con colonne nominate e righe, usata per mostrare quella relazione.</p>
           </div>
         </details>
       </section>
