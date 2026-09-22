@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laboratorio C++: costruire un MiniDB persistente su file binario con operazioni CRUD e compattazione.">
+  <title>Laboratorio · MiniDB su file binario</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../../default.css">
+  <script src="../../highlight.js" defer></script>
+  <script src="../../menu.js" defer></script>
+</head>
+<body class="lesson-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice del laboratorio">
+      <h2>Laboratorio · MiniDB</h2>
+      <ol>
+        <li><a href="#scenario">Scenario e obiettivi</a></li>
+        <li><a href="#modello">Formato dei record</a></li>
+        <li><a href="#requisiti">Requisiti obbligatori</a></li>
+        <li><a href="#sessione1">Sessione 1</a></li>
+        <li><a href="#sessione2">Sessione 2</a></li>
+        <li><a href="#tecnica">Indicazioni tecniche</a></li>
+        <li><a href="#collaudo">Collaudo</a></li>
+        <li><a href="#consegna">Consegna e valutazione</a></li>
+      </ol>
+      <p><a href="../../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Laboratorio C++ · 2 sessioni da 3 ore</p>
+      <h1>MiniDB: un archivio di record persistenti</h1>
+      <p class="lesson-lead">Costruisci un piccolo gestore di libri che salva i dati su file binario, applica una chiave univoca e supporta ricerca, inserimento, modifica, cancellazione logica e rimozione fisica.</p>
+      <div class="lesson-meta">
+        <span>Durata: 6 ore</span>
+        <span>·</span>
+        <span>C++17</span>
+        <span>·</span>
+        <span>File binari</span>
+      </div>
+    </header>
+
+    <nav class="slide-navigation" aria-label="Navigazione superiore">
+      <a class="nav-button" href="../../programma.html">← Programma</a>
+      <a class="nav-button next" href="starter/main.cpp" download>Scarica lo starter C++ ↓</a>
+    </nav>
+
+    <div class="content-box">
+      <section class="lesson-section" id="scenario" aria-labelledby="titolo-scenario">
+        <h2 id="titolo-scenario">Scenario e obiettivi</h2>
+        <p>La biblioteca scolastica vuole sostituire un elenco tenuto solo in memoria con un archivio che sopravviva alla chiusura del programma. Non userai un DBMS esistente: realizzerai direttamente alcune sue funzioni essenziali.</p>
+
+        <div class="concept-grid three">
+          <article class="concept-card">
+            <h3>Persistenza</h3>
+            <p>I record devono essere ancora disponibili dopo la chiusura e il riavvio.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Integrità</h3>
+            <p>Ogni libro attivo ha un ID positivo univoco e campi validi.</p>
+          </article>
+          <article class="concept-card">
+            <h3>Gestione fisica</h3>
+            <p>Il programma individua gli slot, li aggiorna e recupera lo spazio inutilizzato.</p>
+          </article>
+        </div>
+
+        <p>Al termine saprai distinguere lo stato logico dell'archivio dalla sua organizzazione fisica, usare accesso sequenziale e accesso posizionale e motivare il costo delle diverse operazioni.</p>
+        <p class="callout warning"><strong>Confine del progetto:</strong> MiniDB non interpreta SQL, non gestisce utenti, relazioni, indici, transazioni o accessi concorrenti. Tutte le operazioni riguardano un solo archivio locale.</p>
+      </section>
+
+      <section class="lesson-section" id="modello" aria-labelledby="titolo-modello">
+        <h2 id="titolo-modello">Formato dei record</h2>
+        <p>L'archivio <code>libri.dat</code> è una sequenza di slot della stessa dimensione. Ogni slot contiene la rappresentazione binaria di un oggetto <code>Libro</code>.</p>
+
+        <pre><code class="language-cpp">struct Libro {
+    std::int32_t id;       // chiave positiva
+    char titolo[51];       // da 1 a 50 byte di testo + terminatore
+    char autore[41];       // da 1 a 40 byte di testo + terminatore
+    std::int32_t anno;     // da 1450 a 2100
+    std::uint8_t attivo;   // 1 = attivo, 0 = cancellato
+};</code></pre>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Vincoli da garantire</caption>
+            <thead>
+              <tr><th>Campo</th><th>Vincolo</th><th>Può cambiare?</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>Intero positivo; univoco fra i record attivi</td><td>No</td></tr>
+              <tr><td><code>titolo</code></td><td>Non vuoto; massimo 50 byte di testo</td><td>Sì</td></tr>
+              <tr><td><code>autore</code></td><td>Non vuoto; massimo 40 byte di testo</td><td>Sì</td></tr>
+              <tr><td><code>anno</code></td><td>Compreso fra 1450 e 2100</td><td>Sì</td></tr>
+              <tr><td><code>attivo</code></td><td>Vale 1 oppure 0</td><td>Solo nelle operazioni previste</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="callout"><strong>Semplificazione didattica:</strong> il file è destinato allo stesso programma e allo stesso ambiente che lo ha creato. Padding, endianess e portabilità fra compilatori diversi non fanno parte di questa esercitazione. La lunghezza di titolo e autore è misurata da <code>std::string::size()</code> in byte: con testo UTF-8 un carattere accentato può occupare più di un byte.</p>
+
+        <div class="box">
+          <h3>Che cos'è l'offset?</h3>
+          <p>L'<strong>offset</strong> è la distanza, misurata in byte, tra l'inizio del file e la posizione che ci interessa. Il primo byte del file ha offset <code>0</code>. Se un record inizia dopo 208 byte, il suo offset è <code>208</code>.</p>
+          <p>Poiché tutti i record <code>Libro</code> hanno la stessa dimensione, l'offset iniziale dello slot numero <code>k</code>, contando gli slot da zero, si calcola così:</p>
+          <p class="formula"><code>offset = k × sizeof(Libro)</code></p>
+          <p>Durante una ricerca sequenziale il programma conserva l'offset del record trovato. In seguito può tornare direttamente in quella posizione con <code>seekp(offset, std::ios::beg)</code> e modificare o cancellare logicamente quel record, senza riscrivere tutti quelli precedenti.</p>
+          <p class="callout"><strong>Esempio:</strong> se <code>sizeof(Libro)</code> vale 104 byte, gli slot 0, 1 e 2 iniziano rispettivamente agli offset 0, 104 e 208. Il valore concreto va sempre ottenuto con <code>sizeof(Libro)</code>, perché potrebbe dipendere dal compilatore.</p>
+        </div>
+      </section>
+
+      <section class="lesson-section" id="requisiti" aria-labelledby="titolo-requisiti">
+        <h2 id="titolo-requisiti">Requisiti obbligatori</h2>
+        <p>Il menu deve offrire le operazioni seguenti. Ogni funzione elabora il file un record alla volta: non è ammesso caricare l'intero archivio in un array o in un <code>vector</code>.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Operazione</th><th>Comportamento richiesto</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Elenca</td><td>Mostra in forma tabellare tutti e soli i record attivi.</td></tr>
+              <tr><td>2</td><td>Cerca per ID</td><td>Esegue una scansione sequenziale e restituisce record e offset; ignora gli slot cancellati.</td></tr>
+              <tr><td>3</td><td>Inserisci</td><td>Rifiuta un ID già attivo. Dopo aver esaminato tutto il file, scrive nel primo slot cancellato disponibile; se non esiste, aggiunge in coda.</td></tr>
+              <tr><td>4</td><td>Modifica</td><td>Sovrascrive nello stesso slot titolo, autore e anno. ID e flag non cambiano.</td></tr>
+              <tr><td>5</td><td>Cancella logicamente</td><td>Imposta <code>attivo = 0</code> nello slot trovato. La dimensione del file rimane invariata.</td></tr>
+              <tr><td>6</td><td>Statistiche</td><td>Mostra slot totali, attivi, cancellati e dimensione del file in byte.</td></tr>
+              <tr><td>7</td><td>Compatta</td><td>Copia i soli record attivi in un file temporaneo, sostituisce l'originale e, se riesce, non lascia file temporanei o di backup.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Inoltre il programma deve:</p>
+        <ul>
+          <li>creare l'archivio al primo inserimento, se non esiste;</li>
+          <li>controllare il successo di ogni apertura e di ogni scrittura;</li>
+          <li>gestire senza crash un archivio inesistente, vuoto o privo dell'ID richiesto;</li>
+          <li>mantenere i dati fra due esecuzioni differenti;</li>
+          <li>suddividere il lavoro nelle funzioni già dichiarate nello starter.</li>
+        </ul>
+
+        <div class="box">
+          <h3>Regola precisa per ID e slot cancellati</h3>
+          <p>L'unicità riguarda i soli record attivi. Un record con <code>attivo == 0</code> non è più presente dal punto di vista logico e il suo ID può essere usato di nuovo.</p>
+          <p>Durante un inserimento devi ricordare l'offset del primo slot cancellato, ma continuare la scansione fino alla fine: un record attivo con lo stesso ID potrebbe trovarsi più avanti. Soltanto dopo aver escluso il duplicato puoi sovrascrivere lo slot libero o aggiungere il record in coda.</p>
+        </div>
+      </section>
+
+      <section class="lesson-section" id="sessione1" aria-labelledby="titolo-sessione1">
+        <h2 id="titolo-sessione1">Sessione 1 · leggere, cercare, inserire</h2>
+        <ol>
+          <li>Scarica e compila lo starter senza modificarne ancora il menu.</li>
+          <li>Implementa <code>elencaAttivi</code>: l'assenza del file equivale a un archivio vuoto.</li>
+          <li>Implementa <code>cercaPerId</code>, conservando l'offset iniziale di ogni record letto.</li>
+          <li>Implementa <code>inserisci</code>: con una scansione completa verifica la chiave e ricorda il primo slot cancellato; soltanto dopo sovrascrivi quello slot oppure aggiungi in coda.</li>
+          <li>Verifica la persistenza: chiudi il programma, riaprilo e cerca i record inseriti.</li>
+        </ol>
+
+        <p class="callout success"><strong>Checkpoint di fine sessione:</strong> devi poter inserire almeno tre libri, elencarli, cercarli per ID, rifiutare un duplicato e ritrovarli dopo il riavvio.</p>
+      </section>
+
+      <section class="lesson-section" id="sessione2" aria-labelledby="titolo-sessione2">
+        <h2 id="titolo-sessione2">Sessione 2 · aggiornare e recuperare spazio</h2>
+        <ol>
+          <li>Implementa <code>modifica</code> usando l'offset prodotto dalla ricerca.</li>
+          <li>Implementa <code>cancellaLogicamente</code>: non spostare gli altri record e non accorciare il file.</li>
+          <li>Completa <code>mostraStatistiche</code> e usala per osservare gli slot cancellati.</li>
+          <li>Implementa <code>compatta</code> copiando i record attivi in <code>libri.tmp</code>.</li>
+          <li>Solo dopo aver chiuso entrambi i file, sostituisci <code>libri.dat</code> con il temporaneo usando <code>libri.bak</code> come copia di sicurezza. Se una rinomina fallisce, prova a ripristinare l'originale.</li>
+          <li>Esegui e documenta l'intera sequenza di collaudo.</li>
+        </ol>
+
+        <p class="callout warning"><strong>Attenzione:</strong> cancellare logicamente non significa eliminare byte dal centro di un file. La rimozione fisica richiede la riscrittura dei record che devono sopravvivere.</p>
+      </section>
+
+        <section class="lesson-section" id="tecnica" aria-labelledby="titolo-tecnica">
+        <h2 id="titolo-tecnica">Indicazioni tecniche</h2>
+
+        <h3>Lettura e scrittura di un record</h3>
+        <pre><code class="language-cpp">file.read(reinterpret_cast&lt;char*&gt;(&amp;record), sizeof(Libro));
+file.write(reinterpret_cast&lt;const char*&gt;(&amp;record), sizeof(Libro));</code></pre>
+
+        <div class="box">
+          <h3>Perché usiamo <code>reinterpret_cast</code>?</h3>
+          <p><code>&amp;record</code> ha tipo <code>Libro*</code>, mentre <code>read</code> e <code>write</code> ricevono rispettivamente un <code>char*</code> e un <code>const char*</code>: per loro il file è semplicemente una sequenza di byte.</p>
+          <p><code>reinterpret_cast</code> non converte i valori contenuti nel libro e non esegue una serializzazione. Dice invece al compilatore di considerare lo stesso indirizzo come l'inizio della <strong>rappresentazione in byte</strong> dell'oggetto.</p>
+
+          <pre><code class="language-cpp">Libro record{};
+
+// Non ammesso: Libro* e char* non sono collegati da una conversione ordinaria.
+// static_cast&lt;char*&gt;(&amp;record);
+
+// Esplicita l'operazione a basso livello che vogliamo eseguire.
+char* byteDaRiempire = reinterpret_cast&lt;char*&gt;(&amp;record);
+const char* byteDaSalvare = reinterpret_cast&lt;const char*&gt;(&amp;record);</code></pre>
+
+          <p>Un cast tradizionale del C, come <code>(char*)&amp;record</code>, potrebbe compilare, ma nasconde quale conversione viene richiesta e rende più difficile individuare un'operazione rischiosa. I cast C++ sono più visibili e permettono al compilatore di applicare regole più precise: qui scegliamo intenzionalmente <code>reinterpret_cast</code> perché stiamo osservando i byte grezzi di un oggetto.</p>
+          <p class="callout warning"><strong>Limite importante:</strong> questa tecnica è adatta qui perché <code>Libro</code> contiene soltanto numeri, array di caratteri e un flag. Non deve essere usata per salvare direttamente oggetti con <code>std::string</code>, puntatori o memoria dinamica.</p>
+        </div>
+
+        <h3>Modalità di apertura</h3>
+        <p>Usa sempre <code>std::ios::binary</code>. Le altre modalità dipendono dall'operazione:</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Scopo</th><th>Stream e modalità consigliati</th><th>Nota</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Scansione</td><td><code>ifstream(nome, ios::binary)</code></td><td>Se il file non esiste, elenco e ricerca lo trattano come vuoto.</td></tr>
+              <tr><td>Aggiunta in coda</td><td><code>ofstream(nome, ios::binary | ios::app)</code></td><td>Crea il file al primo inserimento e non cancella i record esistenti.</td></tr>
+              <tr><td>Sovrascrittura di uno slot</td><td><code>fstream(nome, ios::binary | ios::in | ios::out)</code></td><td>Usa <code>seekp(offset, ios::beg)</code> prima di <code>write</code>.</td></tr>
+              <tr><td>File temporaneo</td><td><code>ofstream(nomeTemp, ios::binary | ios::trunc)</code></td><td>Ricrea da zero il temporaneo a ogni compattazione.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="callout warning"><strong>Errore da evitare:</strong> aprire direttamente <code>libri.dat</code> con un semplice <code>ofstream</code> lo troncherebbe, cancellando i record già presenti. Se riutilizzi dopo l'EOF lo stesso <code>fstream</code>, devi inoltre chiamare <code>clear()</code> prima di <code>seekp</code>; per questo laboratorio è spesso più semplice chiudere e riaprire il file.</p>
+
+        <h3>Indirizzo di uno slot</h3>
+        <p>Numerando gli slot da zero, l'indirizzo iniziale dello slot <code>k</code> è:</p>
+        <p class="formula"><code>offset = k × sizeof(Libro)</code></p>
+        <p>Per aggiornare un record apri un <code>fstream</code> binario in lettura e scrittura, esegui <code>seekp(offset, std::ios::beg)</code> e scrivi esattamente un <code>Libro</code>.</p>
+
+        <h3>Pseudocodice della ricerca</h3>
+        <pre><code>offset ← 0
+finché è possibile leggere un record
+    se record.attivo e record.id = idCercato
+        restituisci record, offset e vero
+    offset ← offset + dimensioneRecord
+restituisci falso</code></pre>
+
+        <h3>Pseudocodice dell'inserimento</h3>
+        <pre><code>primoSlotLibero ← nessuno
+offset ← 0
+per ogni record del file
+    se il record è attivo e ha lo stesso ID
+        restituisci falso: chiave duplicata
+    se il record è cancellato e primoSlotLibero è ancora nessuno
+        primoSlotLibero ← offset
+    offset ← offset + dimensioneRecord
+
+se primoSlotLibero esiste
+    sovrascrivi quello slot
+altrimenti
+    aggiungi il nuovo record in coda
+restituisci vero solo se la scrittura è riuscita</code></pre>
+
+        <h3>Pseudocodice della compattazione</h3>
+        <pre><code>apri originale in lettura
+se non esiste, restituisci falso
+apri libri.tmp in scrittura, eliminando un vecchio temporaneo
+se l'apertura fallisce, chiudi l'originale e restituisci falso
+
+erroreCopia ← falso
+per ogni record dell'originale
+    se il record è attivo
+        scrivilo nel temporaneo
+        se la scrittura fallisce, erroreCopia ← vero
+se rimane un record letto solo in parte, erroreCopia ← vero
+
+chiudi entrambi i file
+se erroreCopia
+    elimina libri.tmp e restituisci falso
+
+elimina un eventuale vecchio libri.bak
+se non riesci a rinominare libri.dat in libri.bak
+    elimina libri.tmp e restituisci falso
+se non riesci a rinominare libri.tmp in libri.dat
+    prova a rinominare libri.bak in libri.dat
+    elimina libri.tmp e restituisci falso
+
+elimina libri.bak e restituisci vero</code></pre>
+        <p>Per eliminare e rinominare puoi usare <code>std::remove</code> e <code>std::rename</code>, dichiarate in <code>&lt;cstdio&gt;</code>. Entrambe restituiscono <code>0</code> in caso di successo. Le due rinomine sono passaggi decisivi e vanno sempre controllate; durante la pulizia, invece, il fallimento di <code>remove</code> può significare semplicemente che il file da eliminare non esisteva. Un file esistente ma vuoto, oppure contenente solo record cancellati, è valido e dopo la compattazione rimane un archivio vuoto.</p>
+        <p class="callout"><strong>EOF non significa errore:</strong> il ciclo <code>while (file.read(...))</code> termina normalmente quando raggiunge la fine del file. Devi invece segnalare una lettura anomala o un record finale incompleto; puoi controllare che, dopo il ciclo, non siano rimasti byte parziali tramite <code>file.gcount()</code>.</p>
+
+        <h3>Compilazione e cartella di lavoro</h3>
+        <pre><code class="language-bash">g++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o minidb</code></pre>
+        <p>Esegui il programma dalla cartella in cui vuoi creare <code>libri.dat</code>: il nome è relativo alla cartella di lavoro corrente, non alla posizione del sorgente. Su Windows puoi usare <code>-o minidb.exe</code>.</p>
+
+        <details class="reveal">
+          <summary>Perché lo starter usa array di char?</summary>
+          <div class="reveal-content">
+            <p>Un record scritto direttamente nel file deve avere dimensione fissa. Un oggetto <code>std::string</code> contiene invece informazioni interne e riferimenti a memoria esterna: scriverne i byte non salverebbe correttamente il testo. Gli array incorporano i caratteri nel record.</p>
+          </div>
+        </details>
+
+        <details class="reveal">
+          <summary>Qual è la complessità delle operazioni?</summary>
+          <div class="reveal-content">
+            <p>Senza indice, ricerca e inserimento sono lineari: nel caso peggiore leggono <code>n</code> record. Anche modifica e cancellazione hanno costo complessivo lineare, perché devono prima cercare l'ID; la sola riscrittura del record, una volta noto l'offset, ha costo costante. La compattazione è lineare perché legge e riscrive l'archivio.</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="lesson-section" id="collaudo" aria-labelledby="titolo-collaudo">
+        <h2 id="titolo-collaudo">Sequenza di collaudo obbligatoria</h2>
+        <p>Esegui i passi nell'ordine indicato e riporta nella relazione l'esito osservato.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Passo</th><th>Azione</th><th>Esito atteso</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Avvia senza <code>libri.dat</code> ed esegui elenco e ricerca</td><td>Nessun crash; archivio vuoto / ID assente</td></tr>
+              <tr><td>2</td><td>Inserisci gli ID 101, 102 e 103 usando i dati di prova indicati sotto</td><td>3 attivi, 0 cancellati, 3 slot</td></tr>
+              <tr><td>3</td><td>Chiudi, riavvia e cerca 102</td><td>Il record è ancora presente</td></tr>
+              <tr><td>4</td><td>Prova a inserire di nuovo l'ID 102</td><td>Inserimento rifiutato</td></tr>
+              <tr><td>5</td><td>Modifica titolo, autore o anno dell'ID 103</td><td>Dati nuovi; ID e numero di slot invariati</td></tr>
+              <tr><td>6</td><td>Cancella logicamente 102</td><td>2 attivi, 1 cancellato, ancora 3 slot</td></tr>
+              <tr><td>7</td><td>Cerca 102 ed esegui l'elenco</td><td>102 non viene trovato né mostrato</td></tr>
+              <tr><td>8</td><td>Inserisci ID 104</td><td>Riusa lo slot libero: 3 attivi e 3 slot</td></tr>
+              <tr><td>9</td><td>Cancella 101, poi compatta</td><td>2 attivi, 0 cancellati e 2 slot</td></tr>
+              <tr><td>10</td><td>Riavvia ed elenca</td><td>Restano soltanto 103 e 104</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Dati suggeriti: <code>101; Il nome della rosa; Umberto Eco; 1980</code>, <code>102; Se questo è un uomo; Primo Levi; 1947</code>, <code>103; Le cosmicomiche; Italo Calvino; 1965</code>. Al passo 5 modifica, per esempio, l'anno del record 103 in <code>1966</code>.</p>
+        <p>Prima della consegna controlla anche tre casi limite: modifica o cancellazione di un ID inesistente, compattazione di un archivio vuoto e inserimento di testi alla lunghezza massima consentita.</p>
+      </section>
+
+      <section class="lesson-section" id="consegna" aria-labelledby="titolo-consegna">
+        <h2 id="titolo-consegna">Consegna e valutazione</h2>
+        <p>Consegna una cartella contenente:</p>
+        <ul>
+          <li><code>main.cpp</code>, compilabile con C++17 senza errori e senza nuovi warning con le opzioni indicate;</li>
+          <li>un <code>README.txt</code> di massimo una pagina con nomi, scelte implementative, esito dei dieci test ed eventuali problemi noti;</li>
+          <li>facoltativamente, un archivio <code>libri.dat</code> prodotto dalla sequenza di collaudo.</li>
+        </ul>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Rubrica sintetica — 30 punti</caption>
+            <thead>
+              <tr><th>Area</th><th>Punti</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Formato binario e persistenza</td><td>4</td></tr>
+              <tr><td>Elenco e ricerca</td><td>5</td></tr>
+              <tr><td>Inserimento e riuso degli slot</td><td>5</td></tr>
+              <tr><td>Modifica</td><td>4</td></tr>
+              <tr><td>Cancellazione logica</td><td>3</td></tr>
+              <tr><td>Compattazione</td><td>4</td></tr>
+              <tr><td>Robustezza e qualità del codice</td><td>3</td></tr>
+              <tr><td>Collaudo e relazione</td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details class="reveal">
+          <summary>Estensioni facoltative — solo dopo il collaudo completo</summary>
+          <div class="reveal-content">
+            <ul>
+              <li>ricerca parziale per titolo o autore, senza distinzione fra maiuscole e minuscole;</li>
+              <li>esportazione dei record attivi in formato CSV;</li>
+              <li>conferma prima della cancellazione e della compattazione;</li>
+              <li>indice separato contenente coppie <code>ID → offset</code>, con confronto dei tempi di ricerca.</li>
+            </ul>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore">
+      <a class="nav-button" href="../../programma.html">← Programma</a>
+      <a class="nav-button next" href="starter/main.cpp" download>Scarica lo starter C++ ↓</a>
+    </nav>
+  </main>
+</body>
+</html>
