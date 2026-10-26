@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Un left join e tre query che richiedono di scegliere con cura il livello di confronto: persone, corsi o nomi.">
+  <title>Lezione 3.16 · Medium · preservare, confrontare, escludere</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html" aria-current="page">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Medium · preservare, confrontare, escludere</h1>
+      <p class="lesson-lead">Un left join e tre query che richiedono di scegliere con cura il livello di confronto: persone, corsi o nomi.</p>
+      <div class="lesson-meta"><span>Pagina 16 di 20</span><progress value="16" max="20" aria-label="Pagina 16 di 20">16 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_15.html">← Medium M1–M4</a><a class="nav-button next" href="lez3_17.html">Hard H1–H2 →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>medium</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="m5"><h2 id="m5">M5 · Tutti gli studenti e l'eventuale voto di SQL</h2><p>Restituire Sid, nome e voto di SQL di tutti gli studenti; mostrare NULL se non seguono SQL.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Filtra prima ISCRIZIONI sul corso SQL.</li><li>Usa un left outer join naturale su Sid, preservando STUDENTI.</li><li>Proietta i campi richiesti.</li></ol><pre class="ra-expression"><code class="nohighlight">Q ← σ[Cid = 10](ISCRIZIONI)
+π[Sid, Studente, Voto](STUDENTI ⟕ Q)</code></pre><div class="table-scroll"><table data-result="M5"><caption>Risultato di M5: 7 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th><th scope="col">Voto</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>9</td></tr><tr><td>2</td><td>Bruno</td><td>6</td></tr><tr><td>3</td><td>Carla</td><td>8</td></tr><tr><td>4</td><td>Diego</td><td><span class="ra-null">NULL</span></td></tr><tr><td>5</td><td>Elena</td><td>9</td></tr><tr><td>6</td><td>Fabio</td><td><span class="ra-null">NULL</span></td></tr><tr><td>7</td><td>Anna</td><td><span class="ra-null">NULL</span></td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Filtrare Cid = 10 dopo il left join eliminerebbe le righe che vuoi conservare.</p></div></details></section><section class="lesson-section" aria-labelledby="m6"><h2 id="m6">M6 · Corsi seguiti da entrambe le classi</h2><p>Restituire i corsi con almeno un iscritto di 5A e almeno un iscritto di 5B.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Ricava i codici corso degli studenti di 5A e quelli di 5B separatamente.</li><li>Interseca i due insiemi di codici.</li><li>Aggiungi il nome del corso.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Cid](σ[Classe = &quot;5A&quot;](STUDENTI) ⋈ ISCRIZIONI)
+B ← π[Cid](σ[Classe = &quot;5B&quot;](STUDENTI) ⋈ ISCRIZIONI)
+π[Cid, Corso]((A ∩ B) ⋈ CORSI)</code></pre><div class="table-scroll"><table data-result="M6"><caption>Risultato di M6: 3 tuple</caption><thead><tr><th scope="col">Cid</th><th scope="col">Corso</th></tr></thead><tbody><tr><td>10</td><td>SQL</td></tr><tr><td>20</td><td>Web</td></tr><tr><td>30</td><td>Reti</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Non stiamo chiedendo che un singolo studente appartenga contemporaneamente a due classi.</p></div></details></section><section class="lesson-section" aria-labelledby="m7"><h2 id="m7">M7 · Anna, ma non quella iscritta a SQL</h2><p>Restituire le persone chiamate Anna che non seguono SQL.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Seleziona le persone chiamate Anna e mantieni Sid.</li><li>Sottrai gli ID degli iscritti a SQL.</li><li>Recupera i nomi soltanto dopo la differenza.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](σ[Studente = &quot;Anna&quot;](STUDENTI))
+B ← π[Sid](σ[Cid = 10](ISCRIZIONI))
+π[Sid, Studente]((A − B) ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="M7"><caption>Risultato di M7: 1 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>7</td><td>Anna</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Una differenza sui soli nomi eliminerebbe entrambe le Anna: la chiave distingue le persone.</p></div></details></section><section class="lesson-section" aria-labelledby="m8"><h2 id="m8">M8 · Nessun corso insufficiente, almeno un'iscrizione</h2><p>Restituire gli studenti iscritti ad almeno un corso e senza voti inferiori a 6.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Parti dagli ID presenti in ISCRIZIONI: così escludi Fabio.</li><li>Ricava gli ID con almeno un voto insufficiente.</li><li>Sottrai questi ultimi e aggiungi il nome.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](ISCRIZIONI)
+B ← π[Sid](σ[Voto &lt; 6](ISCRIZIONI))
+π[Sid, Studente]((A − B) ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="M8"><caption>Risultato di M8: 5 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>2</td><td>Bruno</td></tr><tr><td>3</td><td>Carla</td></tr><tr><td>5</td><td>Elena</td></tr><tr><td>7</td><td>Anna</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Diego ha anche un voto sufficiente, ma basta l'insufficienza a Web per escluderlo.</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_15.html">← Medium M1–M4</a><a class="nav-button next" href="lez3_17.html">Hard H1–H2 →</a></nav>
+  </main>
+</body>
+</html>

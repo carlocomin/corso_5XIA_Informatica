@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_16 · Schedule serializzabile</title>
+  <title>ITST – 5ª · Lez5_16 · Preservazione delle dipendenze: definizione e controesempio</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
     function prevSlide(){ window.location.href = "lez5_15.html"; }
-    function nextSlide(){ window.location.href = "lez5_17.html"; }
+    function nextSlide(){ window.location.href = "../lez6/lez6_1.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
       const box = document.getElementById(boxId);
@@ -44,75 +44,121 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Corretto non significa seriale, ma equivalente a un seriale</h1>
+    <h1>Preservazione delle dipendenze</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
+      <button onclick="nextSlide()">Transazioni &#8594;</button>
     </div>
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>L'idea di correttezza</h2>
+
+        <h2>Definizione (idea pratica)</h2>
         <div class="box">
-          <p>Uno schedule concorrente è considerato corretto se produce lo <strong>stesso risultato</strong> di uno schedule seriale sulle stesse transazioni.</p>
+          <p>Data una decomposizione di <code>R</code> in <code>(R1, R2, ..., Rn)</code>, diciamo che essa <strong>preserva le dipendenze</strong> se:</p>
+          <p class="ok">ogni vincolo funzionale di interesse si può controllare imponendo DF solo sulle singole relazioni <code>Ri</code>, senza ricostruire <code>R</code> con un join.</p>
+          <p class="warn">Se una DF “vive” su attributi distribuiti su più tabelle, potrebbe non essere verificabile localmente.</p>
+          <p class="note">Intuizione: è la differenza tra “posso controllare la regola guardando una tabella” e “per controllarla devo unire tabelle e guardare il risultato globale”.</p>
         </div>
 
-        <h2>Definizione intuitiva</h2>
+        <h2>Nota critica: BCNF vs preservazione</h2>
         <div class="box">
-          <p class="ok">Uno schedule si dice <strong>serializzabile</strong> se è equivalente a un qualche schedule seriale.</p>
-          <p>In questo modo manteniamo il parallelismo, ma senza perdere la correttezza semantica.</p>
+          <p>L’algoritmo di decomposizione in BCNF garantisce in genere:</p>
+          <ul>
+            <li class="ok">join senza perdita (lossless)</li>
+            <li class="warn">ma non sempre la preservazione delle dipendenze</li>
+          </ul>
+          <p class="note">Questo è uno dei motivi per cui, in alcuni casi, si preferisce una decomposizione in 3NF (lossless e dependency-preserving) invece di spingersi fino a BCNF.</p>
         </div>
 
-        <h2>Il punto delicato</h2>
+        <h2>Controesempio classico (mostra il problema)</h2>
         <div class="box">
-          <p class="warn">Bisogna però chiarire bene cosa significhi "produrre lo stesso risultato".</p>
-          <p class="note">Da qui nascono diverse nozioni di equivalenza tra schedule.</p>
-          <p>Il nodo teorico è proprio questo: non basta dire "si assomigliano", bisogna specificare con precisione che cosa osserviamo e che cosa vogliamo preservare.</p>
+          <p>Schema:</p>
+          <p class="ok" style="display:block"><code>R(A, B, C)</code></p>
+          <p>DF:</p>
+          <pre><code class="language-text">F = { AB → C,  C → B }</code></pre>
+          <p>La DF <code>C → B</code> viola BCNF (in genere <code>C</code> non è superchiave), quindi decomponiamo su <code>C → B</code>:</p>
+          <pre><code class="language-text">R1(C, B)
+R2(A, C)</code></pre>
+          <p class="note">Questa decomposizione resta <strong>lossless</strong>: <code>R1 ∩ R2 = {C}</code> e in <code>R1</code> vale <code>C → B</code>, quindi <code>C</code> è chiave di <code>R1</code> e fa da collante.</p>
+          <p class="warn">Dopo la decomposizione, la DF <code>AB → C</code> non “sta” più in una singola tabella (A è in <code>R2</code>, B è in <code>R1</code>).</p>
         </div>
+
+        <h2>Dimostrazione concreta: vincoli locali ok, vincolo globale no</h2>
+        <div class="box">
+          <p>Considera le seguenti istanze che rispettano i vincoli locali:</p>
+          <pre><code class="language-text">r1(C, B) = { (c1, b1), (c2, b1) }
+  - qui vale C → B
+
+r2(A, C) = { (a1, c1), (a1, c2) }</code></pre>
+          <p>Il join naturale produce:</p>
+          <pre><code class="language-text">r1 ⋈ r2 = { (a1, b1, c1), (a1, b1, c2) }</code></pre>
+          <p class="warn">Qui <code>AB → C</code> è violata: la coppia <code>(a1, b1)</code> determina due valori diversi di <code>C</code> (<code>c1</code> e <code>c2</code>).</p>
+          <p class="ok">Conclusione: decomposizione lossless, ma NON dependency-preserving.</p>
+        </div>
+
+        <h2>Conseguenza pratica (scelta progettuale)</h2>
+        <div class="box">
+          <ul>
+            <li><strong>BCNF</strong>: più “pulita” contro ridondanze da DF, ma può perdere la verificabilità locale di alcuni vincoli.</li>
+            <li><strong>3NF</strong>: spesso permette decomposizioni lossless e dependency-preserving, accettando qualche ridondanza residua in casi particolari.</li>
+          </ul>
+          <p class="note">La scelta dipende da cosa è più importante nel contesto: eliminare ridondanza al massimo oppure poter imporre vincoli senza join.</p>
+        </div>
+
+        <h2>Cosa deve restare</h2>
+        <div class="box">
+          <ul>
+            <li><strong>Lossless join</strong> riguarda il recupero corretto dell'informazione dopo la decomposizione.</li>
+            <li><strong>Preservazione delle dipendenze</strong> riguarda la possibilita di controllare i vincoli localmente, senza join.</li>
+            <li>Tra <strong>3NF</strong> e <strong>BCNF</strong> non c'e una scelta "sempre migliore": conta il compromesso tra ridondanza e controllabilita dei vincoli.</li>
+          </ul>
+          <p class="ok">Questo e il punto di arrivo del modulo 5: saper leggere una decomposizione non solo come formula, ma come scelta progettuale motivata.</p>
+        </div>
+
+        <h2>Micro-verifica finale</h2>
+        <div class="box">
+          <p><strong>Domanda</strong>: qual è la differenza tra “lossless join” e “dependency preservation”?</p>
+          <button id="btnMV16" onclick="toggleBox('btnMV16','ansMV16')">Mostra ▼</button>
+          <div id="ansMV16" style="display:none; margin-top:.5rem">
+            <ul>
+              <li><span class="def">Lossless join</span>: dal join delle tabelle decomposte posso ricostruire l’informazione originale senza “inventare” associazioni.</li>
+              <li><span class="def">Preservazione delle dipendenze</span>: posso controllare tutte le DF originali imponendo vincoli solo sulle singole tabelle, senza join.</li>
+            </ul>
+            <p class="warn">Sono proprietà diverse: una può valere senza l’altra.</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <div class="nav-buttons" style="margin-top:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
+      <button onclick="nextSlide()">Transazioni &#8594;</button>
     </div>
   </div>
 </body>

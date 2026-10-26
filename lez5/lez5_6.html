@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_6 · COMMIT, ROLLBACK e autocommit</title>
+  <title>ITST – 5ª · Lez5_6 · Equivalenza di DF e verifica (doppia inclusione)</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -44,44 +44,30 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Quando una transazione conferma o annulla i suoi effetti</h1>
+    <h1>Equivalenza e verifica (doppia inclusione)</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -90,32 +76,64 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Le due operazioni fondamentali</h2>
+
+        <h2>Perché non calcoliamo mai <code>F⁺</code> in pratica</h2>
         <div class="box">
+          <p><code>F⁺</code> è l’insieme di tutte le DF implicate: è in genere enorme.</p>
+          <p class="note">Invece di enumerare <code>F⁺</code>, usiamo solo chiusure <code>X⁺</code> quando servono.</p>
+          <p class="note">Intuizione: non serve conoscere “tutte le conseguenze possibili”, basta sapere se <em>questa</em> conseguenza specifica è deducibile.</p>
+        </div>
+
+        <h2>“Soundness”: l’idea chiave</h2>
+        <div class="box">
+          <p>Le trasformazioni usate per ottenere una copertura minimale (Regole 1–2–3) sono <strong>sound</strong>:</p>
           <ul>
-            <li><code>COMMIT</code>: segnala che la transazione è andata a buon fine e rende definitivi i cambiamenti.</li>
-            <li><code>ROLLBACK</code>: annulla gli effetti prodotti dalla transazione.</li>
+            <li>non cambiano il significato logico</li>
+            <li>preservano le implicazioni (la chiusura)</li>
           </ul>
+          <p class="ok">Per questo, applicandole correttamente, si ottiene automaticamente un insieme equivalente.</p>
         </div>
 
-        <h2>Sessione SQL minima</h2>
+        <h2>Se volessi verificare formalmente: doppia inclusione</h2>
         <div class="box">
-<pre><code class="language-sql">START TRANSACTION;
-UPDATE R SET B = 'z';
-ROLLBACK;
-
-START TRANSACTION;
-INSERT INTO R(A,B) VALUES (10,'x');
-COMMIT;</code></pre>
-          <p class="note">Dopo il rollback, il primo aggiornamento non deve lasciare tracce permanenti.</p>
+          <p>Per verificare <code>F<sub>m</sub>⁺ = F⁺</code> senza enumerare nulla, controlla:</p>
+          <ol>
+            <li><span class="def"><code>F ⊆ F<sub>m</sub>⁺</code></span>:
+              <ul>
+                <li>per ogni DF <code>X → Y</code> in <code>F</code>, calcola <code>X⁺</code> rispetto a <code>F<sub>m</sub></code> e verifica <code>Y ⊆ X⁺</code>.</li>
+              </ul>
+            </li>
+            <li><span class="def"><code>F<sub>m</sub> ⊆ F⁺</code></span>:
+              <ul>
+                <li>per ogni DF <code>X → Y</code> in <code>F<sub>m</sub></code>, calcola <code>X⁺</code> rispetto a <code>F</code> e verifica <code>Y ⊆ X⁺</code>.</li>
+              </ul>
+            </li>
+          </ol>
+          <p class="warn">Questo richiede chiusure solo per le premesse presenti nelle DF da controllare (non per tutti i sottoinsiemi di attributi).</p>
+          <p class="note">È come controllare se due dizionari di regole dicono la stessa cosa provando solo le frasi “candidate”, invece di generare un libro infinito di conseguenze.</p>
         </div>
 
-        <h2>Attenzione all'autocommit</h2>
+        <h2>Esempio (ripresa): <code>F={A→BC,B→C,A→B}</code></h2>
         <div class="box">
-          <p>Molti DBMS lavorano di default in <strong>autocommit mode</strong>: ogni istruzione viene confermata automaticamente.</p>
-          <p class="warn">Se vogliamo ragionare davvero su una transazione composta da più istruzioni, l'autocommit va gestito con attenzione.</p>
-          <p>Dal punto di vista didattico questo è decisivo: se ogni query fa commit da sola, perdiamo proprio l'idea di blocco unitario formato da più passi.</p>
+          <p>Dalla procedura abbiamo:</p>
+          <pre><code class="language-text">Fm = { A → B,  B → C }</code></pre>
+          <button id="btnV1" onclick="toggleBox('btnV1','ansV1')">Mostra ▼</button>
+          <div id="ansV1" style="display:none; margin-top:.5rem">
+            <p class="def">Controllo <code>F ⊆ Fm⁺</code></p>
+            <ul>
+              <li><code>A → BC</code>: calcolo <code>A⁺</code> rispetto a <code>Fm</code>. Da <code>A→B</code> ottengo <code>B</code>; da <code>B→C</code> ottengo <code>C</code> ⇒ <code>{B,C} ⊆ A⁺</code>.</li>
+              <li><code>B → C</code>: è in <code>Fm</code>.</li>
+              <li><code>A → B</code>: è in <code>Fm</code>.</li>
+            </ul>
+
+            <p class="def" style="margin-top:.6rem">Controllo <code>Fm ⊆ F⁺</code></p>
+            <ul>
+              <li><code>A→B</code> e <code>B→C</code> sono già in <code>F</code>, quindi ok.</li>
+            </ul>
+            <p class="ok">Conclusione: equivalenza verificata.</p>
+          </div>
         </div>
+
       </div>
     </div>
 

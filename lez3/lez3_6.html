@@ -1,204 +1,62 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_6 · Tipi di dato fondamentali e array</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_5.html"; }
-    function nextSlide(){ window.location.href = "lez3_7.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Il prodotto combina ogni tupla della prima relazione con ogni tupla della seconda. Non controlla se le due tuple rappresentino fatti collegati.">
+  <title>Lezione 3.6 · Prodotto cartesiano: tutte le combinazioni</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Tipi di dato fondamentali e array</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html" aria-current="page">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Prodotto cartesiano: tutte le combinazioni</h1>
+      <p class="lesson-lead">Il prodotto combina ogni tupla della prima relazione con ogni tupla della seconda. Non controlla se le due tuple rappresentino fatti collegati.</p>
+      <div class="lesson-meta"><span>Pagina 6 di 20</span><progress value="6" max="20" aria-label="Pagina 6 di 20">6 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_5.html">← Rinomina ρ e nomi degli attributi</a><a class="nav-button next" href="lez3_7.html">Unione ∪ e compatibilità →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Obiettivi</h2>
-        <div class="box">
-          <ul>
-            <li>Ripassare i datatype fondamentali piu usati in PHP.</li>
-            <li>Capire gli array come struttura chiave del linguaggio.</li>
-            <li>Riconoscere quando usare array indicizzati e quando usare array associativi.</li>
-            <li>Prepararsi a leggere e stampare risultati provenienti da MySQL.</li>
-          </ul>
-        </div>
-
-        <h2>Scalari: stringhe, numeri, boolean, null</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$utente = "Giulia";
-$eta = 19;
-$media = 7.5;
-$iscritta = true;
-$telefono = null;
-
-var_dump($utente, $eta, $media, $iscritta, $telefono);
-?&gt;</code></pre>
-          <ul>
-            <li>Questi sono i tipi di base che userai piu spesso negli script introduttivi.</li>
-            <li><code>null</code> rappresenta l'assenza di valore ed e molto comune nei dati opzionali.</li>
-            <li><code>var_dump()</code> e utile per capire il tipo reale di un dato durante il debug.</li>
-          </ul>
-        </div>
-
-        <h2>Cast e lettura sicura dei dati</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$quantita = (int) ($_POST['quantita'] ?? 0);
-$prezzo = (float) ($_POST['prezzo'] ?? 0);
-$attivo = (bool) ($_POST['attivo'] ?? false);
-?&gt;</code></pre>
-          <ul>
-            <li>Il cast esplicito rende piu chiaro come userai il dato.</li>
-            <li>Quando i valori arrivano da un form, prima chiarisci il tipo e poi li validi o li elabori.</li>
-            <li>Questo stesso approccio verra riusato quando passeremo valori a PDO.</li>
-          </ul>
-        </div>
-
-        <h2>Perche gli array sono centrali in questo modulo</h2>
-        <div class="box">
-          <p>In PHP moltissimi dati applicativi vengono gestiti come array:</p>
-          <ul>
-            <li>campi ricevuti da form;</li>
-            <li>righe restituite da una query;</li>
-            <li>liste di risultati da mostrare in HTML.</li>
-          </ul>
-          <p class="note">Per questo il modulo dedica piu spazio agli array che ad altri aspetti del linguaggio.</p>
-        </div>
-
-        <h2>Array indicizzati: liste ordinate</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$classi = ["5BIA", "5AIA", "5CINF"];
-$classi[] = "5DINF";
-
-foreach ($classi as $classe) {
-    echo $classe . "&lt;br&gt;";
-}
-?&gt;</code></pre>
-          <ul>
-            <li>Usa un array indicizzato quando l'ordine conta.</li>
-            <li>Gli elementi vengono letti tramite indice: <code>0</code>, <code>1</code>, <code>2</code>...</li>
-            <li>La sintassi <code>[]</code> aggiunge un elemento in coda.</li>
-          </ul>
-        </div>
-
-        <h2>Array associativi: una riga con campi nominati</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$studente = [
-  'id' => 1,
-  'nome' => 'Giulia',
-  'classe' => '5BIA'
-];
-
-echo $studente['nome'];
-?&gt;</code></pre>
-          <ul>
-            <li>Qui ogni dato ha un nome semantico: <code>id</code>, <code>nome</code>, <code>classe</code>.</li>
-            <li>Questo rende il codice piu leggibile rispetto a un array solo numerico.</li>
-          </ul>
-          <p class="ok">Questo formato e molto vicino a una riga di tabella letta da MySQL con <code>PDO::FETCH_ASSOC</code>.</p>
-        </div>
-
-        <h2>Lista di righe: l'array che ritorna una query</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$stmt = $pdo->query("SELECT id, nome, classe FROM studenti");
-$righe = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($righe as $riga) {
-    echo $riga['nome'] . " - " . $riga['classe'] . "&lt;br&gt;";
-}
-?&gt;</code></pre>
-          <p>Qui hai un array di array associativi: e il formato tipico dei risultati SQL in questo modulo.</p>
-        </div>
-
-        <h2>Array annidati e accesso ai dati</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$studenti = [
-  ['nome' => 'Ada', 'classe' => '5BIA'],
-  ['nome' => 'Alan', 'classe' => '5BIA']
-];
-
-echo $studenti[0]['nome']; // Ada
-?&gt;</code></pre>
-          <ul>
-            <li>Indice esterno: scegli la riga.</li>
-            <li>Chiave interna: scegli il campo della riga.</li>
-            <li>Questa struttura compare spesso sia negli esercizi sia nelle pagine che leggono il database.</li>
-          </ul>
-        </div>
-
-        <h2>Buone pratiche utili per il database</h2>
-        <div class="box">
-          <ul>
-            <li>Usa chiavi chiare negli array associativi: devono corrispondere ai nomi dei campi.</li>
-            <li>Controlla l'esistenza di una chiave con <code>??</code> o <code>array_key_exists()</code>.</li>
-            <li>Quando stampi valori da un array in HTML, usa <code>htmlspecialchars()</code>.</li>
-            <li>Quando ricevi dati da form, fai cast e validazione prima di costruire l'array da passare alla query.</li>
-          </ul>
-        </div>
-
-        <h2>Checklist finale</h2>
-        <div class="box">
-          <ul>
-            <li>Datatype scalari = valori singoli come stringhe, numeri, boolean e <code>null</code>.</li>
-            <li>Array indicizzato = lista.</li>
-            <li>Array associativo = record con campi nominati.</li>
-            <li>Risultato di query = lista di record.</li>
-          </ul>
-          <p class="ok">Nella prossima slide useremo funzioni sugli array per filtrare, trasformare e leggere meglio i dati prima di mostrarli in pagina.</p>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore binario ×</h2><pre class="ra-expression"><code class="nohighlight">R × S = { r concatenata con s | r ∈ R e s ∈ S }</code></pre><p>I nomi degli attributi dei due operandi devono essere disgiunti nella notazione adottata: se necessario usiamo ρ. Il grado è la somma dei gradi e la cardinalità è il prodotto delle cardinalità.</p><pre class="ra-expression"><code class="nohighlight">|R × S| = |R| · |S|</code></pre><p>Se uno dei due operandi è vuoto, il prodotto è vuoto.</p></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Classi e corsi: possibilità, non iscrizioni</h2><pre class="ra-expression"><code class="nohighlight">A ← π[Classe](STUDENTI)
+B ← π[Cid](σ[Cid = 10 ∨ Cid = 20](CORSI))
+A × B</code></pre><div class="table-scroll"><table><caption>Le 2 × 2 = 4 combinazioni</caption><thead><tr><th scope="col">Classe</th><th scope="col">Cid</th></tr></thead><tbody><tr><td>5A</td><td>10</td></tr><tr><td>5A</td><td>20</td></tr><tr><td>5B</td><td>10</td></tr><tr><td>5B</td><td>20</td></tr></tbody></table></div><p>Queste tuple non dimostrano che una classe segua un corso. Sono tutte le combinazioni possibili. Le iscrizioni effettive sono registrate soltanto in ISCRIZIONI.</p></section><section class="lesson-section" aria-labelledby="join"><h2 id="join">Dal prodotto a un collegamento</h2><p>Per collegare le iscrizioni agli studenti possiamo rinominare l'ID nella copia di STUDENTI, costruire il prodotto e selezionare le coppie con ID uguali. Questa composizione porterà al theta-join.</p><pre class="ra-expression"><code class="nohighlight">S ← ρ[StudId ← Sid](STUDENTI)
+σ[StudId = Sid](S × ISCRIZIONI)</code></pre><p class="callout warning"><strong>Errore frequente:</strong> <code>STUDENTI × CORSI</code> ha 7 × 5 = 35 tuple. Non è l'elenco delle iscrizioni e non sostituisce ISCRIZIONI.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_5.html">← Rinomina ρ e nomi degli attributi</a><a class="nav-button next" href="lez3_7.html">Unione ∪ e compatibilità →</a></nav>
+  </main>
 </body>
 </html>

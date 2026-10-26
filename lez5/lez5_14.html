@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_14 · Formalizzare le transazioni</title>
+  <title>ITST – 5ª · Lez5_14 · BCNF: perché a volte la 3NF non basta</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -44,44 +44,30 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Dalle query alle operazioni r_i(x) e w_i(x)</h1>
+    <h1>BCNF: perché a volte la 3NF non basta</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -90,26 +76,67 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Notazione minima</h2>
+
+        <h2>Idea chiave</h2>
         <div class="box">
+          <p>La <strong>3NF</strong> elimina molte ridondanze, ma ammette ancora alcune DF con premessa non-chiave (se il determinato è <em>prime</em>).</p>
+          <p class="ok">La <strong>BCNF</strong> è più forte: se esiste una DF non banale <code>X → Y</code>, allora <code>X</code> deve essere una superchiave.</p>
+          <p class="note">Intuizione: in BCNF non vogliamo “piccole regole locali” (non-chiavi) che forzano ripetizioni su molte righe.</p>
+        </div>
+
+        <h2>Esempio limpido: <code>LEZIONE(Studente, Docente, Corso)</code></h2>
+        <div class="box">
+          <p>Scenario:</p>
           <ul>
-            <li><code>r_i(x)</code>: la transazione <code>T_i</code> legge l'oggetto <code>x</code>.</li>
-            <li><code>w_i(x)</code>: la transazione <code>T_i</code> scrive l'oggetto <code>x</code>.</li>
+            <li>Ogni studente segue un corso con un docente.</li>
+            <li>Ogni docente insegna sempre lo stesso corso (un solo corso).</li>
+          </ul>
+          <p>DF:</p>
+          <pre><code class="language-text">(1) (Studente, Corso) → Docente
+(2) Docente → Corso</code></pre>
+        </div>
+
+        <h2>Chiavi candidate e attributi prime</h2>
+        <div class="box">
+          <p>Calcolo (idea):</p>
+          <ul>
+            <li><code>{Studente, Corso}⁺</code> contiene <code>Docente</code> per (1) ⇒ determina tutto ⇒ chiave candidata.</li>
+            <li><code>{Studente, Docente}⁺</code> contiene <code>Corso</code> per (2) ⇒ determina tutto ⇒ chiave candidata.</li>
+          </ul>
+          <p class="ok">Quindi <code>Studente</code>, <code>Docente</code>, <code>Corso</code> sono tutti <strong>prime</strong> (compaiono in qualche chiave).</p>
+        </div>
+
+        <h2>Perché è in 3NF ma non in BCNF</h2>
+        <div class="box">
+          <p>Considera la DF (2) <code>Docente → Corso</code>:</p>
+          <ul>
+            <li><code>Docente</code> <strong>non</strong> è superchiave (non determina <code>Studente</code>).</li>
+            <li>Ma <code>Corso</code> è <strong>prime</strong>.</li>
+          </ul>
+          <p class="ok">Quindi la 3NF la accetta (vale la condizione “RHS prime”).</p>
+          <p class="warn">La BCNF non la accetta: in BCNF la premessa deve essere superchiave.</p>
+        </div>
+
+        <h2>Ridondanza e anomalie (cosa resta anche in 3NF)</h2>
+        <div class="box">
+          <table>
+            <thead>
+              <tr><th>Studente</th><th>Docente</th><th>Corso</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ada</td><td>Rossi</td><td>BasiDati</td></tr>
+              <tr><td>Bruno</td><td>Rossi</td><td>BasiDati</td></tr>
+              <tr><td>Chiara</td><td>Verdi</td><td>Reti</td></tr>
+              <tr><td>Diego</td><td>Rossi</td><td>BasiDati</td></tr>
+            </tbody>
+          </table>
+          <ul>
+            <li><span class="def">Aggiornamento</span>: se Rossi cambia corso, devo aggiornare tutte le tuple con Rossi.</li>
+            <li><span class="def">Inserimento</span>: per registrare che “Rossi insegna BasiDati” devo avere almeno uno studente.</li>
+            <li><span class="def">Cancellazione</span>: se cancello l’ultimo studente con Rossi, perdo l’informazione sul corso di Rossi.</li>
           </ul>
         </div>
 
-        <h2>Perché si fa questa astrazione</h2>
-        <div class="box">
-          <p>La teoria del controllo della concorrenza non ha bisogno di conoscere tutti i dettagli del calcolo interno.</p>
-          <p class="note">Le interessano soprattutto le azioni di <strong>ingresso/uscita sui dati</strong>: letture e scritture.</p>
-          <p>Grazie a questa astrazione possiamo confrontare transazioni molto diverse usando un linguaggio comune e più semplice da analizzare.</p>
-        </div>
-
-        <h2>Esempio</h2>
-        <div class="box">
-<pre><code class="language-text">T1: r1(x) r1(y) w1(x) w1(y)</code></pre>
-          <p>La transazione è qui rappresentata solo tramite le operazioni che possono interferire con altre transazioni.</p>
-        </div>
       </div>
     </div>
 

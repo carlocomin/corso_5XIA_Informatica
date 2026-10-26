@@ -1,177 +1,62 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_9 · Variabili d'ambiente e superglobali PHP</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_8.html"; }
-    function nextSlide(){ window.location.href = "lez3_10.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Un join collega tuple secondo una condizione. Un inner join conserva soltanto gli abbinamenti che la soddisfano.">
+  <title>Lezione 3.9 · Inner join, theta-join ed equi-join</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Variabili d'ambiente e superglobali PHP</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html" aria-current="page">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Inner join, theta-join ed equi-join</h1>
+      <p class="lesson-lead">Un join collega tuple secondo una condizione. Un inner join conserva soltanto gli abbinamenti che la soddisfano.</p>
+      <div class="lesson-meta"><span>Pagina 9 di 20</span><progress value="9" max="20" aria-label="Pagina 9 di 20">9 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_8.html">← Differenza − e intersezione derivata</a><a class="nav-button next" href="lez3_10.html">Join naturale e suoi rischi →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-        <p class="note">Le superglobali sono array speciali sempre disponibili in ogni punto dello script. Nel nostro modulo servono soprattutto per leggere input utente, validarlo e poi usarlo in query parametrizzate verso MySQL.</p>
-
-        <div class="box">
-          <h2>Mappa didattica della slide</h2>
-          <ul>
-            <li>Nucleo del modulo: <code>$_GET</code>, <code>$_POST</code>, <code>$_SERVER</code>.</li>
-            <li>Passaggio chiave: leggere l'input, validarlo, usarlo in una query parametrizzata.</li>
-            <li>Le altre superglobali vanno conosciute, ma qui restano sullo sfondo.</li>
-          </ul>
-        </div>
-
-        <div class="box">
-          <h2>$_GET — Parametri in query string</h2>
-          <p>Contiene i parametri passati via URL (es. <code>pagina.php?nome=Anna&eta=17</code>). Non modifica mai lo stato del server ed è usato per filtri, ricerche e navigazione. I valori arrivano come stringhe: valida e sanifica sempre.</p>
-          <pre><code class="language-php">&lt;?php
-// pagina.php?nome=Anna&amp;eta=17
-$nome = $_GET['nome'] ?? 'ospite';
-$eta  = $_GET['eta'] ?? 'n/d';
-
-echo "Ciao $nome, ho ricevuto età: $eta";
-?&gt;</code></pre>
-          <p class="note">Esempio diretto e volutamente semplice: serve a capire la meccanica di <code>$_GET</code> prima della validazione.</p>
-        </div>
-
-        <div class="box">
-          <h2>$_POST — Dati inviati da form</h2>
-          <p>Raccoglie i campi di un modulo con <code>method="POST"</code>. È il canale piu naturale quando l'utente invia dati da salvare o elaborare sul server.</p>
-          <pre><code class="language-php">&lt;form action="salva-contatto.php" method="POST"&gt;
-  &lt;input name="email" type="email" required&gt;
-  &lt;textarea name="messaggio" required&gt;&lt;/textarea&gt;
-  &lt;button type="submit"&gt;Invia&lt;/button&gt;
-&lt;/form&gt;
-
-&lt;?php // salva-contatto.php
-$email = $_POST['email'] ?? null;
-$msg   = $_POST['messaggio'] ?? null;
-
-if (!$email || !$msg) {
-  exit('Dati mancanti');
-}
-
-echo "Grazie, contatteremo $email. Messaggio: $msg";
-?&gt;</code></pre>
-          <p class="note">Anche qui partiamo dal caso base: prima capisci che cosa arriva in <code>$_POST</code>, poi aggiungi validazione e query parametrizzate.</p>
-        </div>
-
-        <div class="box">
-          <h2>$_SERVER — Contesto della richiesta</h2>
-          <p>Contiene informazioni utili sulla richiesta in corso. Nel modulo ci interessa soprattutto capire se la pagina e stata aperta in <code>GET</code> o inviata in <code>POST</code>.</p>
-          <pre><code class="language-php">&lt;?php
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-  echo "Il form e stato inviato.";
-} else {
-  echo "Mostro il form.";
-}
-?&gt;</code></pre>
-          <p class="ok">Questa variabile ti aiuta a distinguere tra la pagina che mostra il form e la pagina che lo elabora.</p>
-        </div>
-
-        <div class="box">
-          <h2>Le superglobali centrali del modulo</h2>
-          <ul>
-            <li><code>$_GET</code>: filtri e parametri di lettura.</li>
-            <li><code>$_POST</code>: dati da form da validare prima del salvataggio.</li>
-            <li><code>$_SERVER</code>: capire se la richiesta e GET o POST e ottenere contesto utile.</li>
-          </ul>
-          <p class="ok">Nel percorso del modulo queste tre sono il ponte diretto tra pagina HTML, logica PHP e database.</p>
-        </div>
-
-        <div class="box">
-          <h2>Validazione essenziale con filter_input</h2>
-          <p>Quando il meccanismo base e chiaro, il passo successivo e validare l'input. Per il nostro livello basta capire il principio: scegli la sorgente, leggi il campo, applichi un filtro.</p>
-          <ul>
-            <li><code>FILTER_SANITIZE_SPECIAL_CHARS</code>: prepara una stringa da mostrare in HTML.</li>
-            <li><code>FILTER_VALIDATE_INT</code> e <code>FILTER_VALIDATE_EMAIL</code>: verificano se un valore ha il formato atteso.</li>
-            <li>Se il valore non e valido, non lo usi: mostri un messaggio o blocchi l'operazione.</li>
-          </ul>
-          <pre><code class="language-php">&lt;?php
-$nome = filter_input(INPUT_GET, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-$eta  = filter_input(INPUT_GET, 'eta', FILTER_VALIDATE_INT, [
-  'options' => ['min_range' => 1, 'max_range' => 120]
-]);
-
-$etaDescrizione = $eta === false ? 'età non valida' : ($eta === null ? 'nessuna età' : $eta . ' anni');
-echo "Ciao $nome, ho ricevuto $etaDescrizione";
-?&gt;</code></pre>
-          <p class="note"><code>filter_input_array()</code> esiste ed e utile su piu campi insieme, ma per il modulo basta padroneggiare bene i casi semplici.</p>
-        </div>
-
-        <div class="box">
-          <h2>Altre superglobali da conoscere, senza approfondirle ora</h2>
-          <ul>
-            <li><code>$_FILES</code>: descrive i file caricati con un form e richiede <code>enctype="multipart/form-data"</code>.</li>
-            <li><code>$_COOKIE</code>: legge preferenze salvate nel browser, ma non e adatto a dati sensibili.</li>
-            <li><code>$_SESSION</code>: mantiene dati lato server tra una richiesta e l'altra dopo <code>session_start()</code>.</li>
-          </ul>
-          <p class="note">Sono utili da conoscere, ma non sono il centro di questo modulo introduttivo.</p>
-        </div>
-
-        <div class="box">
-          <h2>Dal form al prepared statement</h2>
-          <p>Questo e il collegamento che ci interessa di piu nel modulo:</p>
-          <pre><code class="language-php">&lt;?php
-$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-$classe = filter_input(INPUT_POST, 'classe', FILTER_SANITIZE_SPECIAL_CHARS);
-
-if ($nome && $classe) {
-  $stmt = $pdo->prepare(
-    "INSERT INTO studenti (nome, classe)
-     VALUES (:nome, :classe)"
-  );
-
-  $stmt->execute([
-    'nome' => $nome,
-    'classe' => $classe
-  ]);
-}
-?&gt;</code></pre>
-          <p class="warn">La superglobale da sola non basta: il passaggio corretto e sempre <strong>leggere</strong>, <strong>validare</strong>, <strong>passare i valori alla query parametrizzata</strong>.</p>
-        </div>
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Theta-join: prodotto seguito da selezione</h2><pre class="ra-expression"><code class="nohighlight">R ⋈[θ] S = σ[θ](R × S)</code></pre><p>θ (“theta”) è la condizione di join: confronta attributi delle due relazioni e può usare uguaglianze, disuguaglianze o condizioni composte. Prima distinguiamo con ρ i nomi eventualmente in comune. Il risultato conserva gli attributi di entrambi gli operandi.</p><p>Il theta-join così definito è un <strong>inner join</strong>: se una tupla non trova alcun abbinamento non compare nel risultato. Un <strong>equi-join</strong> è un theta-join la cui condizione usa soltanto uguaglianze, eventualmente congiunte.</p></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Collegare studenti e iscrizioni</h2><pre class="ra-expression"><code class="nohighlight">S ← ρ[StudId ← Sid](STUDENTI)
+S ⋈[StudId = Sid] ISCRIZIONI</code></pre><div class="table-scroll"><table><caption>Proiezione di alcune colonne del risultato: tutte le 13 iscrizioni</caption><thead><tr><th scope="col">StudId</th><th scope="col">Studente</th><th scope="col">Sid</th><th scope="col">Cid</th><th scope="col">Voto</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>1</td><td>10</td><td>9</td></tr><tr><td>1</td><td>Anna</td><td>1</td><td>20</td><td>8</td></tr><tr><td>1</td><td>Anna</td><td>1</td><td>30</td><td>7</td></tr><tr><td>2</td><td>Bruno</td><td>2</td><td>10</td><td>6</td></tr><tr><td>2</td><td>Bruno</td><td>2</td><td>20</td><td>7</td></tr><tr><td>3</td><td>Carla</td><td>3</td><td>10</td><td>8</td></tr><tr><td>3</td><td>Carla</td><td>3</td><td>30</td><td>9</td></tr><tr><td>4</td><td>Diego</td><td>4</td><td>20</td><td>5</td></tr><tr><td>4</td><td>Diego</td><td>4</td><td>30</td><td>8</td></tr><tr><td>5</td><td>Elena</td><td>5</td><td>10</td><td>9</td></tr><tr><td>5</td><td>Elena</td><td>5</td><td>20</td><td>9</td></tr><tr><td>5</td><td>Elena</td><td>5</td><td>30</td><td>10</td></tr><tr><td>7</td><td>Anna</td><td>7</td><td>40</td><td>7</td></tr></tbody></table></div><p>I due attributi StudId e Sid restano entrambi: la condizione ne rende uguali i valori, ma non li fonde. Fabio (6) non compare perché non ha iscrizioni.</p></section><section class="lesson-section" aria-labelledby="disuguaglianza"><h2 id="disuguaglianza">Un theta-join senza uguaglianza</h2><pre class="ra-expression"><code class="nohighlight">A ← ρ[A(S1, N1, K1)](STUDENTI)
+B ← ρ[B(S2, N2, K2)](STUDENTI)
+A ⋈[K1 = K2 ∧ S1 &lt; S2] B</code></pre><p>La condizione confronta due studenti della stessa classe. <code>S1 &lt; S2</code> esclude l'abbinamento di una persona con se stessa e conserva una sola delle coppie speculari. “Inner” non significa quindi necessariamente “uguaglianza su una chiave”.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_8.html">← Differenza − e intersezione derivata</a><a class="nav-button next" href="lez3_10.html">Join naturale e suoi rischi →</a></nav>
+  </main>
 </body>
 </html>

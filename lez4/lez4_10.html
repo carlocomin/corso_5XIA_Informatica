@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez4_10 · Esempio di decomposizione: corretto vs sbagliato</title>
+  <title>ITST – 5ª · Lez4_10 · Funzioni in PHP</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -12,62 +12,31 @@
     function prevSlide(){ window.location.href = "lez4_9.html"; }
     function nextSlide(){ window.location.href = "lez4_11.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-    document.addEventListener('DOMContentLoaded', function(){
-      var current = window.location.pathname.split('/').pop();
-      var link = document.querySelector('#menu a[href="' + current + '"]');
-      if (link) link.classList.add('active');
-    });
   </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
 </head>
 <body>
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 4 — Normalizzazione</h2>
+    <h2>Lezione 4 — PHP + MySQL + HTML/CSS</h2>
     <ul>
-      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
-      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
-      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
-      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
-      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
-      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
-      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
-      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
-      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
-      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
-      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
-      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
-      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
-      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
-      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
-      <li><a href="lez4_16.html">Lez4.16: Preservazione delle dipendenze</a></li>
+      <li><a href="lez4_1.html">Lez4.1: Obiettivi e percorso</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez4_3.html">Lez4.3: Setup ambiente: PHP + MySQL</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Primo script PHP</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Sintassi base e tipi</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Tipi di dato fondamentali e array</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Funzioni di utilità sugli array</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Esercizi PHP (soluzioni a comparsa)</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Variabili d'ambiente e superglobali PHP</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Funzioni in PHP: idee fondamentali</a></li>
+      <li><a href="lez4_11.html">Lez4.11: Funzioni in PHP: approfondimento</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Esempio: decomposizione corretta vs sbagliata</h1>
+    <h1>Funzioni in PHP: idee fondamentali</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -76,50 +45,111 @@
 
     <div class="content-box">
       <div class="inner-box">
+        <p class="note">Le funzioni servono a riusare codice e organizzarlo. Nel nostro modulo diventano utili soprattutto per non ripetere validazioni, formattazioni e piccole operazioni sul database.</p>
 
-        <h2>Dati del problema</h2>
         <div class="box">
-          <p>Schema:</p>
-          <p class="ok" style="display:block"><code>R(A, B, C, D)</code></p>
-          <p>Ipotesi (DF):</p>
-          <pre><code class="language-text">A → B</code></pre>
-          <p class="note">In questo esempio la chiave candidata completa non ci serve: ci basta capire perché <code>A</code> deve restare come “collante” tra le due relazioni.</p>
+          <h2>Sintassi essenziale</h2>
+          <p>Si definisce con la parola chiave <code>function</code> seguita dal nome e dalle parentesi. Il codice tra graffe viene eseguito quando la funzione è chiamata.</p>
+          <pre><code class="language-php">&lt;?php
+function saluta() {
+    echo "Ciao a tutti!";
+}
+
+saluta(); // stampa "Ciao a tutti!"
+?&gt;</code></pre>
+          <p class="note">PHP legge l'intero file prima di eseguirlo: puoi chiamare una funzione anche se è dichiarata più in basso.</p>
         </div>
 
-        <h2>Decomposizione corretta (isolo <code>A → B</code>)</h2>
         <div class="box">
-          <pre><code class="language-text">R1(A, B)
-R2(A, C, D)</code></pre>
+          <h2>Parametri e valori di ritorno</h2>
           <ul>
-            <li>In <code>R1</code> la DF <code>A → B</code> è “isolata”.</li>
-            <li><code>A</code> resta in <code>R2</code> come collegamento per ricostruire il join.</li>
+            <li>I parametri si scrivono tra parentesi. Se manca un valore obbligatorio, PHP genera un errore.</li>
+            <li>Con <code>return</code> restituisci un risultato a chi chiama la funzione.</li>
+            <li>I tipi sono dinamici: puoi passare numeri o stringhe senza specificarli.</li>
           </ul>
-          <p class="ok">Questa forma è lossless: <code>R1 ∩ R2 = {A}</code> e in <code>R1</code> vale <code>A → B</code>.</p>
+          <pre><code class="language-php">&lt;?php
+function somma($a, $b) {
+    return $a + $b;
+}
+
+$risultato = somma(4, 6); // 10
+?&gt;</code></pre>
         </div>
 
-        <h2>Decomposizione sbagliata (se togliessi tutto <code>Y</code>)</h2>
         <div class="box">
-          <pre><code class="language-text">R1(A, B)
-R2(C, D)</code></pre>
-          <p class="warn">Qui <code>R1</code> e <code>R2</code> non hanno attributi in comune: il join naturale non può ricostruire <code>R</code>.</p>
-          <p class="note">Intuizione: hai separato due “metà” senza più un ID comune; non puoi più sapere quale riga di una metà corrisponde a quale riga dell’altra.</p>
-          <button id="btnBad" onclick="toggleBox('btnBad','ansBad')">Mostra ▼</button>
-          <div id="ansBad" style="display:none; margin-top:.5rem">
-            <p class="note"><strong>Idea</strong>: senza un attributo comune, il join diventa un prodotto cartesiano (o comunque non “aggancia” le tuple giuste).</p>
-            <p class="warn">Quindi perdi informazione su quali valori di <code>A,B</code> erano associati a quali valori di <code>C,D</code>.</p>
-          </div>
+          <h2>Primo esempio utile al modulo</h2>
+          <p>Una funzione puo ricevere un input gia validato e restituire un valore pronto da mostrare o usare:</p>
+          <pre><code class="language-php">&lt;?php
+function formattaStudente($nome, $classe) {
+    return "$nome - classe $classe";
+}
+
+echo formattaStudente("Ada", "5BIA");
+?&gt;</code></pre>
         </div>
 
-        <h2>Checklist operativa (quando vedi <code>X → Y</code>)</h2>
         <div class="box">
+          <h2>Valori di default</h2>
+          <p>Puoi impostare un valore predefinito per rendere un parametro opzionale. I parametri con default vengono di solito alla fine della lista.</p>
+          <pre><code class="language-php">&lt;?php
+function salutaPersona($nome = "mondo") {
+    return "Ciao $nome";
+}
+
+echo salutaPersona();        // Ciao mondo
+echo salutaPersona("Luca"); // Ciao Luca
+?&gt;</code></pre>
+        </div>
+
+        <div class="box">
+          <h2>Scope delle variabili</h2>
           <ul>
-            <li>Costruisci <code>R1 = X ∪ Y</code>.</li>
-            <li>Costruisci <code>R2 = R − (Y − X)</code> (non <code>R − Y</code>!).</li>
-            <li>Verifica: <code>R1 ∩ R2 = X</code> (in questa decomposizione standard).</li>
-            <li>Ricorda: se <code>X</code> è chiave di <code>R1</code>, il join è lossless.</li>
+            <li>Le variabili create dentro una funzione esistono solo lì dentro.</li>
+            <li>Per leggere o modificare una variabile definita fuori, usa <code>global</code> oppure il super-array <code>$GLOBALS</code>.</li>
           </ul>
+          <pre><code class="language-php">&lt;?php
+$messaggio = "Ciao";
+
+function stampaMessaggio() {
+    global $messaggio;
+    echo $messaggio;
+}
+
+stampaMessaggio(); // usa la variabile definita fuori
+?&gt;</code></pre>
+          <p class="warn">Nel codice didattico e utile sapere che <code>global</code> esiste, ma quando puoi e meglio passare i dati come parametri: il codice risulta piu chiaro.</p>
         </div>
 
+        <div class="box">
+          <h2>Esempio pratico</h2>
+          <p>Combinare parametri, ritorni e logica permette di costruire piccole utility riutilizzabili anche in pagine che leggono il database.</p>
+          <pre><code class="language-php">&lt;?php
+function calcolaMedia($lista) {
+    $totale = array_sum($lista);
+    $quantita = count($lista);
+    return $quantita > 0 ? $totale / $quantita : 0;
+}
+
+$numeri = [6, 8, 10];
+echo calcolaMedia($numeri); // 8
+?&gt;</code></pre>
+        </div>
+
+        <div class="box">
+          <h2>Esempio con PDO e query parametrizzata</h2>
+          <pre><code class="language-php">&lt;?php
+function caricaStudentiPerClasse(PDO $pdo, $classe) {
+    $stmt = $pdo->prepare(
+        "SELECT nome, classe
+         FROM studenti
+         WHERE classe = :classe"
+    );
+    $stmt->execute(['classe' => $classe]);
+    return $stmt->fetchAll();
+}
+?&gt;</code></pre>
+          <p class="ok">Qui la funzione non e un concetto astratto: diventa uno strumento concreto per non riscrivere ogni volta la stessa query.</p>
+        </div>
       </div>
     </div>
 

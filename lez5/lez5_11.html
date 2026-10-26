@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_11 · Lettura inconsistente e aggiornamento fantasma</title>
+  <title>ITST – 5ª · Lez5_11 · 3NF: perché la 2NF non basta</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -44,44 +44,30 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Analisi incoerente durante la lettura</h1>
+    <h1>3NF: perché la 2NF non basta</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -90,26 +76,62 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Lettura inconsistente</h2>
+
+        <h2>Idea chiave</h2>
         <div class="box">
-          <p>Una transazione legge due volte lo stesso dato in momenti diversi, ma tra le due letture un'altra transazione lo modifica e fa commit.</p>
-<pre><code class="language-text">T1: r1(x) ... r1(x)
-T2: r2(x), w2(x), commit</code></pre>
-          <p class="warn">La stessa transazione <code>T1</code> osserva due valori diversi di <code>x</code>.</p>
+          <p>La <strong>2NF</strong> elimina un tipo specifico di dipendenza “cattiva”:</p>
+          <p class="ok">le dipendenze <strong>parziali</strong> da una chiave composta.</p>
+          <p>Ma possono rimanere dipendenze <strong>transitive</strong> tra attributi <strong>non di chiave</strong>, che causano ancora ridondanza e anomalie.</p>
+          <p class="note">Intuizione: la tabella contiene “due cose diverse insieme” (es. impiegati e reparti), quindi finisci per ripetere i dati della cosa “più piccola” (il reparto) molte volte.</p>
         </div>
 
-        <h2>Aggiornamento fantasma</h2>
+        <h2>Esempio (classico): IMPIEGATO</h2>
         <div class="box">
-          <p>Una transazione calcola, ad esempio, la somma di più saldi. Durante il calcolo un'altra transazione modifica alcuni valori coinvolti.</p>
-          <p class="note">Il risultato finale dell'aggregazione non corrisponde né alla situazione iniziale né a quella finale completa.</p>
-          <p class="note">In questi materiali manteniamo il termine <strong>aggiornamento fantasma</strong> nel senso usato da Montanari: una forma di <strong>analisi inconsistente</strong> su dati già presenti.</p>
+          <p>Schema:</p>
+          <p class="ok" style="display:block"><code>IMPIEGATO(EmpID, EmpNome, RepartoID, RepartoNome, RepartoTelefono)</code></p>
+          <p>Ipotesi realistiche (DF):</p>
+          <pre><code class="language-text">(1) EmpID → EmpNome, RepartoID
+(2) RepartoID → RepartoNome, RepartoTelefono</code></pre>
+          <p>Chiave candidata: <code>{EmpID}</code> (chiave singola).</p>
+          <p class="note">Con chiave singola non possono esistere dipendenze parziali ⇒ spesso 2NF è “automatica”.</p>
         </div>
 
-        <h2>Idea comune</h2>
+        <h2>Eppure c’è ridondanza</h2>
         <div class="box">
-          <p class="ok">In entrambi i casi, la transazione analizza una base di dati che <strong>cambia mentre la sta leggendo</strong>.</p>
-          <p>La differenza è nel tipo di osservazione: rilettura dello stesso dato nel primo caso, lettura complessiva di più dati nel secondo.</p>
+          <table>
+            <thead>
+              <tr><th>EmpID</th><th>EmpNome</th><th>RepartoID</th><th>RepartoNome</th><th>RepartoTelefono</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>10</td><td>Ada</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+              <tr><td>11</td><td>Bruno</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+              <tr><td>12</td><td>Chiara</td><td>D2</td><td>IT</td><td>011-222222</td></tr>
+              <tr><td>13</td><td>Diego</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
+            </tbody>
+          </table>
+          <p class="warn">I dati del reparto (<code>RepartoNome</code>, <code>RepartoTelefono</code>) si ripetono per ogni impiegato del reparto.</p>
         </div>
+
+        <h2>Anomalie tipiche</h2>
+        <div class="box">
+          <ul>
+            <li><span class="def">Aggiornamento</span>: se cambia il telefono di <code>D1</code>, devo aggiornare molte tuple. Se ne sbaglio una → inconsistenza.</li>
+            <li><span class="def">Inserimento</span>: se voglio inserire un reparto senza impiegati, non ho una tupla dove metterlo (o devo usare NULL/fittizi).</li>
+            <li><span class="def">Cancellazione</span>: se cancello l’ultimo impiegato di <code>D2</code>, perdo anche l’informazione sul reparto <code>D2</code>.</li>
+          </ul>
+        </div>
+
+        <h2>Cosa sta succedendo: dipendenza transitiva</h2>
+        <div class="box">
+          <p>Dalle DF (1) e (2) segue:</p>
+          <pre><code class="language-text">EmpID → RepartoID
+RepartoID → RepartoNome, RepartoTelefono
+--------------------------------------
+EmpID → RepartoNome, RepartoTelefono</code></pre>
+          <p class="ok">Alcuni attributi non-prime non dipendono “direttamente” dalla chiave: dipendono da un altro attributo non-prime.</p>
+          <p class="note">È esattamente il fenomeno che la 3NF vuole impedire (o controllare rigorosamente).</p>
+        </div>
+
       </div>
     </div>
 

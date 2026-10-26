@@ -1,170 +1,64 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_7 · Funzioni di utilità sugli array</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_6.html"; }
-    function nextSlide(){ window.location.href = "lez3_8.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="L'unione riunisce tuple compatibili. Una tupla presente in entrambi gli operandi compare una sola volta.">
+  <title>Lezione 3.7 · Unione: almeno uno dei due insiemi</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Funzioni di utilità sugli array</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html" aria-current="page">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Unione: almeno uno dei due insiemi</h1>
+      <p class="lesson-lead">L'unione riunisce tuple compatibili. Una tupla presente in entrambi gli operandi compare una sola volta.</p>
+      <div class="lesson-meta"><span>Pagina 7 di 20</span><progress value="7" max="20" aria-label="Pagina 7 di 20">7 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_6.html">← Prodotto cartesiano ×</a><a class="nav-button next" href="lez3_8.html">Differenza − e intersezione derivata →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-        <p class="note">
-          Queste funzioni sono prima di tutto strumenti generali di PHP. In questo modulo le useremo sia negli esercizi introduttivi sia, piu avanti, su input gia validati e risultati di query.
-        </p>
-
-        <div class="box">
-          <h2>array_sum(array $valori): somma di tutti gli elementi</h2>
-          <p>Utile quando devi sommare valori numerici gia raccolti in un array.</p>
-          <pre><code class="language-php">&lt;?php
-$prezzi = [9.99, 14.50, 3];
-$totale = array_sum($prezzi);
-
-echo "Totale carrello: €" . number_format($totale, 2, ',', '.');
-?&gt;</code></pre>
-          <p class="note">Negli esercizi puo servire per somme e medie; con una query potresti usarla dopo aver estratto una colonna numerica.</p>
-        </div>
-
-        <div class="box">
-          <h2>array_map(callable $f, array $a): applica una funzione a tutti gli elementi</h2>
-          <p>Utile per trasformazioni senza scrivere ogni volta un ciclo esplicito.</p>
-          <pre><code class="language-php">&lt;?php
-$voti = [18, 23, 30];
-$stati = array_map(function($voto) {
-  return $voto &gt;= 18 ? "Promosso" : "Insufficiente";
-}, $voti);
-
-print_r($stati);
-?&gt;</code></pre>
-          <p class="note">La stessa idea puo servire per formattare nomi o etichette letti da MySQL prima di stamparli in HTML.</p>
-        </div>
-
-        <div class="box">
-          <h2>array_filter(array $a, ?callable $f = null): filtra gli elementi</h2>
-          <p>Serve a tenere solo gli elementi che rispettano una condizione.</p>
-          <pre><code class="language-php">&lt;?php
-$numeri = [10, 5, 0, -2, 7];
-$positivi = array_filter($numeri, function($n) {
-  return $n &gt; 0;
-});
-
-print_r($positivi);
-?&gt;</code></pre>
-          <p class="note">Negli esempi base filtra numeri o stringhe; dopo una query puo servire per lavorare solo su una parte del risultato.</p>
-        </div>
-
-        <div class="box">
-          <h2>in_array(mixed $needle, array $haystack): cerca un valore</h2>
-          <p>Con il terzo parametro <code>true</code> esegue il confronto stretto.</p>
-          <pre><code class="language-php">&lt;?php
-$classiConsentite = ["5BIA", "5AIA", "5CINF"];
-if (in_array("5BIA", $classiConsentite, true)) {
-  echo "Classe valida";
-}
-?&gt;</code></pre>
-          <p class="note">Passare <code>true</code> evita confronti ambigui quando i dati arrivano da form o query.</p>
-        </div>
-
-        <div class="box">
-          <h2>array_merge(array ...$arrays): unisce più array</h2>
-          <p>Utile per unire dati base e dati aggiuntivi in un solo array.</p>
-          <pre><code class="language-php">&lt;?php
-$datiBase = ["nome" =&gt; "Ada"];
-$datiExtra = ["classe" =&gt; "5BIA", "email" =&gt; "ada@example.org"];
-$studente = array_merge($datiBase, $datiExtra);
-
-print_r($studente);
-?&gt;</code></pre>
-          <p class="note">Con chiavi stringa, l'ultimo valore vince se una chiave e presente in entrambi gli array.</p>
-        </div>
-
-        <div class="box">
-          <h2>array_key_exists(string|int $chiave, array $array): verifica la presenza di una chiave</h2>
-          <p>Restituisce <code>true</code> anche se il valore associato e <code>null</code>.</p>
-          <pre><code class="language-php">&lt;?php
-$utente = [
-  "nome" =&gt; "Luca",
-  "ruolo" =&gt; null,
-];
-
-var_dump(array_key_exists("ruolo", $utente)); // true
-var_dump(isset($utente["ruolo"]));             // false
-?&gt;</code></pre>
-          <p class="note">E utile quando un campo puo essere presente ma vuoto, per esempio dopo una validazione.</p>
-        </div>
-
-        <div class="box">
-          <h2>Combina le funzioni per pipeline compatte</h2>
-          <p>Le funzioni sugli array diventano potenti quando le combini in sequenza.</p>
-          <pre><code class="language-php">&lt;?php
-$righe = [
-  ['nome' =&gt; 'ada', 'classe' =&gt; '5BIA'],
-  ['nome' =&gt; 'luca', 'classe' =&gt; '4BIA']
-];
-
-$soloQuinte = array_filter($righe, function($riga) {
-  return $riga['classe'] === '5BIA';
-});
-$nomi = array_map(function($riga) {
-  return strtoupper($riga['nome']);
-}, $soloQuinte);
-
-print_r($nomi);
-?&gt;</code></pre>
-          <p class="note">Questa logica e perfetta quando vuoi pulire o trasformare dati prima di stamparli nella view.</p>
-        </div>
-
-        <div class="box">
-          <h2>Da ricordare</h2>
-          <ul>
-            <li>Prima capisci la funzione con un array semplice.</li>
-            <li>Poi riusi la stessa idea su array piu complessi, compresi quelli letti dal database.</li>
-            <li>Se il codice diventa meno leggibile di un <code>foreach</code>, un ciclo esplicito puo restare la scelta migliore.</li>
-          </ul>
-        </div>
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore binario ∪</h2><pre class="ra-expression"><code class="nohighlight">R ∪ S = { t | t ∈ R oppure t ∈ S }</code></pre><p>R e S devono essere <strong>compatibili all'unione</strong>: in questa lezione hanno lo stesso schema (nomi di attributo e domini). Avere soltanto lo stesso numero di colonne non basta.</p><p><code>π[Sid](STUDENTI)</code> e <code>π[Cid](CORSI)</code> non rappresentano lo stesso tipo di informazione, anche se entrambi contengono numeri interi.</p></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Chi segue SQL oppure Web?</h2><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](σ[Cid = 10](ISCRIZIONI))
+B ← π[Sid](σ[Cid = 20](ISCRIZIONI))
+A ∪ B</code></pre><div class="table-scroll"><table><caption>Operandi e risultato</caption><thead><tr><th scope="col">Relazione</th><th scope="col">Valori di Sid</th></tr></thead><tbody><tr><td>A: SQL</td><td>1, 2, 3, 5</td></tr><tr><td>B: Web</td><td>1, 2, 4, 5</td></tr><tr><td>A ∪ B</td><td>1, 2, 3, 4, 5</td></tr></tbody></table></div><p>“Oppure” è inclusivo: Anna (1), Bruno (2) ed Elena (5) seguono entrambi i corsi e compaiono una volta sola.</p></section><section class="lesson-section" aria-labelledby="proprieta"><h2 id="proprieta">Proprietà utili</h2><pre class="ra-expression"><code class="nohighlight">R ∪ S = S ∪ R
+(R ∪ S) ∪ T = R ∪ (S ∪ T)
+R ∪ R = R
+max(|R|, |S|) ≤ |R ∪ S| ≤ |R| + |S|</code></pre><p>Le proprietà valgono per operandi compatibili. La semantica corrisponde all'eliminazione dei duplicati di SQL <code>UNION</code>, non a <code>UNION ALL</code>.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_6.html">← Prodotto cartesiano ×</a><a class="nav-button next" href="lez3_8.html">Differenza − e intersezione derivata →</a></nav>
+  </main>
 </body>
 </html>

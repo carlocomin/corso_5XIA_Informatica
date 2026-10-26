@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez4_8 · Algoritmo generale di decomposizione</title>
+  <title>ITST – 5ª · Lez4_8 · Esercizi PHP con soluzioni</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -17,57 +17,33 @@
       const btn = document.getElementById(btnId);
       const open = box.style.display === 'block';
       box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
+      btn.textContent = open ? 'Mostra soluzione ▼' : 'Nascondi soluzione ▲';
     }
-    document.addEventListener('DOMContentLoaded', function(){
-      var current = window.location.pathname.split('/').pop();
-      var link = document.querySelector('#menu a[href="' + current + '"]');
-      if (link) link.classList.add('active');
-    });
   </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
 </head>
 <body>
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 4 — Normalizzazione</h2>
+    <h2>Lezione 4 — PHP + MySQL + HTML/CSS</h2>
     <ul>
-      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
-      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
-      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
-      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
-      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
-      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
-      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
-      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
-      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
-      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
-      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
-      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
-      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
-      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
-      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
-      <li><a href="lez4_16.html">Lez4.16: Preservazione delle dipendenze</a></li>
+      <li><a href="lez4_1.html">Lez4.1: Obiettivi e percorso</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez4_3.html">Lez4.3: Setup ambiente: PHP + MySQL</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Primo script PHP</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Sintassi base e tipi</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Tipi di dato fondamentali e array</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Funzioni di utilità sugli array</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Esercizi PHP (soluzioni a comparsa)</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Variabili d'ambiente e superglobali PHP</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Funzioni in PHP: idee fondamentali</a></li>
+      <li><a href="lez4_11.html">Lez4.11: Funzioni in PHP: approfondimento</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Algoritmo generale di decomposizione (schema “generico”)</h1>
+    <h1>Esercizi PHP con soluzione a comparsa</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -76,45 +52,293 @@
 
     <div class="content-box">
       <div class="inner-box">
-
-        <h2>Idea generale</h2>
+        <p class="note">Questa slide resta un <strong>laboratorio di consolidamento</strong>: non sostituisce il percorso principale del modulo, ma ti aiuta a fissare sintassi, cicli, input e stampa HTML con molta pratica.</p>
         <div class="box">
-          <p>Finché esiste una DF che <strong>viola</strong> la forma normale obiettivo nello schema corrente, la si isola in una relazione a parte.</p>
-          <p class="note">Qui “viola” è generico: può essere 2NF/3NF/BCNF… cambia il criterio di violazione, non la meccanica della decomposizione.</p>
-        </div>
-
-        <h2>Passo di decomposizione</h2>
-        <div class="box">
-          <p>Scegli una dipendenza “violante”:</p>
-          <p class="ok" style="display:block"><code>X → Y</code></p>
-          <p>e decomponi lo schema corrente <code>R</code> in due schemi:</p>
-          <pre><code class="language-text">R1 = X ∪ Y
-R2 = R − (Y − X)   (equiv.: R2 = (R − Y) ∪ X)</code></pre>
-          <p class="warn">Il termine <code>(Y − X)</code> è fondamentale: lo analizziamo nella prossima slide.</p>
-          <p class="note">Intuizione: crei una tabella “dizionari” (<code>R1</code>) che registra <code>X</code> e ciò che <code>X</code> impone (<code>Y</code>), e lasci in <code>R2</code> il resto dei dati collegati tramite <code>X</code>.</p>
-        </div>
-
-        <h2>Schema “while” (pseudocodice)</h2>
-        <div class="box">
-          <pre><code class="language-text">Input: schema R, dipendenze F, criterio di violazione (NF obiettivo)
-
-while esiste una DF in F (o in Fm) che viola la NF nello schema corrente do
-  scegli una DF violante X → Y
-  R1 := X ∪ Y
-  R2 := R − (Y − X)
-  continua l'analisi separatamente su R1 e su R2
-end</code></pre>
-          <p class="note">Dopo ogni split, ragioni su <em>sottoschemi</em>: le DF “rilevanti” sono quelle che riguardano gli attributi del sottoschema.</p>
-        </div>
-
-        <h2>Nota importante: non lavori più con “F su R” in blocco</h2>
-        <div class="box">
-          <p>Dopo una decomposizione:</p>
+          <h2>Come usare questa slide</h2>
           <ul>
-            <li>in <code>R1</code> consideri le DF che coinvolgono attributi di <code>R1</code></li>
-            <li>in <code>R2</code> consideri le DF che coinvolgono attributi di <code>R2</code></li>
+            <li>Gli esercizi 1-6 consolidano sintassi, cicli, stringhe e output.</li>
+            <li>Gli esercizi 7-9 introducono input da URL e piccoli calcoli.</li>
+            <li>Gli esercizi 10-14 lavorano di piu su pagine PHP, file e output HTML.</li>
+            <li>Le soluzioni restano a comparsa: prima prova da solo, poi confronta il codice.</li>
           </ul>
-          <p class="warn">Questo punto diventa critico quando parliamo di <strong>dependency preservation</strong>.</p>
+          <p class="ok">Il blocco esercizi rimane parte integrante del modulo: serve a non perdere la manualita di base mentre introduciamo PDO e MySQL nelle altre slide.</p>
+        </div>
+
+        <div class="box">
+          <h2>Blocco A — PHP base: cicli, stringhe, output</h2>
+          <p>Qui l'obiettivo e prendere confidenza con la sintassi e con il fatto che PHP genera HTML in modo dinamico.</p>
+        </div>
+
+        <div class="box">
+          <h2>1) Disegna una scacchiera 20×20</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Disegnare una scacchiera di 20 × 20 usando i colori bianco e nero.</p>
+          <p>Alterna celle chiare/scure con un semplice controllo sull'indice di riga e colonna.</p>
+          <button id="btn-1" onclick="toggleBox('btn-1','sol-1')">Mostra soluzione ▼</button>
+          <div id="sol-1" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$size = 20;
+echo "&lt;table style='border-collapse:collapse'&gt;";
+for ($r = 0; $r &lt; $size; $r++) {
+  echo "&lt;tr&gt;";
+  for ($c = 0; $c &lt; $size; $c++) {
+    $isDark = ($r + $c) % 2 === 0;
+    $color = $isDark ? '#222' : '#eee';
+    echo "&lt;td style='width:20px;height:20px;background:$color;border:1px solid #555'&gt;&lt;/td&gt;";
+  }
+  echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>2) Tabella 20×20 con numero che cresce di 3</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Realizzare una tabella di 20 × 20 con la formula di un numero che cresce di 3.</p>
+          <p>Parti da 3 e incrementa ogni cella usando un contatore condiviso.</p>
+          <button id="btn-2" onclick="toggleBox('btn-2','sol-2')">Mostra soluzione ▼</button>
+          <div id="sol-2" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$valore = 3;
+echo "&lt;table style='border:3px solid blue;border-collapse:collapse'&gt;";
+for ($r = 0; $r &lt; 20; $r++) {
+  echo "&lt;tr&gt;";
+  for ($c = 0; $c &lt; 20; $c++, $valore += 3) {
+    echo "&lt;td style='width:28px;height:28px;text-align:center;border:1px solid #5faafc'&gt;$valore&lt;/td&gt;";
+  }
+  echo "&lt;/tr&gt;";
+}
+echo "&lt;/table&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>3) Decrescita da 100 a 0 con passo 5</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Stampare i numeri da 100 a 0 sottraendo 5.</p>
+          <p>Usa un ciclo <code>for</code> con decremento costante.</p>
+          <button id="btn-3" onclick="toggleBox('btn-3','sol-3')">Mostra soluzione ▼</button>
+          <div id="sol-3" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+for ($i = 100; $i &gt;= 0; $i -= 5) {
+  echo $i . "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>4) Stampa le lettere della parola «AMICIZIA»</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Leggere la parola AMICIZIA e stamparne le lettere.</p>
+          <p>Sfrutta <code>strlen()</code> per percorrere ogni carattere.</p>
+          <button id="btn-4" onclick="toggleBox('btn-4','sol-4')">Mostra soluzione ▼</button>
+          <div id="sol-4" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$parola = "AMICIZIA";
+for ($i = 0; $i &lt; strlen($parola); $i++) {
+  echo $parola[$i] . "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>5) I primi 100 numeri del triangolo di Tartaglia</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere i primi 100 numeri del triangolo di Tartaglia.</p>
+          <p>Genera le righe finché non si superano 100 elementi complessivi.</p>
+          <button id="btn-5" onclick="toggleBox('btn-5','sol-5')">Mostra soluzione ▼</button>
+          <div id="sol-5" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$triangolo = [[1]];
+$numeri = [1];
+while (count($numeri) &lt; 100) {
+  $ultima = end($triangolo);
+  $nuova = [1];
+  for ($i = 0; $i &lt; count($ultima) - 1; $i++) {
+    $nuova[] = $ultima[$i] + $ultima[$i + 1];
+  }
+  $nuova[] = 1;
+  $triangolo[] = $nuova;
+  $numeri = array_merge($numeri, $nuova);
+}
+
+$stampati = 0;
+foreach ($triangolo as $riga) {
+  foreach ($riga as $valore) {
+    if ($stampati++ &gt;= 100) break 2;
+    echo $valore . " ";
+  }
+  echo "&lt;br&gt;";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>6) Confronta due stringhe predefinite</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Usando due stringhe già definite verificare se sono uguali.</p>
+          <p>Confronta con uguaglianza stretta per non perdere le differenze tra maiuscole/minuscole.</p>
+          <button id="btn-6" onclick="toggleBox('btn-6','sol-6')">Mostra soluzione ▼</button>
+          <div id="sol-6" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$stringa1 = "1234567890";
+$stringa2 = "1234567890"; // cambia per testare la condizione
+
+if ($stringa1 === $stringa2) {
+  echo "Stringhe uguali";
+} else {
+  echo "Stringhe diverse";
+}
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>Blocco B — Input da URL e calcoli</h2>
+          <p>In questi esercizi compaiono <code>$_GET</code>, cast e controlli minimi sugli input.</p>
+        </div>
+
+        <div class="box">
+          <h2>7) Secondi trascorsi da una data</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Confrontare la data odierna con una data inserita (es. 15/3/2013) e stabilire quanti secondi sono trascorsi.</p>
+          <p>Confronta una data inserita con l'istante attuale usando <code>DateTime</code>.</p>
+          <button id="btn-7" onclick="toggleBox('btn-7','sol-7')">Mostra soluzione ▼</button>
+          <div id="sol-7" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$dataInput = $_GET['data'] ?? '2024-01-01 00:00:00';
+$passata = new DateTime($dataInput);
+$ora = new DateTime();
+$diff = $ora-&gt;getTimestamp() - $passata-&gt;getTimestamp();
+
+echo "Secondi trascorsi dal $dataInput: $diff";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>8) Consumo dell'auto (l/100km)</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Chiedere quanto gasolio la macchina consuma e quanta strada ha fatto (consumo in litri/100 km).</p>
+          <p>Chiedi gasolio utilizzato e km percorsi, poi calcola il consumo medio.</p>
+          <button id="btn-8" onclick="toggleBox('btn-8','sol-8')">Mostra soluzione ▼</button>
+          <div id="sol-8" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$litri = (float) ($_GET['litri'] ?? 0);
+$km = (float) ($_GET['km'] ?? 1);
+if ($litri &lt;= 0 || $km &lt;= 0) {
+  echo "Inserisci ?litri=...&amp;km=...";
+  exit;
+}
+$consumo = ($litri / $km) * 100;
+echo "Consumo medio: " . round($consumo, 2) . " L/100km";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>9) Km percorsi noto il consumo medio</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Noto il consumo medio calcolare i km percorsi.</p>
+          <p>Usa la formula inversa: km = (litri / consumo) × 100.</p>
+          <button id="btn-9" onclick="toggleBox('btn-9','sol-9')">Mostra soluzione ▼</button>
+          <div id="sol-9" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$litri = (float) ($_GET['litri'] ?? 0);
+$consumo = (float) ($_GET['consumo'] ?? 0); // L/100km
+if ($litri &lt;= 0 || $consumo &lt;= 0) {
+  echo "Inserisci ?litri=...&amp;consumo=... (L/100km)";
+  exit;
+}
+$km = ($litri / $consumo) * 100;
+echo "Puoi percorrere circa " . round($km, 1) . " km";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>Blocco C — Pagine PHP, file e output HTML</h2>
+          <p>Qui il focus torna sul lato server: leggere file, produrre pagine e stampare contenuti in modo leggibile.</p>
+        </div>
+
+        <div class="box">
+          <h2>10) Pagina semplice di benvenuto</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Programma che stampi la scritta "Benvenuto nel nostro sito".</p>
+          <p>Script minimale che risponde con un messaggio testuale.</p>
+          <button id="btn-10" onclick="toggleBox('btn-10','sol-10')">Mostra soluzione ▼</button>
+          <div id="sol-10" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+echo "&lt;h1&gt;Benvenuto nel nostro sito&lt;/h1&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>11) Leggi e valida un file HTML</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere un programma che legge un file HTML e dice se è corretto (usando eventualmente un validatore).</p>
+          <p>Carica <code>index.html</code>, verifica la presenza di tag base e notifica l'esito.</p>
+          <button id="btn-11" onclick="toggleBox('btn-11','sol-11')">Mostra soluzione ▼</button>
+          <div id="sol-11" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$file = 'index.html';
+$contenuto = file_get_contents($file);
+$valido = str_contains($contenuto, '<html>') &amp;&amp;
+          str_contains($contenuto, '<body>') &amp;&amp;
+          str_contains($contenuto, '</html>');
+
+echo $valido
+  ? "Il file $file contiene i tag principali."
+  : "Attenzione: struttura HTML incompleta.";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>12) Riporta il codice HTML di una pagina</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere un programma che riporta il codice HTML di una pagina.</p>
+          <p>Mostra l'HTML letto dal file in modo sicuro (escape con <code>htmlspecialchars</code>).</p>
+          <button id="btn-12" onclick="toggleBox('btn-12','sol-12')">Mostra soluzione ▼</button>
+          <div id="sol-12" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$pagina = 'index.html';
+$contenuto = file_get_contents($pagina);
+
+echo "&lt;h2&gt;Sorgente di $pagina&lt;/h2&gt;";
+echo "&lt;pre&gt;" . htmlspecialchars($contenuto) . "&lt;/pre&gt;";
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>13) Pagina HTML con link a data estesa</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Scrivere una pagina HTML con un link ad un file PHP che restituisce la data estesa.</p>
+          <p>Pagina principale con link al controller PHP che restituisce la data formattata.</p>
+          <button id="btn-13" onclick="toggleBox('btn-13','sol-13')">Mostra soluzione ▼</button>
+          <div id="sol-13" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+// file pagina_principale.php
+echo "&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;";
+echo "&lt;h1&gt;Homepage&lt;/h1&gt;";
+echo "&lt;footer&gt;&lt;a href='data.php'&gt;Mostra data odierna&lt;/a&gt;&lt;/footer&gt;";
+echo "&lt;/body&gt;&lt;/html&gt;";
+
+// file data.php
+echo date("d/m/Y H:i:s");
+?&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="box">
+          <h2>14) 10 nomi con colore casuale</h2>
+          <p class="exercise-statement"><strong>Enunciato:</strong> Estrarre da un array 10 nomi di ragazzi e assegnare a ciascuno un colore casuale.</p>
+          <p>Estrai un colore HEX per ogni nome e applicalo allo stile inline.</p>
+          <button id="btn-14" onclick="toggleBox('btn-14','sol-14')">Mostra soluzione ▼</button>
+          <div id="sol-14" style="display:none; margin-top:10px;">
+            <pre><code class="language-php">&lt;?php
+$nomi = ["Giulia", "Ahmed", "Sara", "Luca", "Elena", "Davide", "Marta", "Paolo", "Noemi", "Diego"];
+foreach ($nomi as $nome) {
+  $colore = sprintf("#%06X", random_int(0, 0xFFFFFF));
+  echo "&lt;div style='color:$colore'&gt;$nome&lt;/div&gt;";
+}
+?&gt;</code></pre>
+          </div>
         </div>
 
       </div>

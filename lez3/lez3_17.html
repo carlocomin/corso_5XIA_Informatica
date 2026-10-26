@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="“Tutti i corsi richiesti” e “soltanto corsi ammessi” non sono la stessa domanda. Entrambe si risolvono cercando i controesempi.">
+  <title>Lezione 3.17 · Hard · tutti e soltanto</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html" aria-current="page">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Hard · tutti e soltanto</h1>
+      <p class="lesson-lead">“Tutti i corsi richiesti” e “soltanto corsi ammessi” non sono la stessa domanda. Entrambe si risolvono cercando i controesempi.</p>
+      <div class="lesson-meta"><span>Pagina 17 di 20</span><progress value="17" max="20" aria-label="Pagina 17 di 20">17 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_16.html">← Medium M5–M8</a><a class="nav-button next" href="lez3_18.html">Hard H3–H4 →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>hard</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="h1"><h2 id="h1">H1 · Tutti i corsi richiesti</h2><p>Trovare gli studenti iscritti a tutti i corsi dell'area Dati oppure Web. Possono essere iscritti anche ad altri corsi.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Definisci T(Cid), l'insieme dei corsi richiesti: in questa istanza {10, 20}.</li><li>Crea tutte le coppie candidato-corso richiesto con A × T.</li><li>Sottrai le iscrizioni effettive: restano le coppie mancanti.</li><li>Gli ID presenti nelle coppie mancanti sono da scartare. Recupera i nomi dei candidati rimasti.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](STUDENTI)
+T ← π[Cid](σ[Area = &quot;Dati&quot; ∨ Area = &quot;Web&quot;](CORSI))
+P ← π[Sid, Cid](ISCRIZIONI)
+Mancanti ← (A × T) − P
+Buoni ← A − π[Sid](Mancanti)
+π[Sid, Studente](Buoni ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="H1"><caption>Risultato di H1: 3 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>2</td><td>Bruno</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> La costruzione esprime una quantificazione universale senza introdurre l'operatore divisione. Se T è vuoto, nessun corso può mancare: tutti i candidati, incluso Fabio, soddisfano la richiesta.</p></div></details></section><section class="lesson-section" aria-labelledby="h2"><h2 id="h2">H2 · Soltanto corsi delle aree ammesse</h2><p>Trovare gli studenti con almeno un'iscrizione e iscritti soltanto a corsi dell'area Dati oppure Web. Non devono per forza seguirli tutti.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Costruisci T come in H1 e ricava i corsi esterni a T.</li><li>Unisci i corsi esterni alle iscrizioni: ottieni le partecipazioni vietate.</li><li>Sottrai gli studenti con partecipazioni vietate dall'insieme degli iscritti ad almeno un corso.</li></ol><pre class="ra-expression"><code class="nohighlight">T ← π[Cid](σ[Area = &quot;Dati&quot; ∨ Area = &quot;Web&quot;](CORSI))
+Fuori ← π[Cid](CORSI) − T
+Vietati ← π[Sid](ISCRIZIONI ⋈ Fuori)
+Buoni ← π[Sid](ISCRIZIONI) − Vietati
+π[Sid, Studente](Buoni ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="H2"><caption>Risultato di H2: 1 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>2</td><td>Bruno</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Anna (1) ed Elena seguono anche Reti, Carla segue Reti, Diego segue Reti, Anna (7) segue Python. Fabio viene escluso dalla richiesta di almeno un'iscrizione.</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_16.html">← Medium M5–M8</a><a class="nav-button next" href="lez3_18.html">Hard H3–H4 →</a></nav>
+  </main>
+</body>
+</html>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_21b · Lock di predicato e inserimento fantasma</title>
+  <title>ITST – 5ª · Lez6_21b · Lock di predicato e inserimento fantasma</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez5_21.html"; }
-    function nextSlide(){ window.location.href = "lez5_22.html"; }
+    function prevSlide(){ window.location.href = "lez6_21.html"; }
+    function nextSlide(){ window.location.href = "lez6_22.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
     function toggleBox(btnId, boxId){
       const box = document.getElementById(boxId);
@@ -44,38 +44,38 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 6 — Transazioni concorrenti</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez6_1.html">Lez6.1: Introduzione e obiettivi</a></li>
+      <li><a href="lez6_2.html">Lez6.2: Da dove arriviamo</a></li>
+      <li><a href="lez6_3.html">Lez6.3: Perché serve la concorrenza</a></li>
+      <li><a href="lez6_4.html">Lez6.4: Che cos'è una transazione</a></li>
+      <li><a href="lez6_5.html">Lez6.5: Proprietà ACID</a></li>
+      <li><a href="lez6_6.html">Lez6.6: COMMIT, ROLLBACK, autocommit</a></li>
+      <li><a href="lez6_7.html">Lez6.7: Il problema centrale</a></li>
+      <li><a href="lez6_8.html">Lez6.8: Panoramica delle anomalie</a></li>
+      <li><a href="lez6_9.html">Lez6.9: Perdita di aggiornamento</a></li>
+      <li><a href="lez6_10.html">Lez6.10: Lettura sporca</a></li>
+      <li><a href="lez6_11.html">Lez6.11: Lettura inconsistente e aggiornamento fantasma</a></li>
+      <li><a href="lez6_12.html">Lez6.12: Inserimento fantasma</a></li>
+      <li><a href="lez6_13.html">Lez6.13: Sintesi delle anomalie</a></li>
+      <li><a href="lez6_14.html">Lez6.14: Formalizzare le transazioni</a></li>
+      <li><a href="lez6_15.html">Lez6.15: Che cos'è uno schedule</a></li>
+      <li><a href="lez6_16.html">Lez6.16: Schedule serializzabile</a></li>
+      <li><a href="lez6_17.html">Lez6.17: Equivalenza rispetto alle viste</a></li>
+      <li><a href="lez6_17b.html">Lez6.17b: Perché entra la complessità</a></li>
+      <li><a href="lez6_17c.html">Lez6.17c: Problemi NP-completi</a></li>
+      <li><a href="lez6_17d.html">Lez6.17d: SAT in dettaglio</a></li>
+      <li><a href="lez6_17e.html">Lez6.17e: SAT solver</a></li>
+      <li><a href="lez6_17f.html">Lez6.17f: VSR è NP-completo</a></li>
+      <li><a href="lez6_17g.html">Lez6.17g: Riduzione VSR a SAT</a></li>
+      <li><a href="lez6_18.html">Lez6.18: Dai limiti delle viste ai conflitti</a></li>
+      <li><a href="lez6_19.html">Lez6.19: Grafo dei conflitti</a></li>
+      <li><a href="lez6_20.html">Lez6.20: Locking e lock manager</a></li>
+      <li><a href="lez6_21.html">Lez6.21: 2PL e 2PL stretto</a></li>
+      <li><a href="lez6_21b.html">Lez6.21b: Lock di predicato e fantasmi</a></li>
+      <li><a href="lez6_22.html">Lez6.22: Deadlock e livelli di isolamento</a></li>
+      <li><a href="lez6_23.html">Lez6.23: PostgreSQL e MySQL</a></li>
     </ul>
   </div>
   <!-- END MENU -->

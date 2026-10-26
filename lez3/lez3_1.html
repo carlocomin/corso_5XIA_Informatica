@@ -1,132 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_1 · Obiettivi e percorso PHP + MySQL + HTML/CSS</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ if (history.length > 1) { history.back(); } else { window.location.href = "../programma.html"; } }
-    function nextSlide(){ window.location.href = "lez3_2.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dopo aver progettato le relazioni, impariamo a combinarle per ottenere risposte precise. Ogni operazione produce una nuova relazione.">
+  <title>Lezione 3.1 · Perché un'algebra per interrogare i dati</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Obiettivi e percorso — PHP + MySQL + HTML/CSS</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html" aria-current="page">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Perché un'algebra per interrogare i dati</h1>
+      <p class="lesson-lead">Dopo aver progettato le relazioni, impariamo a combinarle per ottenere risposte precise. Ogni operazione produce una nuova relazione.</p>
+      <div class="lesson-meta"><span>Pagina 1 di 20</span><progress value="1" max="20" aria-label="Pagina 1 di 20">1 di 20</progress></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="../lez2/lez2_7.html">← Traduzione relazionale</a><a class="nav-button next" href="lez3_2.html">Dati, terminologia e simboli →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Perché questo modulo</h2>
-        <div class="box">
-          <p>Questo modulo introduce <strong>PHP come linguaggio lato server</strong> e lo collega subito a <strong>MySQL</strong> per costruire pagine che leggono input, eseguono query semplici e mostrano risultati in HTML.</p>
-          <p class="note">Non e un modulo avanzato di backend: il focus e padroneggiare bene il flusso <code>browser -&gt; PHP -&gt; MySQL -&gt; HTML</code>.</p>
-        </div>
-
-        <h2>Cosa saprai fare alla fine</h2>
-        <div class="box">
-          <ul>
-            <li>Scrivere script PHP semplici e leggibili integrati con HTML.</li>
-            <li>Leggere input da <code>$_GET</code> e <code>$_POST</code>, validarli e trattarli in modo essenziale ma corretto.</li>
-            <li>Aprire una connessione <strong>PDO</strong> verso MySQL.</li>
-            <li>Eseguire <strong>SELECT</strong> e <strong>INSERT</strong> di base con <strong>prepared statements</strong>.</li>
-            <li>Mostrare risultati del database in liste e tabelle HTML.</li>
-          </ul>
-        </div>
-
-        <h2>Cosa non faremo</h2>
-        <div class="box">
-          <ul>
-            <li>Niente framework o architetture avanzate.</li>
-            <li>Niente ORM, routing complesso o pattern enterprise.</li>
-            <li>Niente ottimizzazioni da produzione: qui servono <strong>basi didattiche solide</strong>.</li>
-          </ul>
-          <p class="warn">La priorita e capire il percorso del dato, non costruire un'applicazione complessa.</p>
-        </div>
-
-        <h2>Prerequisiti minimi</h2>
-        <div class="box">
-          <ul>
-            <li>Ripasso di <strong>HTML</strong>: form, tabelle e attributi principali.</li>
-            <li>Idea generale di <strong>client</strong>, <strong>server</strong> e richiesta HTTP.</li>
-            <li>Richiamo del <strong>modello relazionale</strong>: tabelle, chiavi e vincoli di base.</li>
-          </ul>
-        </div>
-
-        <h2>Sequenza del modulo</h2>
-        <div class="box">
-          <ol>
-            <li>Capire come viaggia una richiesta web e dove entra PHP.</li>
-            <li>Scrivere PHP di base: output, variabili, tipi, array, funzioni.</li>
-            <li>Leggere input da form e validarli.</li>
-            <li>Collegarsi a MySQL con PDO.</li>
-            <li>Eseguire query parametrizzate e mostrare il risultato in HTML.</li>
-          </ol>
-          <p class="ok">Il filo conduttore sara sempre lo stesso: <strong>dati inseriti dall'utente, elaborati da PHP, salvati o letti da MySQL, ristampati in pagina</strong>.</p>
-        </div>
-
-        <h2>Mini-progetto guida</h2>
-        <div class="box">
-          <ul>
-            <li>Una pagina che legge righe da MySQL e le mostra in tabella.</li>
-            <li>Un form che raccoglie dati essenziali.</li>
-            <li>Un inserimento eseguito con <em>prepared statement</em>.</li>
-            <li>Una ristampa HTML dei dati aggiornati.</li>
-          </ul>
-        </div>
-
-        <h2>Deliverable attesi</h2>
-        <div class="box">
-          <ul>
-            <li>Una base riutilizzabile per connessione PDO e query parametrizzate.</li>
-            <li>Snippet chiari per input, validazione minima e output HTML sicuro.</li>
-            <li>Un lessico tecnico coerente per distinguere linguaggio PHP, database e interfaccia web.</li>
-          </ul>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="obiettivi"><h2 id="obiettivi">Dallo schema alla domanda</h2><p>Le lezioni 1 e 2 spiegano come descrivere dati e vincoli. Ora chiediamo: <em>quali studenti seguono SQL? Quali corsi non hanno iscritti? Chi frequenta tutti i corsi richiesti?</em> L'<strong>algebra relazionale</strong> è un linguaggio formale di interrogazione: definisce operatori che trasformano una o due relazioni in una relazione risultato.</p><p>Una <strong>interrogazione</strong>, o <em>query</em>, è una richiesta di informazioni sui dati. Valutare un'espressione algebrica non modifica le relazioni di partenza: calcola un risultato.</p><ul><li>Esprimere con precisione quali tuple vogliamo ottenere.</li><li>Comporre più operatori grazie alla proprietà di chiusura.</li><li>Confrontare espressioni equivalenti e comprenderne il ruolo nei DBMS.</li></ul></section><section class="lesson-section" aria-labelledby="storia"><h2 id="storia">Una breve storia</h2><p>Nel 1970 Edgar F. Codd pubblica il modello relazionale e discute operazioni sulle relazioni, nel contesto della separazione fra organizzazione logica e memorizzazione fisica. Negli anni successivi si sviluppano linguaggi e sistemi relazionali sperimentali, tra cui System R di IBM.</p><p>I DBMS moderni usano rappresentazioni algebriche dei piani di interrogazione: possono riscrivere un piano conservandone il risultato e scegliere poi operatori fisici adatti, come scansioni o join basati su hash.</p><p class="source-note">Riferimenti: <a href="https://research.ibm.com/publications/a-relational-model-of-data-for-large-shared-data-banks">Codd, articolo del 1970</a>; <a href="https://www.ibm.com/think/topics/relational-databases">IBM, storia dei sistemi relazionali e di System R</a>.</p></section><section class="lesson-section" aria-labelledby="livelli"><h2 id="livelli">Algebra, SQL e implementazione</h2><p>L'algebra è detta <strong>procedurale a livello logico</strong>: l'espressione indica quali operatori applicare e come comporli. Non stabilisce però l'algoritmo fisico, l'indice o l'ordine di lettura dei byte. SQL è prevalentemente dichiarativo: descrive il risultato e lascia al DBMS la scelta del piano.</p><pre class="ra-expression"><code class="nohighlight">Domanda → espressione logica → piano fisico → risultato</code></pre><p class="callout"><strong>Proprietà di chiusura:</strong> l'output di un operatore è ancora una relazione, quindi può diventare l'input di un altro operatore.</p></section><section class="lesson-section" aria-labelledby="percorso"><h2 id="percorso">Il percorso della lezione</h2><ol><li>Pagine 2–8: dati, notazione e operatori fondamentali, con rinomina e intersezione derivata.</li><li>Pagine 9–11: inner, theta, equi, natural e outer join.</li><li>Pagina 12: metodo per tradurre una domanda in espressione.</li><li>Pagine 13–19: 22 interrogazioni svolte, divise in easy, medium e hard.</li><li>Pagina 20: riepilogo, errori frequenti e autoverifica.</li></ol><details class="reveal"><summary>Controllo rapido: il risultato di una proiezione può essere usato in una selezione?</summary><div class="reveal-content"><p>Sì, perché è una relazione. La condizione di selezione deve però usare soltanto attributi ancora presenti dopo la proiezione.</p></div></details></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="../lez2/lez2_7.html">← Traduzione relazionale</a><a class="nav-button next" href="lez3_2.html">Dati, terminologia e simboli →</a></nav>
+  </main>
 </body>
 </html>

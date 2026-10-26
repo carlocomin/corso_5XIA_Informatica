@@ -1,155 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_2 · Ripasso e flusso richiesta/risposta</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_1.html"; }
-    function nextSlide(){ window.location.href = "lez3_3.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Useremo sempre gli stessi dati. Il database contiene omonimi, corsi vuoti e uno studente senza iscrizioni: casi che rendono verificabili anche le query più delicate.">
+  <title>Lezione 3.2 · Il database guida e la notazione</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Ripasso e flusso richiesta/risposta</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html" aria-current="page">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Il database guida e la notazione</h1>
+      <p class="lesson-lead">Useremo sempre gli stessi dati. Il database contiene omonimi, corsi vuoti e uno studente senza iscrizioni: casi che rendono verificabili anche le query più delicate.</p>
+      <div class="lesson-meta"><span>Pagina 2 di 20</span><progress value="2" max="20" aria-label="Pagina 2 di 20">2 di 20</progress></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_1.html">← Introduzione, scopo e storia</a><a class="nav-button next" href="lez3_3.html">Selezione σ →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Domanda guida</h2>
-        <div class="box">
-          <p>Che cosa succede davvero quando un utente compila un form, preme invio e vede una pagina aggiornata con dati presi da MySQL?</p>
-          <p class="note">Questa slide serve a fissare il percorso del dato prima di scrivere codice PHP e query parametrizzate.</p>
-        </div>
-
-        <h2>I tre attori del flusso</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Browser</strong>: mostra HTML/CSS, raccoglie input dal form e invia la richiesta.</li>
-            <li><strong>PHP</strong>: riceve la richiesta, legge i dati, li valida, prepara la query e costruisce la risposta.</li>
-            <li><strong>MySQL</strong>: conserva i dati e risponde alle query eseguite da PHP.</li>
-          </ul>
-          <p class="warn">Il browser non esegue PHP: riceve solo l'HTML finale generato sul server.</p>
-        </div>
-
-        <h2>Il percorso del dato</h2>
-        <div class="box">
-          <ol>
-            <li>L'utente apre una pagina PHP o invia un form.</li>
-            <li>PHP legge i parametri con <code>$_GET</code> o <code>$_POST</code>.</li>
-            <li>PHP valida i valori ricevuti.</li>
-            <li>PHP usa <strong>PDO</strong> per parlare con MySQL.</li>
-            <li>La query legge o scrive dati, meglio se con <strong>prepared statement</strong>.</li>
-            <li>PHP stampa il risultato dentro HTML.</li>
-          </ol>
-          <p class="ok">Schema mentale del modulo: <code>form -&gt; input PHP -&gt; PDO -&gt; MySQL -&gt; HTML</code>.</p>
-        </div>
-
-        <h2>GET e POST: cosa cambia per noi</h2>
-        <div class="box">
-          <table>
-            <thead>
-              <tr><th>Metodo</th><th>Quando usarlo</th><th>Esempio didattico</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><code>GET</code></td><td>Letture, filtri, ricerche</td><td><code>elenco.php?classe=5BIA</code></td></tr>
-              <tr><td><code>POST</code></td><td>Invio dati da form, inserimenti</td><td>form per aggiungere uno studente</td></tr>
-            </tbody>
-          </table>
-          <p class="note">Nel modulo useremo soprattutto <code>GET</code> per filtrare e <code>POST</code> per inserire dati nel database.</p>
-        </div>
-
-        <h2>Dove entra MySQL</h2>
-        <div class="box">
-          <pre><code class="language-text">Browser
-  ↓ richiesta HTTP
-PHP
-  ↓ PDO / prepared statement
-MySQL
-  ↑ risultati
-PHP
-  ↑ HTML generato
-Browser</code></pre>
-          <p class="warn">Se perdi questo schema, poi <code>$_POST</code>, PDO e HTML sembrano argomenti separati. In realta fanno parte dello stesso flusso.</p>
-        </div>
-
-        <h2>Struttura minima del progetto</h2>
-        <div class="box">
-          <ul>
-            <li><code>public/</code>: pagine accessibili dal browser, per esempio <code>index.php</code> e <code>insert.php</code>.</li>
-            <li><code>config/</code>: parametri di connessione al DB, fuori dalla parte pubblica.</li>
-            <li><code>src/</code> o <code>lib/</code>: funzioni riutilizzabili, per esempio apertura della connessione PDO.</li>
-            <li><code>data/</code>: script SQL di creazione e dati di prova.</li>
-          </ul>
-          <p class="note">L'idea chiave non e la struttura perfetta del progetto, ma separare bene pagine, configurazione e supporto al database.</p>
-        </div>
-
-        <h2>Micro-demo: PHP dentro HTML</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;h1&gt;Elenco studenti&lt;/h1&gt;
-&lt;?php
-$studenti = ["Ada", "Alan", "Grace"];
-foreach ($studenti as $nome) {
-    echo "&lt;p&gt;$nome&lt;/p&gt;";
-}
-?&gt;</code></pre>
-          <p>Per ora i dati arrivano da un array. Nelle prossime slide lo stesso meccanismo servira per stampare righe lette da MySQL.</p>
-        </div>
-
-        <h2>Mappa del modulo</h2>
-        <div class="box">
-          <ul>
-            <li><strong>Adesso</strong>: fissiamo richiesta, risposta, input e ruolo del database.</li>
-            <li><strong>Subito dopo</strong>: prepariamo ambiente e connessione PDO.</li>
-            <li><strong>Poi</strong>: costruiamo script PHP che leggono input, eseguono query parametrizzate e mostrano risultati.</li>
-          </ul>
-          <p class="ok">Se questa mappa e chiara, tutto il resto del modulo diventa piu naturale.</p>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="lessico"><h2 id="lessico">Le parole da conoscere</h2><div class="table-scroll"><table><caption>Terminologia del modello e degli operatori</caption><thead><tr><th scope="col">Termine</th><th scope="col">Significato</th></tr></thead><tbody><tr><td>Schema</td><td>Nomi degli attributi, domini e vincoli di una relazione.</td></tr><tr><td>Istanza</td><td>Insieme delle tuple presenti in un dato momento.</td></tr><tr><td>Tupla</td><td>Una riga, cioè un'associazione di valori agli attributi.</td></tr><tr><td>Attributo / dominio</td><td>Una proprietà / l'insieme dei valori ammessi per quella proprietà.</td></tr><tr><td>Grado o arità della relazione</td><td>Numero degli attributi.</td></tr><tr><td>Cardinalità |R|</td><td>Numero delle tuple della relazione R.</td></tr><tr><td>Operatore unario / binario</td><td>Riceve rispettivamente una relazione / due relazioni.</td></tr><tr><td>Predicato</td><td>Una condizione che, sui dati classici di questa lezione, è vera oppure falsa.</td></tr></tbody></table></div></section><section class="lesson-section" aria-labelledby="schema"><h2 id="schema">Schema e vincoli</h2><p><code>STUDENTI(Sid, Studente, Classe)</code>, chiave <code>Sid</code>.<br><code>CORSI(Cid, Corso, Area)</code>, chiave <code>Cid</code>.<br><code>ISCRIZIONI(Sid, Cid, Voto)</code>, chiave composta <code>{Sid, Cid}</code>.</p><p>Le chiavi esterne di ISCRIZIONI riferiscono STUDENTI e CORSI. Voto è un intero da 1 a 10: un corso è superato con voto almeno 6. Ogni studente può avere al massimo un'iscrizione per corso.</p><p>Le relazioni di base non contengono valori nulli. Anna con Sid 1 e Anna con Sid 7 sono persone diverse: il nome non è una chiave.</p></section><section class="lesson-section" aria-labelledby="istanze"><h2 id="istanze">Le tre istanze</h2><div class="table-scroll"><table><caption>STUDENTI: 7 tuple, grado 3</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th><th scope="col">Classe</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>5A</td></tr><tr><td>2</td><td>Bruno</td><td>5A</td></tr><tr><td>3</td><td>Carla</td><td>5B</td></tr><tr><td>4</td><td>Diego</td><td>5B</td></tr><tr><td>5</td><td>Elena</td><td>5A</td></tr><tr><td>6</td><td>Fabio</td><td>5B</td></tr><tr><td>7</td><td>Anna</td><td>5B</td></tr></tbody></table></div><div class="table-scroll"><table><caption>CORSI: 5 tuple, grado 3</caption><thead><tr><th scope="col">Cid</th><th scope="col">Corso</th><th scope="col">Area</th></tr></thead><tbody><tr><td>10</td><td>SQL</td><td>Dati</td></tr><tr><td>20</td><td>Web</td><td>Web</td></tr><tr><td>30</td><td>Reti</td><td>Sistemi</td></tr><tr><td>40</td><td>Python</td><td>Programmazione</td></tr><tr><td>50</td><td>Robotica</td><td>Sistemi</td></tr></tbody></table></div><div class="table-scroll"><table><caption>ISCRIZIONI: 13 tuple, grado 3</caption><thead><tr><th scope="col">Sid</th><th scope="col">Cid</th><th scope="col">Voto</th></tr></thead><tbody><tr><td>1</td><td>10</td><td>9</td></tr><tr><td>1</td><td>20</td><td>8</td></tr><tr><td>1</td><td>30</td><td>7</td></tr><tr><td>2</td><td>10</td><td>6</td></tr><tr><td>2</td><td>20</td><td>7</td></tr><tr><td>3</td><td>10</td><td>8</td></tr><tr><td>3</td><td>30</td><td>9</td></tr><tr><td>4</td><td>20</td><td>5</td></tr><tr><td>4</td><td>30</td><td>8</td></tr><tr><td>5</td><td>10</td><td>9</td></tr><tr><td>5</td><td>20</td><td>9</td></tr><tr><td>5</td><td>30</td><td>10</td></tr><tr><td>7</td><td>40</td><td>7</td></tr></tbody></table></div><p>Fabio (6) non è iscritto a nessun corso. Robotica (50) non ha iscritti. Questi casi devono essere trattati esplicitamente dalle query.</p></section><section class="lesson-section" aria-labelledby="notazione"><h2 id="notazione">Come leggere le espressioni</h2><p>Adottiamo parametri fra parentesi quadre: <code>σ[condizione](R)</code> significa “seleziona da R le tuple che soddisfano la condizione”. È la stessa notazione spesso stampata con il parametro a pedice.</p><div class="table-scroll"><table><caption>Simboli utilizzati</caption><thead><tr><th scope="col">Simbolo</th><th scope="col">Lettura</th></tr></thead><tbody><tr><td>σ / π / ρ</td><td>selezione / proiezione / rinomina</td></tr><tr><td>× / ∪ / − / ∩</td><td>prodotto cartesiano / unione / differenza / intersezione</td></tr><tr><td>⋈[θ] / ⋈</td><td>join con condizione θ / join naturale</td></tr><tr><td>⟕ / ⟖ / ⟗</td><td>left / right / full outer join</td></tr><tr><td>∧ / ∨ / ¬</td><td>e / oppure inclusivo / non</td></tr><tr><td>←</td><td>assegna un nome a un risultato intermedio</td></tr><tr><td>∅</td><td>insieme vuoto</td></tr></tbody></table></div><p>Le espressioni annidate si leggono dall'interno verso l'esterno. Una relazione intermedia chiamata <code>A</code> non è una nuova tabella permanente.</p><p class="callout warning"><strong>Semantica insiemistica:</strong> niente tuple duplicate e nessun ordinamento significativo delle righe. Le tabelle sono ordinate soltanto per facilitare la lettura. SQL può invece mantenere duplicati: la corrispondenza con l'algebra richiede attenzione.</p><p><a href="lez3_2.html#istanze">Questa pagina</a> sarà richiamata in tutti gli esempi svolti.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_1.html">← Introduzione, scopo e storia</a><a class="nav-button next" href="lez3_3.html">Selezione σ →</a></nav>
+  </main>
 </body>
 </html>

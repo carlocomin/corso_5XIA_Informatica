@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Con copie rinominate, prodotti e confronti si possono esprimere soglie fisse come “almeno due” ed “esattamente due”, senza COUNT.">
+  <title>Lezione 3.18 · Hard · contare senza aggregazione</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html" aria-current="page">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Hard · contare senza aggregazione</h1>
+      <p class="lesson-lead">Con copie rinominate, prodotti e confronti si possono esprimere soglie fisse come “almeno due” ed “esattamente due”, senza COUNT.</p>
+      <div class="lesson-meta"><span>Pagina 18 di 20</span><progress value="18" max="20" aria-label="Pagina 18 di 20">18 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_17.html">← Hard H1–H2</a><a class="nav-button next" href="lez3_19.html">Hard H5–H6 →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>hard</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="h3"><h2 id="h3">H3 · Almeno due corsi diversi</h2><p>Restituire gli studenti che seguono almeno due corsi distinti.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Crea due copie rinominate di ISCRIZIONI.</li><li>Abbina tuple con lo stesso studente ma con C1 < C2: questo garantisce due corsi diversi e scarta le coppie speculari.</li><li>Proietta S1 e rinominalo Sid, poi aggiungi il nome.</li></ol><pre class="ra-expression"><code class="nohighlight">I1 ← ρ[I1(S1, C1, V1)](ISCRIZIONI)
+I2 ← ρ[I2(S2, C2, V2)](ISCRIZIONI)
+Coppie ← σ[S1 = S2 ∧ C1 &lt; C2](I1 × I2)
+Almeno2 ← ρ[Sid ← S1](π[S1](Coppie))
+π[Sid, Studente](Almeno2 ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="H3"><caption>Risultato di H3: 5 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>2</td><td>Bruno</td></tr><tr><td>3</td><td>Carla</td></tr><tr><td>4</td><td>Diego</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Fabio non ha iscrizioni e Anna (7) ne ha una. Una sola tupla non può abbinarsi con se stessa perché C1 < C2 deve essere vero.</p></div></details></section><section class="lesson-section" aria-labelledby="h4"><h2 id="h4">H4 · Esattamente due corsi</h2><p>Restituire gli studenti che seguono esattamente due corsi.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Riusa Almeno2 della query H3.</li><li>Con tre copie cerca lo stesso studente con C1 < C2 < C3: sono tre corsi distinti.</li><li>Sottrai gli ID con almeno tre corsi da quelli con almeno due.</li></ol><pre class="ra-expression"><code class="nohighlight">I1 ← ρ[I1(S1, C1, V1)](ISCRIZIONI)
+I2 ← ρ[I2(S2, C2, V2)](ISCRIZIONI)
+I3 ← ρ[I3(S3, C3, V3)](ISCRIZIONI)
+Triple ← σ[S1 = S2 ∧ S1 = S3 ∧ C1 &lt; C2 ∧ C2 &lt; C3](I1 × I2 × I3)
+Almeno3 ← ρ[Sid ← S1](π[S1](Triple))
+Esattamente2 ← Almeno2 − Almeno3
+π[Sid, Studente](Esattamente2 ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="H4"><caption>Risultato di H4: 3 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>2</td><td>Bruno</td></tr><tr><td>3</td><td>Carla</td></tr><tr><td>4</td><td>Diego</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Anna (1) ed Elena hanno tre corsi e vengono sottratte. Almeno2 e Almeno3 devono avere entrambi lo schema (Sid).</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_17.html">← Hard H1–H2</a><a class="nav-button next" href="lez3_19.html">Hard H5–H6 →</a></nav>
+  </main>
+</body>
+</html>

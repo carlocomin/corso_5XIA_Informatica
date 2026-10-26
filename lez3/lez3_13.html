@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quattro query su una relazione alla volta: filtri semplici, attributi richiesti e duplicati.">
+  <title>Lezione 3.13 · Easy · selezionare e proiettare</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html" aria-current="page">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Easy · selezionare e proiettare</h1>
+      <p class="lesson-lead">Quattro query su una relazione alla volta: filtri semplici, attributi richiesti e duplicati.</p>
+      <div class="lesson-meta"><span>Pagina 13 di 20</span><progress value="13" max="20" aria-label="Pagina 13 di 20">13 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_12.html">← Metodo, composizione ed equivalenze</a><a class="nav-button next" href="lez3_14.html">Easy E5–E8 →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>easy</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="e1"><h2 id="e1">E1 · Tutti gli studenti di 5A</h2><p>Restituire tutte le informazioni degli studenti di 5A.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>La relazione necessaria è STUDENTI.</li><li>La condizione riguarda Classe: basta una selezione.</li></ol><pre class="ra-expression"><code class="nohighlight">σ[Classe = &quot;5A&quot;](STUDENTI)</code></pre><div class="table-scroll"><table data-result="E1"><caption>Risultato di E1: 3 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th><th scope="col">Classe</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>5A</td></tr><tr><td>2</td><td>Bruno</td><td>5A</td></tr><tr><td>5</td><td>Elena</td><td>5A</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Il risultato mantiene anche Classe: selezionare non elimina colonne.</p></div></details></section><section class="lesson-section" aria-labelledby="e2"><h2 id="e2">E2 · Le classi presenti</h2><p>Elencare le classi che hanno almeno uno studente, senza ripetizioni.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Serve soltanto l'attributo Classe.</li><li>La proiezione elimina le ripetizioni.</li></ol><pre class="ra-expression"><code class="nohighlight">π[Classe](STUDENTI)</code></pre><div class="table-scroll"><table data-result="E2"><caption>Risultato di E2: 2 tuple</caption><thead><tr><th scope="col">Classe</th></tr></thead><tbody><tr><td>5A</td></tr><tr><td>5B</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Sette studenti producono soltanto due classi distinte.</p></div></details></section><section class="lesson-section" aria-labelledby="e3"><h2 id="e3">E3 · ID e nomi della 5B</h2><p>Restituire identificatore e nome degli studenti di 5B.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Prima filtra la classe, ancora presente nello schema.</li><li>Poi proietta Sid e Studente.</li></ol><pre class="ra-expression"><code class="nohighlight">π[Sid, Studente](σ[Classe = &quot;5B&quot;](STUDENTI))</code></pre><div class="table-scroll"><table data-result="E3"><caption>Risultato di E3: 4 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>3</td><td>Carla</td></tr><tr><td>4</td><td>Diego</td></tr><tr><td>6</td><td>Fabio</td></tr><tr><td>7</td><td>Anna</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Sid permette di distinguere Anna (7) da Anna (1).</p></div></details></section><section class="lesson-section" aria-labelledby="e4"><h2 id="e4">E4 · Le iscrizioni con voto alto</h2><p>Restituire le coppie studente-corso con voto almeno 8.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Filtra ISCRIZIONI su Voto ≥ 8.</li><li>Proietta Sid e Cid: si chiedono coppie, non persone distinte.</li></ol><pre class="ra-expression"><code class="nohighlight">π[Sid, Cid](σ[Voto ≥ 8](ISCRIZIONI))</code></pre><div class="table-scroll"><table data-result="E4"><caption>Risultato di E4: 8 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Cid</th></tr></thead><tbody><tr><td>1</td><td>10</td></tr><tr><td>1</td><td>20</td></tr><tr><td>3</td><td>10</td></tr><tr><td>3</td><td>30</td></tr><tr><td>4</td><td>30</td></tr><tr><td>5</td><td>10</td></tr><tr><td>5</td><td>20</td></tr><tr><td>5</td><td>30</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> La stessa persona può comparire più volte con corsi diversi.</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_12.html">← Metodo, composizione ed equivalenze</a><a class="nav-button next" href="lez3_14.html">Easy E5–E8 →</a></nav>
+  </main>
+</body>
+</html>

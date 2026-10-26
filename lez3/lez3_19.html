@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Due applicazioni del ragionamento per esclusione: eliminare chi è superato e sottrarre le coppie che hanno un fatto in comune.">
+  <title>Lezione 3.19 · Hard · massimi e coppie senza collegamenti</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html" aria-current="page">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Hard · massimi e coppie senza collegamenti</h1>
+      <p class="lesson-lead">Due applicazioni del ragionamento per esclusione: eliminare chi è superato e sottrarre le coppie che hanno un fatto in comune.</p>
+      <div class="lesson-meta"><span>Pagina 19 di 20</span><progress value="19" max="20" aria-label="Pagina 19 di 20">19 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_18.html">← Hard H3–H4</a><a class="nav-button next" href="lez3_20.html">Riepilogo, esercizi e riferimenti →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>hard</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="h5"><h2 id="h5">H5 · Il voto massimo di ciascun corso</h2><p>Restituire (Sid, Cid, Voto) delle iscrizioni con voto massimo nel proprio corso, mantenendo tutti gli eventuali pari merito.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Confronta due copie di ISCRIZIONI sullo stesso corso.</li><li>Se V1 < V2, la prima iscrizione è superata da almeno un'altra: non è massima.</li><li>Proietta la prima iscrizione e riallinea i nomi degli attributi.</li><li>Sottrai le iscrizioni superate da tutte le iscrizioni.</li></ol><pre class="ra-expression"><code class="nohighlight">I1 ← ρ[I1(S1, C1, V1)](ISCRIZIONI)
+I2 ← ρ[I2(S2, C2, V2)](ISCRIZIONI)
+Superate ← σ[C1 = C2 ∧ V1 &lt; V2](I1 × I2)
+DaScartare ← ρ[D(Sid, Cid, Voto)](π[S1, C1, V1](Superate))
+ISCRIZIONI − DaScartare</code></pre><div class="table-scroll"><table data-result="H5"><caption>Risultato di H5: 5 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Cid</th><th scope="col">Voto</th></tr></thead><tbody><tr><td>1</td><td>10</td><td>9</td></tr><tr><td>5</td><td>10</td><td>9</td></tr><tr><td>5</td><td>20</td><td>9</td></tr><tr><td>5</td><td>30</td><td>10</td></tr><tr><td>7</td><td>40</td><td>7</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> L'uguaglianza di voto non fa scartare nulla: i due 9 di SQL restano entrambi. Robotica non produce righe perché non ha iscritti.</p></div></details></section><section class="lesson-section" aria-labelledby="h6"><h2 id="h6">H6 · Compagni senza corsi in comune</h2><p>Restituire le coppie di ID di studenti della stessa classe che non hanno nessun corso in comune. Ogni coppia deve comparire una sola volta e contenere persone diverse.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Crea due copie di STUDENTI e costruisci i candidati con stessa classe e Sid1 < Sid2.</li><li>Crea due copie di ISCRIZIONI, con nomi Sid1 e Sid2 allineati a quelli dei candidati.</li><li>I corsi con Cid1 = Cid2 individuano le coppie con almeno un corso comune.</li><li>Sottrai tali coppie dai candidati.</li></ol><pre class="ra-expression"><code class="nohighlight">S1 ← ρ[S1(Sid1, Nome1, Classe1)](STUDENTI)
+S2 ← ρ[S2(Sid2, Nome2, Classe2)](STUDENTI)
+Candidati ← π[Sid1, Sid2](
+  σ[Classe1 = Classe2 ∧ Sid1 &lt; Sid2](S1 × S2)
+)
+I1 ← ρ[I1(Sid1, Cid1, V1)](ISCRIZIONI)
+I2 ← ρ[I2(Sid2, Cid2, V2)](ISCRIZIONI)
+Condividono ← π[Sid1, Sid2](σ[Cid1 = Cid2](I1 × I2))
+Candidati − Condividono</code></pre><div class="table-scroll"><table data-result="H6"><caption>Risultato di H6: 5 tuple</caption><thead><tr><th scope="col">Sid1</th><th scope="col">Sid2</th></tr></thead><tbody><tr><td>3</td><td>6</td></tr><tr><td>3</td><td>7</td></tr><tr><td>4</td><td>6</td></tr><tr><td>4</td><td>7</td></tr><tr><td>6</td><td>7</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Fabio, pur non avendo iscrizioni, compare nelle coppie candidate. Se partissi soltanto da ISCRIZIONI lo perderesti.</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_18.html">← Hard H3–H4</a><a class="nav-button next" href="lez3_20.html">Riepilogo, esercizi e riferimenti →</a></nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prima scegli il significato della risposta, poi gli operatori. Uno schema corretto dei risultati intermedi evita molti errori.">
+  <title>Lezione 3.12 · Come costruire un'interrogazione</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html" aria-current="page">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Come costruire un'interrogazione</h1>
+      <p class="lesson-lead">Prima scegli il significato della risposta, poi gli operatori. Uno schema corretto dei risultati intermedi evita molti errori.</p>
+      <div class="lesson-meta"><span>Pagina 12 di 20</span><progress value="12" max="20" aria-label="Pagina 12 di 20">12 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_11.html">← Left, right e full outer join</a><a class="nav-button next" href="lez3_13.html">Easy E1–E4 →</a></nav>
+    <div class="content-box">
+<section class="lesson-section" aria-labelledby="metodo"><h2 id="metodo">Una procedura in cinque passi</h2><ol><li><strong>Definisci l'output:</strong> ID, nomi, corsi o coppie? Scrivi lo schema atteso.</li><li><strong>Individua le relazioni:</strong> quali fatti sono necessari? Non confondere dati anagrafici e iscrizioni.</li><li><strong>Traduci i vincoli:</strong> filtri con σ; collegamenti con ⋈; “oppure” con ∪; “non” con −.</li><li><strong>Costruisci i risultati intermedi:</strong> assegna nomi brevi e controlla gli schemi prima di ∪, − e ∩.</li><li><strong>Proietta l'output e verifica:</strong> mantieni le chiavi finché servono a distinguere le persone; prova un caso positivo, uno negativo e un caso senza collegamenti.</li></ol></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Esempio completo: studenti di 5A con un voto almeno 9</h2><pre class="ra-expression"><code class="nohighlight">A ← σ[Classe = &quot;5A&quot;](STUDENTI)
+B ← σ[Voto ≥ 9](ISCRIZIONI)
+Risultato ← π[Sid, Studente](A ⋈ B)</code></pre><div class="table-scroll"><table><caption>Risultato</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><p>Anna ha una tupla qualificante, Elena ne ha tre. La proiezione finale produce comunque una sola tupla per persona.</p></section><section class="lesson-section" aria-labelledby="riscritture"><h2 id="riscritture">Equivalenze: stesso risultato, espressioni diverse</h2><pre class="ra-expression"><code class="nohighlight">σ[p ∧ q](R) = σ[p](σ[q](R))
+σ[p](σ[q](R)) = σ[q](σ[p](R))
+π[X](π[Y](R)) = π[X](R), se X ⊆ Y</code></pre><p>Se p usa soltanto attributi di R, in un inner join si può applicare prima il filtro:</p><pre class="ra-expression"><code class="nohighlight">σ[p](R ⋈[θ] S) = σ[p](R) ⋈[θ] S</code></pre><p>Ridurre le tuple intermedie può rendere il piano più efficiente. Spostare una proiezione richiede di conservare gli attributi necessari ai filtri e ai join.</p><p class="callout warning"><strong>Condizioni essenziali:</strong> queste riscritture non vanno trasferite automaticamente agli outer join. Non eliminare inoltre le chiavi prima di una differenza se la domanda riguarda persone e non nomi distinti.</p></section><section class="lesson-section" aria-labelledby="parole"><h2 id="parole">Indizi nel testo delle domande</h2><div class="table-scroll"><table><caption>Dal linguaggio naturale all'algebra</caption><thead><tr><th scope="col">Espressione nella domanda</th><th scope="col">Strategia</th></tr></thead><tbody><tr><td>Almeno uno / esiste</td><td>Join o proiezione dei fatti qualificanti.</td></tr><tr><td>Nessuno / non esiste</td><td>Candidati meno elementi con una controparte.</td></tr><tr><td>Tutti i corsi richiesti</td><td>Candidati meno studenti a cui manca almeno un corso richiesto.</td></tr><tr><td>Soltanto / esclusivamente</td><td>Almeno una partecipazione e nessuna partecipazione vietata.</td></tr><tr><td>Almeno due corsi diversi</td><td>Due copie rinominate della stessa relazione e confronto dei codici corso.</td></tr></tbody></table></div><p>Negli esempi ogni soluzione esplicita domanda, passaggi, espressione, risultato e punto da controllare. Le pagine hard richiedono più risultati intermedi, non nuovi operatori obbligatori.</p></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_11.html">← Left, right e full outer join</a><a class="nav-button next" href="lez3_13.html">Easy E1–E4 →</a></nav>
+  </main>
+</body>
+</html>

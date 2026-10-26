@@ -1,0 +1,41 @@
+/* Solo le nuove pagine di algebra; riusa il template condiviso. */
+.algebra-page .ra-expression {
+    padding: .8rem 1rem;
+    background: var(--surface-alt);
+    border-left: 4px solid var(--brand);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+}
+.algebra-page .ra-expression code {
+    display: block;
+    min-width: 0;
+    padding: 0;
+    white-space: inherit;
+    overflow-wrap: inherit;
+    font-size: .95rem;
+}
+.algebra-page .ra-null {
+    color: var(--muted);
+    font-style: italic;
+}
+.algebra-page .lesson-meta {
+    flex-wrap: wrap;
+}
+.algebra-page .reveal-content > :first-child {
+    margin-top: .4rem;
+}
+@media (max-width: 760px) {
+    .algebra-page table {
+        min-width: 0;
+    }
+}
+@media print {
+    .algebra-page .ra-expression,
+    .algebra-page tr {
+        break-inside: avoid;
+    }
+    .algebra-page .table-scroll {
+        overflow: visible;
+    }
+}

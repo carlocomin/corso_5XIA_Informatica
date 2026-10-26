@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Controlla schema, identità e significato della domanda. Sono i tre riferimenti per leggere e scrivere un'espressione corretta.">
+  <title>Lezione 3.20 · Riepilogo e autoverifica</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html" aria-current="page">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Riepilogo e autoverifica</h1>
+      <p class="lesson-lead">Controlla schema, identità e significato della domanda. Sono i tre riferimenti per leggere e scrivere un'espressione corretta.</p>
+      <div class="lesson-meta"><span>Pagina 20 di 20</span><progress value="20" max="20" aria-label="Pagina 20 di 20">20 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_19.html">← Hard H5–H6</a><a class="nav-button next" href="../lez4/lez4_1.html">PHP, MySQL e web →</a></nav>
+    <div class="content-box">
+<section class="lesson-section" aria-labelledby="quadro"><h2 id="quadro">Il quadro degli operatori</h2><div class="table-scroll"><table><caption>Operatori studiati</caption><thead><tr><th scope="col">Operatore</th><th scope="col">Tipo</th><th scope="col">Effetto principale</th></tr></thead><tbody><tr><td>σ selezione</td><td>Unario, fondamentale</td><td>Filtra tuple; mantiene lo schema.</td></tr><tr><td>π proiezione</td><td>Unario, fondamentale</td><td>Sceglie attributi; elimina duplicati.</td></tr><tr><td>× prodotto</td><td>Binario, fondamentale</td><td>Tutte le combinazioni; nomi distinti.</td></tr><tr><td>∪ unione</td><td>Binario, fondamentale</td><td>Presenza in almeno un operando compatibile.</td></tr><tr><td>− differenza</td><td>Binario, fondamentale</td><td>Presenza nel primo e assenza nel secondo; schemi compatibili.</td></tr><tr><td>ρ rinomina</td><td>Unario, di base/supporto</td><td>Cambia i nomi, non i fatti.</td></tr><tr><td>∩ intersezione</td><td>Binario, derivato</td><td>R − (R − S).</td></tr><tr><td>⋈[θ] theta-join</td><td>Binario, derivato</td><td>Selezione su un prodotto; inner.</td></tr><tr><td>⋈ naturale</td><td>Binario, derivato</td><td>Uguaglianza su tutti i nomi comuni, presenti una volta sola.</td></tr><tr><td>⟕ / ⟖ / ⟗ outer join</td><td>Binari, estensione</td><td>Conservano tuple senza abbinamento usando NULL.</td></tr></tbody></table></div></section><section class="lesson-section" aria-labelledby="errori"><h2 id="errori">Sei errori da saper riconoscere</h2><ol><li><strong>Proiettare i nomi prima di distinguere le persone:</strong> gli omonimi si fondono.</li><li><strong>Sottrarre relazioni con schemi diversi:</strong> prepara prima proiezioni compatibili.</li><li><strong>Usare Cid ≠ 10 per dire “non segue SQL”:</strong> trova altre iscrizioni anche di chi segue SQL.</li><li><strong>Cercare due corsi con Cid = 10 ∧ Cid = 20 sulla stessa tupla:</strong> servono due insiemi di studenti o due copie della relazione.</li><li><strong>Dimenticare attributi comuni in un join naturale:</strong> vengono confrontati tutti, anche quelli non voluti.</li><li><strong>Filtrare dopo un outer join come se fosse un inner join:</strong> puoi perdere le righe completate con NULL.</li></ol></section><section class="lesson-section" aria-labelledby="esercizi"><h2 id="esercizi">Prova tu: tre interrogazioni</h2><p>Usa il <a href="lez3_2.html#istanze">database guida</a>. Prima trova il risultato a mano, poi scrivi l'espressione.</p><ol><li>Studenti con voto almeno 9 in almeno due corsi distinti.</li><li>Corsi che non hanno alcun iscritto di 5A.</li><li>Studenti iscritti a tutti i corsi dell'area Sistemi.</li></ol><details class="reveal"><summary>Confronta soluzioni e risultati</summary><div class="reveal-content"><h3>1 · Due corsi con voto alto</h3><pre class="ra-expression"><code class="nohighlight">A ← σ[Voto ≥ 9](ISCRIZIONI)
+I1 ← ρ[I1(S1, C1, V1)](A)
+I2 ← ρ[I2(S2, C2, V2)](A)
+Id ← ρ[Sid ← S1](π[S1](σ[S1 = S2 ∧ C1 &lt; C2](I1 × I2)))
+π[Sid, Studente](Id ⋈ STUDENTI)</code></pre><p>Risultato: <code>{(5, Elena)}</code>.</p><h3>2 · Nessun iscritto di 5A</h3><pre class="ra-expression"><code class="nohighlight">Frequentati ← π[Cid](σ[Classe = &quot;5A&quot;](STUDENTI) ⋈ ISCRIZIONI)
+Id ← π[Cid](CORSI) − Frequentati
+π[Cid, Corso](Id ⋈ CORSI)</code></pre><p>Risultato: <code>{(40, Python), (50, Robotica)}</code>.</p><h3>3 · Tutti i corsi dell'area Sistemi</h3><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](STUDENTI)
+T ← π[Cid](σ[Area = &quot;Sistemi&quot;](CORSI))
+Mancanti ← (A × T) − π[Sid, Cid](ISCRIZIONI)
+Buoni ← A − π[Sid](Mancanti)
+π[Sid, Studente](Buoni ⋈ STUDENTI)</code></pre><p>Risultato: relazione vuota di schema (Sid, Studente). Robotica fa parte dei corsi richiesti ma non ha iscritti, quindi ogni studente manca almeno di quel corso.</p></div></details></section><section class="lesson-section" aria-labelledby="riferimenti"><h2 id="riferimenti">Riferimenti e passo successivo</h2><ul class="source-note"><li>E. F. Codd, <a href="https://research.ibm.com/publications/a-relational-model-of-data-for-large-shared-data-banks"><cite>A Relational Model of Data for Large Shared Data Banks</cite></a>, 1970: origine del modello e delle operazioni sulle relazioni.</li><li>Silberschatz, Korth, Sudarshan, <a href="https://db-book.com/slides-dir/PDF-dir/ch2.pdf"><cite>Database System Concepts</cite>, capitolo 2</a>: operatori di base e notazione.</li><li><a href="https://15445.courses.cs.cmu.edu/spring2026/slides/01-relationalmodel.pdf">Carnegie Mellon, Relational Model &amp; Algebra</a>: collegamento fra algebra e sistemi di gestione.</li><li><a href="https://www.postgresql.org/docs/18/queries-table-expressions.html">PostgreSQL, Table Expressions</a>: comportamento dei join nel contesto SQL.</li></ul><p class="callout success"><strong>Passo successivo:</strong> la lezione 4 introduce PHP, MySQL e pagine web. L'algebra aiuta a ragionare sui risultati delle interrogazioni che l'applicazione richiederà al DBMS.</p></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_19.html">← Hard H5–H6</a><a class="nav-button next" href="../lez4/lez4_1.html">PHP, MySQL e web →</a></nav>
+  </main>
+</body>
+</html>

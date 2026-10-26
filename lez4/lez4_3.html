@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez4_3 · X⁺ e F⁺: implicazione di dipendenze</title>
+  <title>ITST – 5ª · Lez4_3 · Setup ambiente PHP + MySQL</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -19,55 +19,31 @@
       box.style.display = open ? 'none' : 'block';
       btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
     }
-    document.addEventListener('DOMContentLoaded', function(){
-      var current = window.location.pathname.split('/').pop();
-      var link = document.querySelector('#menu a[href="' + current + '"]');
-      if (link) link.classList.add('active');
-    });
   </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
 </head>
 <body>
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 4 — Normalizzazione</h2>
+    <h2>Lezione 4 — PHP + MySQL + HTML/CSS</h2>
     <ul>
-      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
-      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
-      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
-      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
-      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
-      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
-      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
-      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
-      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
-      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
-      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
-      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
-      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
-      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
-      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
-      <li><a href="lez4_16.html">Lez4.16: Preservazione delle dipendenze</a></li>
+      <li><a href="lez4_1.html">Lez4.1: Obiettivi e percorso</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez4_3.html">Lez4.3: Setup ambiente: PHP + MySQL</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Primo script PHP</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Sintassi base e tipi</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Tipi di dato fondamentali e array</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Funzioni di utilità sugli array</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Esercizi PHP (soluzioni a comparsa)</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Variabili d'ambiente e superglobali PHP</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Funzioni in PHP: idee fondamentali</a></li>
+      <li><a href="lez4_11.html">Lez4.11: Funzioni in PHP: approfondimento</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1><code>X⁺</code> e <code>F⁺</code>: il ponte operativo</h1>
+    <h1>Setup ambiente: PHP + MySQL</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -77,61 +53,110 @@
     <div class="content-box">
       <div class="inner-box">
 
-        <h2>Due concetti diversi</h2>
-        <div class="box">
-          <table>
-            <thead>
-              <tr><th>Nome</th><th>Notazione</th><th>Definizione</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Chiusura di attributi</td>
-                <td><code>X⁺</code> (rispetto a <code>F</code>)</td>
-                <td>tutti gli attributi determinabili a partire da <code>X</code> usando le DF di <code>F</code></td>
-              </tr>
-              <tr>
-                <td>Chiusura di dipendenze</td>
-                <td><code>F⁺</code></td>
-                <td>tutte le DF logicamente implicate da <code>F</code> (conseguenze)</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="warn">In pratica <code>F⁺</code> può essere enorme: non lo si enumera.</p>
-          <p class="note">Intuizione: <code>F</code> è l’elenco “breve” di regole che ti danno; <code>F⁺</code> è tutto ciò che puoi dedurre combinandole in tutti i modi possibili.</p>
-        </div>
-
-        <h2>Caratterizzazione operativa (da ricordare)</h2>
-        <div class="box">
-          <p>Una DF <code>X → Y</code> è implicata da <code>F</code> <strong>se e solo se</strong>:</p>
-          <p class="ok" style="display:block"><code>Y ⊆ X⁺</code></p>
-          <p class="note">Quindi il calcolo di <code>X⁺</code> è lo strumento pratico per decidere se una DF appartiene a <code>F⁺</code>.</p>
-          <p class="note">Questo evita discussioni “a intuito”: invece di provare a indovinare, calcoli <code>X⁺</code> e hai una risposta oggettiva.</p>
-        </div>
-
-        <h2>Micro-esempio (implicazione)</h2>
-        <div class="box">
-          <p>Sia:</p>
-          <pre><code class="language-text">F = { A → B,  B → C }</code></pre>
-          <p><strong>Domanda</strong>: <code>A → C</code> è implicata?</p>
-          <button id="btnImp1" onclick="toggleBox('btnImp1','ansImp1')">Mostra ▼</button>
-          <div id="ansImp1" style="display:none; margin-top:.5rem">
-            <p>Calcolo <code>A⁺</code> rispetto a <code>F</code>:</p>
-            <ul>
-              <li>Start: <code>{A}</code></li>
-              <li><code>A→B</code> ⇒ <code>{A,B}</code></li>
-              <li><code>B→C</code> ⇒ <code>{A,B,C}</code></li>
-            </ul>
-            <p class="ok" style="display:block">Poiché <code>C ∈ A⁺</code>, allora <code>A → C</code> è implicata.</p>
-          </div>
-        </div>
-
-        <h2>Uso tipico (da oggi in poi)</h2>
+        <h2>Obiettivo della sessione</h2>
         <div class="box">
           <ul>
-            <li><strong>Test “implicata?”</strong>: per verificare <code>X → Y</code>, calcola <code>X⁺</code> e controlla <code>Y ⊆ X⁺</code>.</li>
-            <li><strong>Superchiavi / chiavi</strong>: <code>X</code> è superchiave se <code>X⁺</code> contiene tutti gli attributi di <code>R</code>.</li>
-            <li><strong>Copertura minimale</strong>: i test “superfluo?” e “ridondante?” si fanno calcolando chiusure.</li>
+            <li>Avere un ambiente locale con <strong>PHP</strong> e <strong>MySQL</strong> funzionanti.</li>
+            <li>Preparare una connessione <strong>PDO</strong> riutilizzabile.</li>
+            <li>Arrivare non solo a "Connessione OK", ma al primo contatto con una <strong>query parametrizzata</strong>.</li>
           </ul>
+        </div>
+
+        <h2>Cosa serve davvero</h2>
+        <div class="box">
+          <ul>
+            <li>Server web locale o bundle equivalente (XAMPP, WAMP, MAMP, LAMP).</li>
+            <li>PHP con estensione <code>pdo_mysql</code> attiva.</li>
+            <li>Un'istanza MySQL o MariaDB raggiungibile in locale.</li>
+          </ul>
+          <p class="note">Per il modulo conta il risultato finale: browser raggiungibile, DB pronto, PDO disponibile.</p>
+        </div>
+
+        <h2>Configurazione minima</h2>
+        <div class="box">
+          <ul>
+            <li>Avvia il server web e MySQL.</li>
+            <li>Individua la cartella da cui il browser legge i file PHP.</li>
+            <li>Verifica che <code>http://localhost</code> risponda.</li>
+            <li>Controlla da terminale la versione PHP con <code>php -v</code>.</li>
+          </ul>
+          <p class="warn">Se PHP non vede l'estensione <code>pdo_mysql</code>, le slide successive sul database non potranno funzionare.</p>
+        </div>
+
+        <h2>Prepara il database e la tabella guida del modulo</h2>
+        <div class="box">
+          <pre><code class="language-sql">CREATE DATABASE corso_php CHARACTER SET utf8mb4;
+CREATE USER 'studente'@'localhost' IDENTIFIED BY 'password_sicura';
+GRANT ALL PRIVILEGES ON corso_php.* TO 'studente'@'localhost';
+
+USE corso_php;
+
+CREATE TABLE studenti (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  classe VARCHAR(20) NOT NULL
+);</code></pre>
+          <p class="note">Nel modulo ricorreremo spesso alla tabella <code>studenti</code>: averla pronta rende piu chiari esempi, query e prepared statements. Qui compare anche l'utente <code>studente</code>, cosi la parte SQL e l'esempio PDO restano coerenti tra loro.</p>
+        </div>
+
+        <h2>Prima connessione PDO</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$dsn = 'mysql:host=localhost;dbname=corso_php;charset=utf8mb4';
+$user = 'studente';
+$pass = 'password_sicura';
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    echo "Connessione OK";
+} catch (PDOException $e) {
+    echo "Errore: " . htmlspecialchars($e->getMessage());
+}
+</code></pre>
+          <p class="note">Sostituisci <code>$user</code> e <code>$pass</code> con le credenziali reali del tuo ambiente locale.</p>
+          <p class="ok">Questa connessione e la base di tutto il modulo: la riuseremo per leggere e inserire dati.</p>
+        </div>
+
+        <h2>Perche usare PDO in questo corso</h2>
+        <div class="box">
+          <ul>
+            <li>Un'unica interfaccia chiara per lavorare con il database.</li>
+            <li>Supporto diretto ai <strong>prepared statements</strong>.</li>
+            <li>Codice piu leggibile e riutilizzabile rispetto a query costruite a mano.</li>
+          </ul>
+        </div>
+
+        <h2>Primo esempio di prepared statement</h2>
+        <div class="box">
+          <pre><code class="language-php">&lt;?php
+$stmt = $pdo->prepare(
+    "SELECT id, nome, classe
+     FROM studenti
+     WHERE classe = :classe"
+);
+
+$stmt->execute([
+    'classe' => '5BIA'
+]);
+
+$righe = $stmt->fetchAll();
+?&gt;</code></pre>
+          <p class="warn">Il punto chiave non e memorizzare i metodi, ma capire la sequenza: <code>prepare</code>, poi <code>execute</code>, poi lettura del risultato.</p>
+        </div>
+
+        <h2>Checklist finale</h2>
+        <div class="box">
+          <ul>
+            <li>PHP e MySQL attivi.</li>
+            <li>Database <code>corso_php</code> creato.</li>
+            <li>Tabella <code>studenti</code> pronta.</li>
+            <li>Connessione PDO verificata.</li>
+            <li>Idea chiara di cosa sia un prepared statement.</li>
+          </ul>
+          <p class="ok">Nella prossima slide useremo PHP dentro HTML, ma con l'orizzonte gia orientato ai dati del database.</p>
         </div>
 
       </div>

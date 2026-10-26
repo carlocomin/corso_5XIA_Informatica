@@ -1,168 +1,62 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_5 · Sintassi base e tipi</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_4.html"; }
-    function nextSlide(){ window.location.href = "lez3_6.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Per confrontare due copie della stessa relazione o allineare due schemi dobbiamo distinguere i nomi degli attributi.">
+  <title>Lezione 3.5 · Rinomina: dare nomi senza cambiare i dati</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Sintassi base e tipi</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html" aria-current="page">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Rinomina: dare nomi senza cambiare i dati</h1>
+      <p class="lesson-lead">Per confrontare due copie della stessa relazione o allineare due schemi dobbiamo distinguere i nomi degli attributi.</p>
+      <div class="lesson-meta"><span>Pagina 5 di 20</span><progress value="5" max="20" aria-label="Pagina 5 di 20">5 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_4.html">← Proiezione π</a><a class="nav-button next" href="lez3_6.html">Prodotto cartesiano × →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Obiettivi</h2>
-        <div class="box">
-          <ul>
-            <li>Prendere confidenza con variabili, commenti e regole di base della sintassi PHP.</li>
-            <li>Conoscere i tipi primitivi principali e capire come li usi nel codice, nelle pagine HTML e negli input dei form.</li>
-            <li>Evitare errori tipici: concatenazione sbagliata, confronti deboli, input mancanti e cast poco chiari.</li>
-          </ul>
-          <p class="note">Questa base resta introduttiva a PHP: ci serve sia per leggere script semplici sia per arrivare con piu consapevolezza a <code>$_GET</code>, <code>$_POST</code> e PDO.</p>
-        </div>
-
-        <h2>Sintassi minima: variabili e commenti</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$nome = "Giulia";
-$eta = 18;
-
-// commento su una linea
-/* commento su piu linee */
-?&gt;</code></pre>
-          <ul>
-            <li>Le istruzioni terminano con <code>;</code>.</li>
-            <li>Le variabili iniziano sempre con <code>$</code>.</li>
-            <li>PHP distingue tra <code>$nome</code> e <code>$Nome</code>: sulle variabili il linguaggio e case-sensitive.</li>
-          </ul>
-          <p class="note">Nelle prossime slide queste variabili rappresenteranno a volte valori scritti a mano, a volte dati letti da <code>$_POST</code> o da MySQL.</p>
-        </div>
-
-        <h2>Stringhe: singoli apici, doppi apici e concatenazione</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$classe = "5BIA";
-$titolo = "Elenco classe $classe";
-$testo = 'Classe: ' . $classe;
-
-echo $titolo;
-?&gt;</code></pre>
-          <ul>
-            <li>I doppi apici interpolano variabili; i singoli lasciano il testo letterale.</li>
-            <li><code>.</code> concatena stringhe: non usare <code>+</code>.</li>
-            <li>Quando una stringa arriva dall'esterno e va stampata in HTML, usa <code>htmlspecialchars()</code>.</li>
-            <li>I singoli apici sono utili anche quando vuoi testo stabile, per esempio in una stringa SQL o in un frammento HTML fisso.</li>
-          </ul>
-        </div>
-
-        <h2>Numeri e booleani</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$prezzo = 19.90;
-$quantita = 3;
-$totale = $prezzo * $quantita;
-
-$attivo = true;
-
-var_dump(0 == false);   // true
-var_dump(0 === false);  // false
-?&gt;</code></pre>
-          <ul>
-            <li>Preferisci <code>===</code> e <code>!==</code> per confronti affidabili.</li>
-            <li><code>var_dump()</code> e utile in fase di debug per capire tipo e valore reali.</li>
-            <li>I valori numerici servono sia negli esercizi introduttivi sia, piu avanti, in calcoli e query.</li>
-          </ul>
-        </div>
-
-        <h2>Null, default e dati mancanti</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$nome = $_POST['nome'] ?? null;
-$classe = $_POST['classe'] ?? '5BIA';
-?&gt;</code></pre>
-          <ul>
-            <li><code>null</code> indica assenza di valore.</li>
-            <li><code>??</code> evita notice e rende espliciti i valori di default.</li>
-            <li>Questa forma e molto utile quando ricevi dati da un form prima di validarli o salvarli.</li>
-            <li>E utile distinguere tra "chiave mancante", <code>null</code> e stringa vuota: non significano la stessa cosa.</li>
-          </ul>
-        </div>
-
-        <h2>Cast e conversioni esplicite</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$quantita = "5";
-$quantitaInt = (int) $quantita;
-
-$id = (int) ($_GET['id'] ?? 0);
-$voto = (float) ($_POST['voto'] ?? 0);
-?&gt;</code></pre>
-          <ul>
-            <li>Il cast esplicito chiarisce come stai interpretando il dato ricevuto.</li>
-            <li>Prima si valida, poi si casta, poi si usa il valore.</li>
-            <li>Nel modulo questo passaggio tornera utile anche prima di una query parametrizzata.</li>
-          </ul>
-        </div>
-
-        <h2>In sintesi</h2>
-        <div class="box">
-          <ul>
-            <li>La sintassi di base serve a scrivere script PHP leggibili e prevedibili.</li>
-            <li>Stringhe, numeri, boolean e <code>null</code> compaiono subito negli esercizi, nei form e poi nelle query.</li>
-            <li>Se i tipi sono chiari, anche il passaggio verso MySQL diventa piu semplice da capire.</li>
-          </ul>
-          <p class="ok">Nella prossima slide vedremo gli array, che in PHP sono la struttura chiave per gestire risultati, righe e collezioni di dati.</p>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore di supporto ρ</h2><p>Ai cinque operatori richiesti aggiungiamo la <strong>rinomina</strong>, tradizionalmente inclusa fra gli operatori di base. Non cambia tuple, domini o cardinalità: modifica i nomi della relazione o dei suoi attributi.</p><pre class="ra-expression"><code class="nohighlight">ρ[NuovoNome ← VecchioNome](R)
+ρ[Alias(A1, …, An)](R)</code></pre><p>Nella seconda forma assegniamo un alias alla relazione e nuovi nomi a tutti gli attributi, seguendo l'ordine dello schema scritto. Useremo nomi distinti per evitare ambiguità.</p></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Due copie delle iscrizioni</h2><pre class="ra-expression"><code class="nohighlight">I1 ← ρ[I1(S1, C1, V1)](ISCRIZIONI)
+I2 ← ρ[I2(S2, C2, V2)](ISCRIZIONI)</code></pre><p>I1 e I2 contengono gli stessi 13 fatti di partenza ma con schemi distinti. Possiamo quindi costruire <code>I1 × I2</code> e confrontare <code>S1 = S2</code> e <code>C1 ≠ C2</code>: due iscrizioni della stessa persona a corsi diversi.</p></section><section class="lesson-section" aria-labelledby="compatibilita"><h2 id="compatibilita">Allineare uno schema</h2><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](STUDENTI)
+B ← ρ[Sid ← S1](π[S1](I1))</code></pre><p>A e B hanno ora lo stesso schema (Sid) e lo stesso dominio. Possiamo calcolare <code>A − B</code>. La rinomina non rende compatibili significati diversi: chiamare Sid un codice corso non lo trasforma in un codice studente.</p><p class="callout"><strong>Convenzione della lezione:</strong> per unione, differenza e intersezione richiediamo gli stessi nomi di attributo e gli stessi domini. Quando i nomi differiscono, li allineiamo con ρ.</p></section><section class="lesson-section" aria-labelledby="controllo"><h2 id="controllo">Verifica rapida</h2><details class="reveal"><summary>ρ cambia il valore dell'identificatore di uno studente?</summary><div class="reveal-content"><p>No: rinominare Sid in S1 cambia soltanto il nome dell’attributo. I valori rimangono invariati.</p></div></details></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_4.html">← Proiezione π</a><a class="nav-button next" href="lez3_6.html">Prodotto cartesiano × →</a></nav>
+  </main>
 </body>
 </html>

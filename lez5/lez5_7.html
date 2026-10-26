@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_7 · Il problema centrale</title>
+  <title>ITST – 5ª · Lez5_7 · Decomposizione: problema e obiettivi</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -44,44 +44,30 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Le transazioni concorrenti si intrecciano</h1>
+    <h1>Decomposizione di schemi relazionali: problema e obiettivi</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -90,26 +76,44 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Dal codice alle operazioni elementari</h2>
+
+        <h2>Problema di partenza</h2>
         <div class="box">
-          <p>Dal punto di vista teorico, una transazione può essere vista come una sequenza di <strong>letture</strong> e <strong>scritture</strong>.</p>
-          <p>Quando due transazioni sono concorrenti, queste operazioni possono <strong>alternarsi</strong>.</p>
+          <p>Dati:</p>
+          <ul>
+            <li>uno schema relazionale <code>R</code> (insieme di attributi)</li>
+            <li>un insieme di dipendenze funzionali <code>F</code> su <code>R</code></li>
+          </ul>
+          <p>vogliamo trasformare <code>R</code> in uno o più schemi <code>(R1, R2, ...)</code> che risultino più “sani” rispetto a una forma normale obiettivo.</p>
         </div>
 
-        <h2>Perché nasce il rischio</h2>
+        <h2>Obiettivi tipici della decomposizione</h2>
         <div class="box">
           <ul>
-            <li>Una transazione può leggere dati modificati da un'altra.</li>
-            <li>Una scrittura può sovrascrivere un risultato ancora non stabilizzato.</li>
-            <li>Un'analisi può essere fatta su una base di dati che cambia "sotto i piedi".</li>
+            <li><strong>Ridurre ridondanze e anomalie</strong> (aggiornamento, inserimento, cancellazione).</li>
+            <li><strong>Lossless join</strong>: decomposizione senza perdita di informazione.</li>
+            <li><strong>Preservazione delle dipendenze</strong> (quando possibile): controllare i vincoli senza dover fare join “globali”.</li>
           </ul>
-          <p class="note">Le singole operazioni possono essere corrette prese una per una, ma l'intreccio complessivo può comunque produrre un risultato sbagliato.</p>
+          <p class="warn">Tra “BCNF” e “preservazione delle dipendenze” può esserci un trade-off: lo vedremo.</p>
         </div>
 
-        <h2>Passo successivo</h2>
+        <h2>Principio chiave</h2>
         <div class="box">
-          <p class="ok">Prima di definire cosa è corretto, vediamo cosa può andare storto: le <strong>anomalie della concorrenza</strong>.</p>
+          <p>Se una DF <code>X → Y</code> “causa” una violazione della forma normale obiettivo in <code>R</code>, allora:</p>
+          <p class="ok" style="display:block"><strong>isola quella DF in una relazione separata.</strong></p>
+          <p class="note">Cioè: separi “la parte <code>Y</code> determinata da <code>X</code>” dal resto.</p>
+          <p class="note">Intuizione: se un pezzo di informazione si ripete perché è determinato da qualcos’altro, conviene spostarlo in una tabella dove compaia una sola volta.</p>
         </div>
+
+        <h2>Passo 0 consigliato (prima di decomporre)</h2>
+        <div class="box">
+          <ol>
+            <li>Calcola una <strong>copertura minimale</strong> <code>F<sub>m</sub></code> di <code>F</code>.</li>
+            <li>Se serve per riconoscere violazioni (3NF/BCNF), individua le <strong>chiavi candidate</strong> di <code>R</code>.</li>
+          </ol>
+          <p class="note">Motivo: un insieme di DF “sporco” rende più difficile capire quali vincoli siano davvero la causa delle anomalie.</p>
+        </div>
+
       </div>
     </div>
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Le prime query su più relazioni: collegare i fatti e trovare gli elementi privi di una controparte.">
+  <title>Lezione 3.15 · Medium · collegamenti e assenze</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
+</head>
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html" aria-current="page">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Medium · collegamenti e assenze</h1>
+      <p class="lesson-lead">Le prime query su più relazioni: collegare i fatti e trovare gli elementi privi di una controparte.</p>
+      <div class="lesson-meta"><span>Pagina 15 di 20</span><progress value="15" max="20" aria-label="Pagina 15 di 20">15 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_14.html">← Easy E5–E8</a><a class="nav-button next" href="lez3_16.html">Medium M5–M8 →</a></nav>
+    <div class="content-box">
+<p class="callout">Livello <strong>medium</strong>. Usa le istanze della <a href="lez3_2.html#istanze">pagina dati</a>. Prima di aprire la soluzione, scrivi lo schema atteso e prova a individuare almeno una tupla del risultato.</p><section class="lesson-section" aria-labelledby="m1"><h2 id="m1">M1 · Nomi degli iscritti a SQL</h2><p>Restituire Sid e nome degli studenti che seguono il corso chiamato SQL.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Filtra CORSI sul nome del corso: non serve conoscerne a priori l'ID.</li><li>Unisci naturalmente il corso con ISCRIZIONI e poi STUDENTI.</li><li>Proietta Sid e Studente.</li></ol><pre class="ra-expression"><code class="nohighlight">Q ← σ[Corso = &quot;SQL&quot;](CORSI)
+π[Sid, Studente](STUDENTI ⋈ ISCRIZIONI ⋈ Q)</code></pre><div class="table-scroll"><table data-result="M1"><caption>Risultato di M1: 4 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>2</td><td>Bruno</td></tr><tr><td>3</td><td>Carla</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> I nomi comuni sono intenzionali: Sid collega le persone, Cid i corsi.</p></div></details></section><section class="lesson-section" aria-labelledby="m2"><h2 id="m2">M2 · Un buon voto a Reti</h2><p>Restituire Sid e nome degli studenti che hanno almeno 8 al corso Reti.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Collega le tre relazioni.</li><li>Filtra sia il corso sia il voto.</li><li>Proietta l'identità della persona.</li></ol><pre class="ra-expression"><code class="nohighlight">π[Sid, Studente](
+  σ[Corso = &quot;Reti&quot; ∧ Voto ≥ 8](STUDENTI ⋈ ISCRIZIONI ⋈ CORSI)
+)</code></pre><div class="table-scroll"><table data-result="M2"><caption>Risultato di M2: 3 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>3</td><td>Carla</td></tr><tr><td>4</td><td>Diego</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Anna (1) segue Reti ma ha 7, quindi viene esclusa.</p></div></details></section><section class="lesson-section" aria-labelledby="m3"><h2 id="m3">M3 · Studenti senza iscrizioni</h2><p>Restituire Sid e nome di chi non segue nessun corso.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Il candidato è qualsiasi studente, anche senza collegamenti.</li><li>Sottrai gli ID presenti in ISCRIZIONI.</li><li>Ricollega il risultato a STUDENTI per ottenere il nome.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Sid](STUDENTI) − π[Sid](ISCRIZIONI)
+π[Sid, Studente](A ⋈ STUDENTI)</code></pre><div class="table-scroll"><table data-result="M3"><caption>Risultato di M3: 1 tuple</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>6</td><td>Fabio</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Un inner join iniziale perderebbe proprio gli studenti che stai cercando.</p></div></details></section><section class="lesson-section" aria-labelledby="m4"><h2 id="m4">M4 · Corsi senza iscritti</h2><p>Restituire Cid e titolo dei corsi che non hanno alcuna iscrizione.</p><details class="reveal"><summary>Mostra lo svolgimento e il risultato</summary><div class="reveal-content"><ol><li>Parti da tutti i corsi.</li><li>Sottrai i codici dei corsi presenti nelle iscrizioni.</li><li>Aggiungi il titolo tramite un join con CORSI.</li></ol><pre class="ra-expression"><code class="nohighlight">A ← π[Cid](CORSI) − π[Cid](ISCRIZIONI)
+π[Cid, Corso](A ⋈ CORSI)</code></pre><div class="table-scroll"><table data-result="M4"><caption>Risultato di M4: 1 tuple</caption><thead><tr><th scope="col">Cid</th><th scope="col">Corso</th></tr></thead><tbody><tr><td>50</td><td>Robotica</td></tr></tbody></table></div><p class="callout"><strong>Controllo:</strong> Non basta filtrare per un voto: un corso senza iscrizioni non ha tuple in ISCRIZIONI.</p></div></details></section>
+    </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_14.html">← Easy E5–E8</a><a class="nav-button next" href="lez3_16.html">Medium M5–M8 →</a></nav>
+  </main>
+</body>
+</html>

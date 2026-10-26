@@ -39,7 +39,7 @@ Compilazione dello starter con GCC/MinGW:
 g++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o minidb
 ```
 
-Su Windows si può usare come nome di uscita `minidb.exe`.
+Su Windows si può usare come nome del file di output `minidb.exe`.
 
 ## Scansione consigliata delle 6 ore
 

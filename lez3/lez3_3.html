@@ -1,171 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_3 · Setup ambiente PHP + MySQL</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_2.html"; }
-    function nextSlide(){ window.location.href = "lez3_4.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="La selezione filtra le righe mediante un predicato. Conserva tutti gli attributi della relazione di partenza.">
+  <title>Lezione 3.3 · Selezione: scegliere le tuple</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Setup ambiente: PHP + MySQL</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html" aria-current="page">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Selezione: scegliere le tuple</h1>
+      <p class="lesson-lead">La selezione filtra le righe mediante un predicato. Conserva tutti gli attributi della relazione di partenza.</p>
+      <div class="lesson-meta"><span>Pagina 3 di 20</span><progress value="3" max="20" aria-label="Pagina 3 di 20">3 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_2.html">← Dati, terminologia e simboli</a><a class="nav-button next" href="lez3_4.html">Proiezione π →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Obiettivo della sessione</h2>
-        <div class="box">
-          <ul>
-            <li>Avere un ambiente locale con <strong>PHP</strong> e <strong>MySQL</strong> funzionanti.</li>
-            <li>Preparare una connessione <strong>PDO</strong> riutilizzabile.</li>
-            <li>Arrivare non solo a "Connessione OK", ma al primo contatto con una <strong>query parametrizzata</strong>.</li>
-          </ul>
-        </div>
-
-        <h2>Cosa serve davvero</h2>
-        <div class="box">
-          <ul>
-            <li>Server web locale o bundle equivalente (XAMPP, WAMP, MAMP, LAMP).</li>
-            <li>PHP con estensione <code>pdo_mysql</code> attiva.</li>
-            <li>Un'istanza MySQL o MariaDB raggiungibile in locale.</li>
-          </ul>
-          <p class="note">Per il modulo conta il risultato finale: browser raggiungibile, DB pronto, PDO disponibile.</p>
-        </div>
-
-        <h2>Configurazione minima</h2>
-        <div class="box">
-          <ul>
-            <li>Avvia il server web e MySQL.</li>
-            <li>Individua la cartella da cui il browser legge i file PHP.</li>
-            <li>Verifica che <code>http://localhost</code> risponda.</li>
-            <li>Controlla da terminale la versione PHP con <code>php -v</code>.</li>
-          </ul>
-          <p class="warn">Se PHP non vede l'estensione <code>pdo_mysql</code>, le slide successive sul database non potranno funzionare.</p>
-        </div>
-
-        <h2>Prepara il database e la tabella guida del modulo</h2>
-        <div class="box">
-          <pre><code class="language-sql">CREATE DATABASE corso_php CHARACTER SET utf8mb4;
-CREATE USER 'studente'@'localhost' IDENTIFIED BY 'password_sicura';
-GRANT ALL PRIVILEGES ON corso_php.* TO 'studente'@'localhost';
-
-USE corso_php;
-
-CREATE TABLE studenti (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(100) NOT NULL,
-  classe VARCHAR(20) NOT NULL
-);</code></pre>
-          <p class="note">Nel modulo ricorreremo spesso alla tabella <code>studenti</code>: averla pronta rende piu chiari esempi, query e prepared statements. Qui compare anche l'utente <code>studente</code>, cosi la parte SQL e l'esempio PDO restano coerenti tra loro.</p>
-        </div>
-
-        <h2>Prima connessione PDO</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$dsn = 'mysql:host=localhost;dbname=corso_php;charset=utf8mb4';
-$user = 'studente';
-$pass = 'password_sicura';
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-    echo "Connessione OK";
-} catch (PDOException $e) {
-    echo "Errore: " . htmlspecialchars($e->getMessage());
-}
-</code></pre>
-          <p class="note">Sostituisci <code>$user</code> e <code>$pass</code> con le credenziali reali del tuo ambiente locale.</p>
-          <p class="ok">Questa connessione e la base di tutto il modulo: la riuseremo per leggere e inserire dati.</p>
-        </div>
-
-        <h2>Perche usare PDO in questo corso</h2>
-        <div class="box">
-          <ul>
-            <li>Un'unica interfaccia chiara per lavorare con il database.</li>
-            <li>Supporto diretto ai <strong>prepared statements</strong>.</li>
-            <li>Codice piu leggibile e riutilizzabile rispetto a query costruite a mano.</li>
-          </ul>
-        </div>
-
-        <h2>Primo esempio di prepared statement</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$stmt = $pdo->prepare(
-    "SELECT id, nome, classe
-     FROM studenti
-     WHERE classe = :classe"
-);
-
-$stmt->execute([
-    'classe' => '5BIA'
-]);
-
-$righe = $stmt->fetchAll();
-?&gt;</code></pre>
-          <p class="warn">Il punto chiave non e memorizzare i metodi, ma capire la sequenza: <code>prepare</code>, poi <code>execute</code>, poi lettura del risultato.</p>
-        </div>
-
-        <h2>Checklist finale</h2>
-        <div class="box">
-          <ul>
-            <li>PHP e MySQL attivi.</li>
-            <li>Database <code>corso_php</code> creato.</li>
-            <li>Tabella <code>studenti</code> pronta.</li>
-            <li>Connessione PDO verificata.</li>
-            <li>Idea chiara di cosa sia un prepared statement.</li>
-          </ul>
-          <p class="ok">Nella prossima slide useremo PHP dentro HTML, ma con l'orizzonte gia orientato ai dati del database.</p>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore unario σ</h2><pre class="ra-expression"><code class="nohighlight">σ[p](R) = { t ∈ R | p(t) è vero }</code></pre><p><code>p</code> è il predicato di selezione. Può contenere confronti fra attributi e costanti, oppure fra due attributi, combinati con <code>∧</code>, <code>∨</code> e <code>¬</code>. Lo schema e il grado non cambiano; la cardinalità può diminuire.</p><div class="table-scroll"><table><caption>Proprietà della selezione</caption><thead><tr><th scope="col">Input</th><th scope="col">Output</th><th scope="col">Cardinalità</th></tr></thead><tbody><tr><td>R di grado n</td><td>Stessi attributi di R</td><td>0 ≤ |σ[p](R)| ≤ |R|</td></tr></tbody></table></div></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Esempio: studenti di 5A</h2><pre class="ra-expression"><code class="nohighlight">σ[Classe = &quot;5A&quot;](STUDENTI)</code></pre><div class="table-scroll"><table><caption>Risultato</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th><th scope="col">Classe</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>5A</td></tr><tr><td>2</td><td>Bruno</td><td>5A</td></tr><tr><td>5</td><td>Elena</td><td>5A</td></tr></tbody></table></div><p>La condizione viene valutata su ogni tupla: le altre classi vengono escluse, senza cancellarle da STUDENTI.</p></section><section class="lesson-section" aria-labelledby="condizioni"><h2 id="condizioni">Predicati composti</h2><pre class="ra-expression"><code class="nohighlight">σ[Cid = 30 ∧ Voto ≥ 8](ISCRIZIONI)</code></pre><div class="table-scroll"><table><caption>Iscrizioni a Reti con voto almeno 8</caption><thead><tr><th scope="col">Sid</th><th scope="col">Cid</th><th scope="col">Voto</th></tr></thead><tbody><tr><td>3</td><td>30</td><td>9</td></tr><tr><td>4</td><td>30</td><td>8</td></tr><tr><td>5</td><td>30</td><td>10</td></tr></tbody></table></div><p><code>∧</code> richiede entrambe le condizioni. <code>∨</code> ne richiede almeno una: “SQL oppure Web” include chi segue entrambi.</p><p class="callout warning"><strong>Nome ingannevole:</strong> la selezione dell'algebra filtra righe; non corrisponde alla lista di colonne che segue la parola <code>SELECT</code> in SQL.</p></section><section class="lesson-section" aria-labelledby="controllo"><h2 id="controllo">Verifica rapida</h2><details class="reveal"><summary>Qual è lo schema di σ[Voto < 6](ISCRIZIONI)?</summary><div class="reveal-content"><p>Rimane (Sid, Cid, Voto). L’unica tupla risultante è (4, 20, 5).</p></div></details></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_2.html">← Dati, terminologia e simboli</a><a class="nav-button next" href="lez3_4.html">Proiezione π →</a></nav>
+  </main>
 </body>
 </html>

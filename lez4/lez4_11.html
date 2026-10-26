@@ -3,71 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez4_11 · 3NF: perché la 2NF non basta</title>
+  <title>ITST – 5ª · Lez4_11 · Funzioni in PHP (approfondimento)</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
   <script>
     try { hljs.highlightAll(); } catch (e) {}
     function prevSlide(){ window.location.href = "lez4_10.html"; }
-    function nextSlide(){ window.location.href = "lez4_12.html"; }
+    function nextSlide(){ window.location.href = "../lez5/lez5_1.html"; }
     function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-    document.addEventListener('DOMContentLoaded', function(){
-      var current = window.location.pathname.split('/').pop();
-      var link = document.querySelector('#menu a[href="' + current + '"]');
-      if (link) link.classList.add('active');
-    });
   </script>
-  <style>
-    .box{background:var(--panel,#fff);border-radius:12px;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:14px}
-    .note{background:#f7faff;border-left:4px solid #3b82f6;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .warn{background:#fff7ed;border-left:4px solid #f59e0b;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .ok{background:#eefbf1;border-left:4px solid #22c55e;padding:.6rem .8rem;border-radius:8px;margin:.35rem 0;display:inline-block}
-    .inner-box, .inner-box p, .inner-box ul, .inner-box ol, .inner-box li, .inner-box pre, .inner-box code{ text-align:left !important; }
-    .inner-box ul, .inner-box ol{ margin:.5rem 0 .75rem 1rem; padding-left:1.25rem; list-style-position:outside; }
-    pre{ white-space:pre; tab-size:4; margin:0 0 1rem 0; padding:.5rem .75rem; }
-    pre code{ display:block; text-align:left !important; }
-    table{ width:100%; border-collapse:collapse; }
-    th,td{ border-bottom:1px solid #e5e7eb; padding:.45rem .5rem; vertical-align:top; text-align:left; }
-    th{ background:#f8fafc; }
-    .def{font-weight:600}
-  </style>
 </head>
 <body>
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 4 — Normalizzazione</h2>
+    <h2>Lezione 4 — PHP + MySQL + HTML/CSS</h2>
     <ul>
-      <li><a href="lez4_1.html">Lez4.1: DF (richiamo) e obiettivi</a></li>
-      <li><a href="lez4_2.html">Lez4.2: Chiusura X⁺ (calcolo)</a></li>
-      <li><a href="lez4_3.html">Lez4.3: X⁺ vs F⁺ (implicazione)</a></li>
-      <li><a href="lez4_4.html">Lez4.4: Copertura minimale (definizione)</a></li>
-      <li><a href="lez4_5.html">Lez4.5: Copertura minimale (regole)</a></li>
-      <li><a href="lez4_6.html">Lez4.6: Equivalenza e verifica</a></li>
-      <li><a href="lez4_7.html">Lez4.7: Decomposizione (obiettivi)</a></li>
-      <li><a href="lez4_8.html">Lez4.8: Algoritmo decomposizione</a></li>
-      <li><a href="lez4_9.html">Lez4.9: Perché R2=R−(Y−X)</a></li>
-      <li><a href="lez4_10.html">Lez4.10: Esempio decomposizione</a></li>
-      <li><a href="lez4_11.html">Lez4.11: 3NF (motivazione)</a></li>
-      <li><a href="lez4_12.html">Lez4.12: 3NF (definizione)</a></li>
-      <li><a href="lez4_13.html">Lez4.13: 3NF (teoremi)</a></li>
-      <li><a href="lez4_14.html">Lez4.14: BCNF (motivazione)</a></li>
-      <li><a href="lez4_15.html">Lez4.15: BCNF (decomposizione)</a></li>
-      <li><a href="lez4_16.html">Lez4.16: Preservazione delle dipendenze</a></li>
+      <li><a href="lez4_1.html">Lez4.1: Obiettivi e percorso</a></li>
+      <li><a href="lez4_2.html">Lez4.2: Ripasso e flusso richiesta/risposta</a></li>
+      <li><a href="lez4_3.html">Lez4.3: Setup ambiente: PHP + MySQL</a></li>
+      <li><a href="lez4_4.html">Lez4.4: Primo script PHP</a></li>
+      <li><a href="lez4_5.html">Lez4.5: Sintassi base e tipi</a></li>
+      <li><a href="lez4_6.html">Lez4.6: Tipi di dato fondamentali e array</a></li>
+      <li><a href="lez4_7.html">Lez4.7: Funzioni di utilità sugli array</a></li>
+      <li><a href="lez4_8.html">Lez4.8: Esercizi PHP (soluzioni a comparsa)</a></li>
+      <li><a href="lez4_9.html">Lez4.9: Variabili d'ambiente e superglobali PHP</a></li>
+      <li><a href="lez4_10.html">Lez4.10: Funzioni in PHP: idee fondamentali</a></li>
+      <li><a class="active" href="lez4_11.html">Lez4.11: Funzioni in PHP: approfondimento</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>3NF: perché la 2NF non basta</h1>
+    <h1>Funzioni in PHP: approfondimento</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -76,62 +45,90 @@
 
     <div class="content-box">
       <div class="inner-box">
+        <p class="note">Riprendiamo le funzioni introducendo aspetti che diventano utili quando il codice cresce. Restiamo su un livello base-intermedio: strumenti da saper leggere e riconoscere, non tecniche da usare tutte subito.</p>
 
-        <h2>Idea chiave</h2>
         <div class="box">
-          <p>La <strong>2NF</strong> elimina un tipo specifico di dipendenza “cattiva”:</p>
-          <p class="ok">le dipendenze <strong>parziali</strong> da una chiave composta.</p>
-          <p>Ma possono rimanere dipendenze <strong>transitive</strong> tra attributi <strong>non di chiave</strong>, che causano ancora ridondanza e anomalie.</p>
-          <p class="note">Intuizione: la tabella contiene “due cose diverse insieme” (es. impiegati e reparti), quindi finisci per ripetere i dati della cosa “più piccola” (il reparto) molte volte.</p>
+          <h2>Type hinting e valori di ritorno tipizzati</h2>
+          <p>Dal PHP 7 puoi indicare il tipo dei parametri e del valore di ritorno: se non rispettati, viene generato un errore di tipo. Usa <code>?</code> per indicare che il valore può essere <code>null</code>.</p>
+          <pre><code class="language-php">&lt;?php
+function sommaInteri(int $a, int $b): int {
+    return $a + $b;
+}
+
+function trovaUtente(?int $id): ?string {
+    if ($id === null) return null;
+    return "Utente #$id";
+}
+?&gt;</code></pre>
+          <p class="note">Le dichiarazioni di tipo aiutano a trovare bug in anticipo e rendono il codice più chiaro.</p>
         </div>
 
-        <h2>Esempio (classico): IMPIEGATO</h2>
         <div class="box">
-          <p>Schema:</p>
-          <p class="ok" style="display:block"><code>IMPIEGATO(EmpID, EmpNome, RepartoID, RepartoNome, RepartoTelefono)</code></p>
-          <p>Ipotesi realistiche (DF):</p>
-          <pre><code class="language-text">(1) EmpID → EmpNome, RepartoID
-(2) RepartoID → RepartoNome, RepartoTelefono</code></pre>
-          <p>Chiave candidata: <code>{EmpID}</code> (chiave singola).</p>
-          <p class="note">Con chiave singola non possono esistere dipendenze parziali ⇒ spesso 2NF è “automatica”.</p>
+          <h2>Parametri variadici</h2>
+          <p>Con l'operatore <code>...</code> puoi accettare un numero variabile di argomenti raccolti in un array.</p>
+          <pre><code class="language-php">&lt;?php
+function sommaTutti(int ...$numeri): int {
+    return array_sum($numeri);
+}
+
+$totale = sommaTutti(1, 2, 3, 4); // 10
+?&gt;</code></pre>
+          <p class="note">Puoi mescolare parametri normali e variadici, ma quello variadico deve stare in fondo.</p>
         </div>
 
-        <h2>Eppure c’è ridondanza</h2>
         <div class="box">
-          <table>
-            <thead>
-              <tr><th>EmpID</th><th>EmpNome</th><th>RepartoID</th><th>RepartoNome</th><th>RepartoTelefono</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>10</td><td>Ada</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
-              <tr><td>11</td><td>Bruno</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
-              <tr><td>12</td><td>Chiara</td><td>D2</td><td>IT</td><td>011-222222</td></tr>
-              <tr><td>13</td><td>Diego</td><td>D1</td><td>Vendite</td><td>011-111111</td></tr>
-            </tbody>
-          </table>
-          <p class="warn">I dati del reparto (<code>RepartoNome</code>, <code>RepartoTelefono</code>) si ripetono per ogni impiegato del reparto.</p>
+          <h2>Passaggio per riferimento</h2>
+          <p>Anteponendo <code>&amp;</code> al parametro lavori sul valore originale, non su una copia. Utile per modificare array e stringhe senza restituirli esplicitamente.</p>
+          <pre><code class="language-php">&lt;?php
+function aggiungiPrefisso(string $prefisso, array &amp;$nomi): void {
+    foreach ($nomi as &amp;$nome) {
+        $nome = "$prefisso $nome";
+    }
+}
+
+$lista = ["Marco", "Giulia"];
+aggiungiPrefisso("Sig.", $lista);
+// $lista ora contiene ["Sig. Marco", "Sig. Giulia"]
+?&gt;</code></pre>
+          <p class="note">E utile conoscerlo, ma nel nostro modulo non e il meccanismo principale: di solito preferiremo funzioni semplici con input chiari e ritorni espliciti.</p>
         </div>
 
-        <h2>Anomalie tipiche</h2>
         <div class="box">
+          <h2>Funzioni anonime e closure</h2>
+          <p>Le funzioni possono essere assegnate a variabili o passate come argomento. Con <code>use</code> catturi variabili esterne creando una closure.</p>
+          <pre><code class="language-php">&lt;?php
+$prefisso = "AVVISO";
+$formatter = function(string $testo) use ($prefisso): string {
+    return "[$prefisso] $testo";
+};
+
+echo $formatter("controllare input");
+?&gt;</code></pre>
+          <p class="note">Le closure sono spesso usate con <code>array_map</code>, <code>array_filter</code> e funzioni che accettano callback.</p>
+        </div>
+
+        <div class="box">
+          <h2>Arrow function</h2>
+          <p>Per callback brevi puoi usare la sintassi a freccia (<code>fn</code>) introdotta in PHP 7.4: cattura automaticamente le variabili esterne per valore.</p>
+          <pre><code class="language-php">&lt;?php
+$numeri = [1, 2, 3, 4];
+$raddoppiati = array_map(fn(int $n): int => $n * 2, $numeri);
+// [2, 4, 6, 8]
+?&gt;</code></pre>
+          <p class="note">Per il corso basta riconoscere la sintassi e saperla leggere in esempi brevi, soprattutto insieme ad <code>array_map</code> e <code>array_filter</code>.</p>
+        </div>
+
+        <div class="box">
+          <h2>Chiusura del modulo: cosa sai fare adesso</h2>
           <ul>
-            <li><span class="def">Aggiornamento</span>: se cambia il telefono di <code>D1</code>, devo aggiornare molte tuple. Se ne sbaglio una → inconsistenza.</li>
-            <li><span class="def">Inserimento</span>: se voglio inserire un reparto senza impiegati, non ho una tupla dove metterlo (o devo usare NULL/fittizi).</li>
-            <li><span class="def">Cancellazione</span>: se cancello l’ultimo impiegato di <code>D2</code>, perdo anche l’informazione sul reparto <code>D2</code>.</li>
+            <li>Capire il flusso <code>browser -&gt; PHP -&gt; MySQL -&gt; HTML</code>.</li>
+            <li>Leggere input con <code>$_GET</code> e <code>$_POST</code>.</li>
+            <li>Validare valori in modo essenziale.</li>
+            <li>Usare PDO e prepared statements per query semplici.</li>
+            <li>Mostrare in pagina il risultato di una query con array, cicli e funzioni.</li>
           </ul>
+          <p class="ok">Il modulo non ti chiede di sviluppare un backend avanzato: ti mette nelle condizioni di costruire correttamente una piccola pagina dinamica con database.</p>
         </div>
-
-        <h2>Cosa sta succedendo: dipendenza transitiva</h2>
-        <div class="box">
-          <p>Dalle DF (1) e (2) segue:</p>
-          <pre><code class="language-text">EmpID → RepartoID
-RepartoID → RepartoNome, RepartoTelefono
---------------------------------------
-EmpID → RepartoNome, RepartoTelefono</code></pre>
-          <p class="ok">Alcuni attributi non-prime non dipendono “direttamente” dalla chiave: dipendono da un altro attributo non-prime.</p>
-          <p class="note">È esattamente il fenomeno che la 3NF vuole impedire (o controllare rigorosamente).</p>
-        </div>
-
       </div>
     </div>
 

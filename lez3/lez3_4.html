@@ -1,162 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_4 · Primo script PHP</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_3.html"; }
-    function nextSlide(){ window.location.href = "lez3_5.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-    function toggleBox(btnId, boxId){
-      const box = document.getElementById(boxId);
-      const btn = document.getElementById(btnId);
-      const open = box.style.display === 'block';
-      box.style.display = open ? 'none' : 'block';
-      btn.textContent = open ? 'Mostra ▼' : 'Nascondi ▲';
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="La proiezione mantiene le colonne richieste e rimuove le tuple duplicate che possono comparire dopo questa scelta.">
+  <title>Lezione 3.4 · Proiezione: scegliere gli attributi</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Primo script PHP</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html" aria-current="page">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Proiezione: scegliere gli attributi</h1>
+      <p class="lesson-lead">La proiezione mantiene le colonne richieste e rimuove le tuple duplicate che possono comparire dopo questa scelta.</p>
+      <div class="lesson-meta"><span>Pagina 4 di 20</span><progress value="4" max="20" aria-label="Pagina 4 di 20">4 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_3.html">← Selezione σ</a><a class="nav-button next" href="lez3_5.html">Rinomina ρ e nomi degli attributi →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-
-        <h2>Obiettivi veloci</h2>
-        <div class="box">
-          <ul>
-            <li>Scrivere un file PHP mescolando logica e HTML in modo ordinato.</li>
-            <li>Stampare output dinamico lato server.</li>
-            <li>Preparare il terreno per mostrare in pagina anche dati presi da MySQL.</li>
-          </ul>
-        </div>
-
-        <h2>Struttura minima di un file PHP</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;!DOCTYPE html&gt;
-&lt;html lang="it"&gt;
-&lt;head&gt;...&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Ciao dal server!&lt;/h1&gt;
-  &lt;p&gt;Oggi e: &lt;?php echo date('d/m/Y'); ?&gt;&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-          <p class="warn">Il browser non riceve il codice PHP: riceve solo l'HTML che PHP ha prodotto.</p>
-        </div>
-
-        <h2>Output dinamico e valori variabili</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$nome = "Alice";
-$classe = "5BIA";
-?&gt;
-
-&lt;h2&gt;Benvenuta &lt;?= htmlspecialchars($nome) ?&gt;&lt;/h2&gt;
-&lt;p&gt;Classe: &lt;?= htmlspecialchars($classe) ?&gt;&lt;/p&gt;</code></pre>
-          <p class="note"><code>htmlspecialchars()</code> va usato ogni volta che stampi dati che potrebbero arrivare da form, URL o database.</p>
-        </div>
-
-        <h2>Dal PHP all'HTML</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$studenti = ["Ada", "Alan", "Grace"];
-?&gt;
-
-&lt;ul&gt;
-  &lt;?php foreach ($studenti as $studente): ?&gt;
-    &lt;li&gt;&lt;?= htmlspecialchars($studente) ?&gt;&lt;/li&gt;
-  &lt;?php endforeach; ?&gt;
-&lt;/ul&gt;</code></pre>
-          <p>La logica prepara i dati; l'HTML descrive come visualizzarli.</p>
-        </div>
-
-        <h2>Lo stesso schema con dati dal database</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-$stmt = $pdo->prepare(
-    "SELECT nome, classe
-     FROM studenti
-     WHERE classe = :classe"
-);
-$stmt->execute(['classe' => '5BIA']);
-$studenti = $stmt->fetchAll();
-?&gt;
-
-&lt;ul&gt;
-  &lt;?php foreach ($studenti as $studente): ?&gt;
-    &lt;li&gt;
-      &lt;?= htmlspecialchars($studente['nome']) ?&gt;
-      -
-      &lt;?= htmlspecialchars($studente['classe']) ?&gt;
-    &lt;/li&gt;
-  &lt;?php endforeach; ?&gt;
-&lt;/ul&gt;</code></pre>
-          <p class="ok">Idea chiave: cambia la sorgente dei dati, non il principio con cui li stampi in HTML.</p>
-        </div>
-
-        <h2>Debug rapido</h2>
-        <div class="box">
-          <pre><code class="language-php">&lt;?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-var_dump($studenti);
-// exit('stop');
-?&gt;</code></pre>
-          <ul>
-            <li><code>var_dump()</code> aiuta a capire se hai una stringa, un array o il risultato di una query.</li>
-            <li><code>exit()</code> ti ferma in un punto preciso quando vuoi controllare lo stato del programma.</li>
-            <li>Questi strumenti vanno bene in locale; non devono restare nel codice finale da consegnare.</li>
-          </ul>
-        </div>
-
-        <h2>Cosa fissare da questa slide</h2>
-        <div class="box">
-          <ul>
-            <li>PHP produce HTML lato server.</li>
-            <li>Una lista HTML puo essere alimentata prima da un array, poi da una query MySQL.</li>
-            <li>Stampare dati in pagina e il punto di arrivo naturale del lavoro fatto con PDO e query parametrizzate.</li>
-          </ul>
-        </div>
-
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore unario π</h2><pre class="ra-expression"><code class="nohighlight">π[A1, …, Ak](R)</code></pre><p>Gli attributi elencati devono appartenere allo schema di R. Il grado del risultato è il numero degli attributi richiesti; la cardinalità non supera quella di R.</p><p>La proiezione è <strong>verticale</strong>, la selezione è <strong>orizzontale</strong>: sono operazioni diverse e spesso si combinano.</p></section><section class="lesson-section" aria-labelledby="duplicati"><h2 id="duplicati">Esempio: quali classi esistono?</h2><pre class="ra-expression"><code class="nohighlight">π[Classe](STUDENTI)</code></pre><div class="table-scroll"><table><caption>Risultato: 2 tuple, non 7</caption><thead><tr><th scope="col">Classe</th></tr></thead><tbody><tr><td>5A</td></tr><tr><td>5B</td></tr></tbody></table></div><p>Le ripetizioni di 5A e 5B scompaiono perché una relazione è un insieme. Per lo stesso motivo <code>π[Studente](STUDENTI)</code> contiene Anna una sola volta, pur essendoci due persone con quel nome.</p></section><section class="lesson-section" aria-labelledby="composizione"><h2 id="composizione">Esempio: ID e nome degli studenti di 5A</h2><pre class="ra-expression"><code class="nohighlight">π[Sid, Studente](σ[Classe = &quot;5A&quot;](STUDENTI))</code></pre><div class="table-scroll"><table><caption>Risultato</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th></tr></thead><tbody><tr><td>1</td><td>Anna</td></tr><tr><td>2</td><td>Bruno</td></tr><tr><td>5</td><td>Elena</td></tr></tbody></table></div><ol><li>La selezione conserva le tuple di 5A.</li><li>La proiezione mantiene soltanto Sid e Studente.</li></ol><p class="callout warning"><strong>Non proiettare troppo presto:</strong> <code>σ[Classe = "5A"](π[Sid, Studente](STUDENTI))</code> non è valida: Classe è già stata eliminata.</p></section><section class="lesson-section" aria-labelledby="controllo"><h2 id="controllo">Verifica rapida</h2><details class="reveal"><summary>Basta proiettare Studente per contare le persone?</summary><div class="reveal-content"><p>No: nomi uguali vengono fusi. Per distinguere le persone conserva Sid, che è la chiave.</p></div></details></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_3.html">← Selezione σ</a><a class="nav-button next" href="lez3_5.html">Rinomina ρ e nomi degli attributi →</a></nav>
+  </main>
 </body>
 </html>

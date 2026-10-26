@@ -1,141 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_11 · Funzioni in PHP (approfondimento)</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_10.html"; }
-    function nextSlide(){ window.location.href = "../lez4/lez4_1.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Un outer join aggiunge alle tuple abbinate quelle senza corrispondenza di uno o di entrambi gli operandi.">
+  <title>Lezione 3.11 · Outer join: conservare chi non trova un abbinamento</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a class="active" href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Funzioni in PHP: approfondimento</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html" aria-current="page">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Outer join: conservare chi non trova un abbinamento</h1>
+      <p class="lesson-lead">Un outer join aggiunge alle tuple abbinate quelle senza corrispondenza di uno o di entrambi gli operandi.</p>
+      <div class="lesson-meta"><span>Pagina 11 di 20</span><progress value="11" max="20" aria-label="Pagina 11 di 20">11 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_10.html">← Join naturale e suoi rischi</a><a class="nav-button next" href="lez3_12.html">Metodo, composizione ed equivalenze →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-        <p class="note">Riprendiamo le funzioni introducendo aspetti che diventano utili quando il codice cresce. Restiamo su un livello base-intermedio: strumenti da saper leggere e riconoscere, non tecniche da usare tutte subito.</p>
-
-        <div class="box">
-          <h2>Type hinting e valori di ritorno tipizzati</h2>
-          <p>Dal PHP 7 puoi indicare il tipo dei parametri e del valore di ritorno: se non rispettati, viene generato un errore di tipo. Usa <code>?</code> per indicare che il valore può essere <code>null</code>.</p>
-          <pre><code class="language-php">&lt;?php
-function sommaInteri(int $a, int $b): int {
-    return $a + $b;
-}
-
-function trovaUtente(?int $id): ?string {
-    if ($id === null) return null;
-    return "Utente #$id";
-}
-?&gt;</code></pre>
-          <p class="note">Le dichiarazioni di tipo aiutano a trovare bug in anticipo e rendono il codice più chiaro.</p>
-        </div>
-
-        <div class="box">
-          <h2>Parametri variadici</h2>
-          <p>Con l'operatore <code>...</code> puoi accettare un numero variabile di argomenti raccolti in un array.</p>
-          <pre><code class="language-php">&lt;?php
-function sommaTutti(int ...$numeri): int {
-    return array_sum($numeri);
-}
-
-$totale = sommaTutti(1, 2, 3, 4); // 10
-?&gt;</code></pre>
-          <p class="note">Puoi mescolare parametri normali e variadici, ma quello variadico deve stare in fondo.</p>
-        </div>
-
-        <div class="box">
-          <h2>Passaggio per riferimento</h2>
-          <p>Anteponendo <code>&amp;</code> al parametro lavori sul valore originale, non su una copia. Utile per modificare array e stringhe senza restituirli esplicitamente.</p>
-          <pre><code class="language-php">&lt;?php
-function aggiungiPrefisso(string $prefisso, array &amp;$nomi): void {
-    foreach ($nomi as &amp;$nome) {
-        $nome = "$prefisso $nome";
-    }
-}
-
-$lista = ["Marco", "Giulia"];
-aggiungiPrefisso("Sig.", $lista);
-// $lista ora contiene ["Sig. Marco", "Sig. Giulia"]
-?&gt;</code></pre>
-          <p class="note">E utile conoscerlo, ma nel nostro modulo non e il meccanismo principale: di solito preferiremo funzioni semplici con input chiari e ritorni espliciti.</p>
-        </div>
-
-        <div class="box">
-          <h2>Funzioni anonime e closure</h2>
-          <p>Le funzioni possono essere assegnate a variabili o passate come argomento. Con <code>use</code> catturi variabili esterne creando una closure.</p>
-          <pre><code class="language-php">&lt;?php
-$prefisso = "AVVISO";
-$formatter = function(string $testo) use ($prefisso): string {
-    return "[$prefisso] $testo";
-};
-
-echo $formatter("controllare input");
-?&gt;</code></pre>
-          <p class="note">Le closure sono spesso usate con <code>array_map</code>, <code>array_filter</code> e funzioni che accettano callback.</p>
-        </div>
-
-        <div class="box">
-          <h2>Arrow function</h2>
-          <p>Per callback brevi puoi usare la sintassi a freccia (<code>fn</code>) introdotta in PHP 7.4: cattura automaticamente le variabili esterne per valore.</p>
-          <pre><code class="language-php">&lt;?php
-$numeri = [1, 2, 3, 4];
-$raddoppiati = array_map(fn(int $n): int => $n * 2, $numeri);
-// [2, 4, 6, 8]
-?&gt;</code></pre>
-          <p class="note">Per il corso basta riconoscere la sintassi e saperla leggere in esempi brevi, soprattutto insieme ad <code>array_map</code> e <code>array_filter</code>.</p>
-        </div>
-
-        <div class="box">
-          <h2>Chiusura del modulo: cosa sai fare adesso</h2>
-          <ul>
-            <li>Capire il flusso <code>browser -&gt; PHP -&gt; MySQL -&gt; HTML</code>.</li>
-            <li>Leggere input con <code>$_GET</code> e <code>$_POST</code>.</li>
-            <li>Validare valori in modo essenziale.</li>
-            <li>Usare PDO e prepared statements per query semplici.</li>
-            <li>Mostrare in pagina il risultato di una query con array, cicli e funzioni.</li>
-          </ul>
-          <p class="ok">Il modulo non ti chiede di sviluppare un backend avanzato: ti mette nelle condizioni di costruire correttamente una piccola pagina dinamica con database.</p>
-        </div>
-      </div>
+<section class="lesson-section" aria-labelledby="estensione"><h2 id="estensione">Un'estensione dell'algebra classica</h2><p>L'algebra classica qui usata non contiene valori nulli. Per gli outer join introduciamo un'estensione: <code>NULL</code> indica un'informazione mancante, non zero e non una stringa vuota. I confronti ordinari con NULL non risultano veri: nelle selezioni conserviamo soltanto le condizioni vere.</p><p>Questo piccolo esempio è indipendente dal database guida, così possiamo osservare sia tuple sinistre sia tuple destre senza corrispondenza.</p><div class="table-scroll"><table><caption>L: persone</caption><thead><tr><th scope="col">Lid</th><th scope="col">Persona</th></tr></thead><tbody><tr><td>1</td><td>Ada</td></tr><tr><td>2</td><td>Berto</td></tr></tbody></table></div><div class="table-scroll"><table><caption>R: tutor assegnati per identificatore</caption><thead><tr><th scope="col">Rid</th><th scope="col">Tutor</th></tr></thead><tbody><tr><td>1</td><td>Rossi</td></tr><tr><td>3</td><td>Verdi</td></tr></tbody></table></div></section><section class="lesson-section" aria-labelledby="risultati"><h2 id="risultati">Stessa condizione, quattro risultati</h2><pre class="ra-expression"><code class="nohighlight">Condizione θ: Lid = Rid</code></pre><div class="table-scroll"><table><caption>Inner: L ⋈[Lid = Rid] R</caption><thead><tr><th scope="col">Lid</th><th scope="col">Persona</th><th scope="col">Rid</th><th scope="col">Tutor</th></tr></thead><tbody><tr><td>1</td><td>Ada</td><td>1</td><td>Rossi</td></tr></tbody></table></div><div class="table-scroll"><table><caption>Left outer: L ⟕[Lid = Rid] R</caption><thead><tr><th scope="col">Lid</th><th scope="col">Persona</th><th scope="col">Rid</th><th scope="col">Tutor</th></tr></thead><tbody><tr><td>1</td><td>Ada</td><td>1</td><td>Rossi</td></tr><tr><td>2</td><td>Berto</td><td>NULL</td><td>NULL</td></tr></tbody></table></div><div class="table-scroll"><table><caption>Right outer: L ⟖[Lid = Rid] R</caption><thead><tr><th scope="col">Lid</th><th scope="col">Persona</th><th scope="col">Rid</th><th scope="col">Tutor</th></tr></thead><tbody><tr><td>1</td><td>Ada</td><td>1</td><td>Rossi</td></tr><tr><td>NULL</td><td>NULL</td><td>3</td><td>Verdi</td></tr></tbody></table></div><div class="table-scroll"><table><caption>Full outer: L ⟗[Lid = Rid] R</caption><thead><tr><th scope="col">Lid</th><th scope="col">Persona</th><th scope="col">Rid</th><th scope="col">Tutor</th></tr></thead><tbody><tr><td>1</td><td>Ada</td><td>1</td><td>Rossi</td></tr><tr><td>2</td><td>Berto</td><td>NULL</td><td>NULL</td></tr><tr><td>NULL</td><td>NULL</td><td>3</td><td>Verdi</td></tr></tbody></table></div><p>Left conserva tutte le tuple di L; right tutte quelle di R; full quelle di entrambi. Per ogni tupla senza abbinamenti si aggiunge una riga completata con NULL sul lato mancante. Quando ci sono più abbinamenti, la tupla partecipa a più righe.</p></section><section class="lesson-section" aria-labelledby="dimensioni"><h2 id="dimensioni">Criterio di abbinamento e conservazione</h2><div class="table-scroll"><table><caption>Due scelte distinte</caption><thead><tr><th scope="col">Domanda</th><th scope="col">Alternative</th></tr></thead><tbody><tr><td>Come si decide l'abbinamento?</td><td>Condizione theta, uguaglianze equi, nomi comuni natural.</td></tr><tr><td>Quali tuple senza abbinamento si conservano?</td><td>Nessuna: inner. Sinistra: left. Destra: right. Entrambe: full.</td></tr></tbody></table></div><p>Nelle formule <code>⟕</code>, <code>⟖</code> e <code>⟗</code> senza condizione useremo l'abbinamento naturale. Con una condizione fra quadre useremo invece gli attributi espliciti.</p><p class="callout warning"><strong>Filtrare prima o dopo cambia il risultato:</strong> <code>σ[Rid = 1](L ⟕[Lid = Rid] R)</code> elimina Berto, perché per lui Rid è NULL. Per mantenere tutti gli elementi di L, filtra R prima del left join.</p><p class="source-note">Confronto con la semantica SQL: <a href="https://www.postgresql.org/docs/18/queries-table-expressions.html">documentazione PostgreSQL, joined tables</a>. La notazione algebrica adottata resta distinta dalla sintassi SQL.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_10.html">← Join naturale e suoi rischi</a><a class="nav-button next" href="lez3_12.html">Metodo, composizione ed equivalenze →</a></nav>
+  </main>
 </body>
 </html>

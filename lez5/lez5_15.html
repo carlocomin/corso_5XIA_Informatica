@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez5_15 · Che cos'è uno schedule</title>
+  <title>ITST – 5ª · Lez5_15 · BCNF: definizione e decomposizione</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../default.css" />
   <script src="../highlight.js"></script>
@@ -44,44 +44,30 @@
   <!-- BEGIN MENU -->
   <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
   <div class="sidebar" id="menu">
-    <h2>Lezione 5 — Transazioni concorrenti</h2>
+    <h2>Lezione 5 — Normalizzazione</h2>
     <ul>
-      <li><a href="lez5_1.html">Lez5.1: Introduzione e obiettivi</a></li>
-      <li><a href="lez5_2.html">Lez5.2: Da dove arriviamo</a></li>
-      <li><a href="lez5_3.html">Lez5.3: Perché serve la concorrenza</a></li>
-      <li><a href="lez5_4.html">Lez5.4: Che cos'è una transazione</a></li>
-      <li><a href="lez5_5.html">Lez5.5: Proprietà ACID</a></li>
-      <li><a href="lez5_6.html">Lez5.6: COMMIT, ROLLBACK, autocommit</a></li>
-      <li><a href="lez5_7.html">Lez5.7: Il problema centrale</a></li>
-      <li><a href="lez5_8.html">Lez5.8: Panoramica delle anomalie</a></li>
-      <li><a href="lez5_9.html">Lez5.9: Perdita di aggiornamento</a></li>
-      <li><a href="lez5_10.html">Lez5.10: Lettura sporca</a></li>
-      <li><a href="lez5_11.html">Lez5.11: Lettura inconsistente e aggiornamento fantasma</a></li>
-      <li><a href="lez5_12.html">Lez5.12: Inserimento fantasma</a></li>
-      <li><a href="lez5_13.html">Lez5.13: Sintesi delle anomalie</a></li>
-      <li><a href="lez5_14.html">Lez5.14: Formalizzare le transazioni</a></li>
-      <li><a href="lez5_15.html">Lez5.15: Che cos'è uno schedule</a></li>
-      <li><a href="lez5_16.html">Lez5.16: Schedule serializzabile</a></li>
-      <li><a href="lez5_17.html">Lez5.17: Equivalenza rispetto alle viste</a></li>
-      <li><a href="lez5_17b.html">Lez5.17b: Perché entra la complessità</a></li>
-      <li><a href="lez5_17c.html">Lez5.17c: Problemi NP-completi</a></li>
-      <li><a href="lez5_17d.html">Lez5.17d: SAT in dettaglio</a></li>
-      <li><a href="lez5_17e.html">Lez5.17e: SAT solver</a></li>
-      <li><a href="lez5_17f.html">Lez5.17f: VSR è NP-completo</a></li>
-      <li><a href="lez5_17g.html">Lez5.17g: Riduzione VSR a SAT</a></li>
-      <li><a href="lez5_18.html">Lez5.18: Dai limiti delle viste ai conflitti</a></li>
-      <li><a href="lez5_19.html">Lez5.19: Grafo dei conflitti</a></li>
-      <li><a href="lez5_20.html">Lez5.20: Locking e lock manager</a></li>
-      <li><a href="lez5_21.html">Lez5.21: 2PL e 2PL stretto</a></li>
-      <li><a href="lez5_21b.html">Lez5.21b: Lock di predicato e fantasmi</a></li>
-      <li><a href="lez5_22.html">Lez5.22: Deadlock e livelli di isolamento</a></li>
-      <li><a href="lez5_23.html">Lez5.23: PostgreSQL e MySQL</a></li>
+      <li><a href="lez5_1.html">Lez5.1: DF (richiamo) e obiettivi</a></li>
+      <li><a href="lez5_2.html">Lez5.2: Chiusura X⁺ (calcolo)</a></li>
+      <li><a href="lez5_3.html">Lez5.3: X⁺ vs F⁺ (implicazione)</a></li>
+      <li><a href="lez5_4.html">Lez5.4: Copertura minimale (definizione)</a></li>
+      <li><a href="lez5_5.html">Lez5.5: Copertura minimale (regole)</a></li>
+      <li><a href="lez5_6.html">Lez5.6: Equivalenza e verifica</a></li>
+      <li><a href="lez5_7.html">Lez5.7: Decomposizione (obiettivi)</a></li>
+      <li><a href="lez5_8.html">Lez5.8: Algoritmo decomposizione</a></li>
+      <li><a href="lez5_9.html">Lez5.9: Perché R2=R−(Y−X)</a></li>
+      <li><a href="lez5_10.html">Lez5.10: Esempio decomposizione</a></li>
+      <li><a href="lez5_11.html">Lez5.11: 3NF (motivazione)</a></li>
+      <li><a href="lez5_12.html">Lez5.12: 3NF (definizione)</a></li>
+      <li><a href="lez5_13.html">Lez5.13: 3NF (teoremi)</a></li>
+      <li><a href="lez5_14.html">Lez5.14: BCNF (motivazione)</a></li>
+      <li><a href="lez5_15.html">Lez5.15: BCNF (decomposizione)</a></li>
+      <li><a href="lez5_16.html">Lez5.16: Preservazione delle dipendenze</a></li>
     </ul>
   </div>
   <!-- END MENU -->
 
   <div class="slide">
-    <h1>Uno schedule è un interleaving di operazioni</h1>
+    <h1>BCNF: definizione e decomposizione</h1>
 
     <div class="nav-buttons" style="margin-bottom:10px">
       <button onclick="prevSlide()">&#8592; Indietro</button>
@@ -90,43 +76,47 @@
 
     <div class="content-box">
       <div class="inner-box">
-        <h2>Definizione</h2>
+
+        <h2>Definizione rigorosa di BCNF</h2>
         <div class="box">
-          <p>Uno <strong>schedule</strong> è una sequenza di operazioni di lettura e scrittura appartenenti a un insieme di transazioni concorrenti.</p>
-<pre><code class="language-text">S: r1(x) r2(z) w1(x) w2(z) ...</code></pre>
+          <p>Una relazione <code>R</code> è in <strong>BCNF</strong> se, per ogni DF non banale <code>X → Y</code> implicata da <code>F</code> (cioè in <code>F⁺</code>):</p>
+          <p class="ok" style="display:block"><code>X</code> è una superchiave di <code>R</code>.</p>
+          <p class="note">Equivalentemente: basta controllare DF del tipo <code>X → A</code> con RHS singolo.</p>
         </div>
 
-        <h2>Schedule seriale</h2>
+        <h2>Checklist: come riconoscere una violazione BCNF</h2>
         <div class="box">
-          <p>Uno schedule è <strong>seriale</strong> se le operazioni di ogni transazione compaiono tutte in blocco, senza essere interrotte da altre transazioni.</p>
-          <p class="ok">È il riferimento ideale di correttezza, ma riduce al minimo il parallelismo.</p>
+          <ol>
+            <li>Prendi una DF non banale <code>X → A</code>.</li>
+            <li>Calcola <code>X⁺</code>.</li>
+            <li>Se <code>X⁺</code> non contiene tutti gli attributi di <code>R</code>, allora <code>X</code> non è superchiave ⇒ <span class="warn">violazione BCNF</span>.</li>
+          </ol>
         </div>
 
-        <h2>Schema visivo minimo</h2>
+        <h2>Decomposizione standard in BCNF (lossless join)</h2>
         <div class="box">
-          <table>
-            <thead>
-              <tr><th>Tipo</th><th>Esempio</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Seriale</strong></td>
-                <td><code>r1(x) w1(x) r2(x) w2(x)</code></td>
-              </tr>
-              <tr>
-                <td><strong>Interleaved</strong></td>
-                <td><code>r1(x) r2(x) w1(x) w2(x)</code></td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="note">Nel secondo caso c'è concorrenza vera: le operazioni delle due transazioni si alternano.</p>
+          <p>Se esiste una DF non banale <code>X → Y</code> con <code>X</code> non superchiave, decomponi:</p>
+          <pre><code class="language-text">R1 = X ∪ Y
+R2 = R − (Y − X)</code></pre>
+          <p class="note">La decomposizione è lossless perché in <code>R1</code> vale <code>X → Y</code> ⇒ <code>X</code> è chiave di <code>R1</code> e fa da collante nel join.</p>
+          <p class="warn">Attenzione: questa decomposizione <strong>non garantisce</strong> sempre la preservazione delle dipendenze (slide successiva).</p>
+          <p class="note">In pratica: BCNF “pulisce” molto bene, ma a volte spezza vincoli che prima erano controllabili su una sola tabella.</p>
         </div>
 
-        <h2>Perché ci serve</h2>
+        <h2>Applicazione all’esempio LEZIONE</h2>
         <div class="box">
-          <p class="note">Per capire se un intreccio concorrente è corretto, lo confronteremo con il comportamento di una qualche esecuzione seriale.</p>
-          <p>Lo schedule è quindi il punto di incontro tra la descrizione pratica della concorrenza e la sua analisi teorica.</p>
+          <p>Nello schema <code>LEZIONE(Studente, Docente, Corso)</code> la DF che viola BCNF è:</p>
+          <p class="ok" style="display:block"><code>Docente → Corso</code></p>
+          <p>Decomposizione:</p>
+          <pre><code class="language-text">R1(Docente, Corso)
+R2(Studente, Docente)</code></pre>
+          <ul>
+            <li>In <code>R1</code>, <code>Docente</code> è chiave ⇒ <code>R1</code> è in BCNF.</li>
+            <li>In <code>R2</code> non resta la ridondanza “Docente ripete sempre lo stesso corso”.</li>
+          </ul>
+          <p class="ok">La ridondanza sparisce: l’associazione Docente–Corso compare una sola volta in <code>R1</code>.</p>
         </div>
+
       </div>
     </div>
 

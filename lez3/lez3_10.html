@@ -1,162 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ITST – 5ª · Lez3_10 · Funzioni in PHP</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../default.css" />
-  <script src="../highlight.js"></script>
-  <script>
-    try { hljs.highlightAll(); } catch (e) {}
-    function prevSlide(){ window.location.href = "lez3_9.html"; }
-    function nextSlide(){ window.location.href = "lez3_11.html"; }
-    function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Il join naturale costruisce automaticamente la condizione di uguaglianza sui nomi comuni e mantiene una sola copia di questi attributi.">
+  <title>Lezione 3.10 · Join naturale: tutti gli attributi in comune</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../default.css">
+  <link rel="stylesheet" href="algebra.css">
+  <script src="../highlight.js" defer></script>
+  <script src="../menu.js" defer></script>
 </head>
-<body>
-  <!-- BEGIN MENU -->
-  <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-  <div class="sidebar" id="menu">
-    <h2>Lezione 3 — PHP + MySQL + HTML/CSS</h2>
-    <ul>
-      <li><a href="lez3_1.html">Lez3.1: Obiettivi e percorso</a></li>
-      <li><a href="lez3_2.html">Lez3.2: Ripasso e flusso richiesta/risposta</a></li>
-      <li><a href="lez3_3.html">Lez3.3: Setup ambiente: PHP + MySQL</a></li>
-      <li><a href="lez3_4.html">Lez3.4: Primo script PHP</a></li>
-      <li><a href="lez3_5.html">Lez3.5: Sintassi base e tipi</a></li>
-      <li><a href="lez3_6.html">Lez3.6: Tipi di dato fondamentali e array</a></li>
-      <li><a href="lez3_7.html">Lez3.7: Funzioni di utilità sugli array</a></li>
-      <li><a href="lez3_8.html">Lez3.8: Esercizi PHP (soluzioni a comparsa)</a></li>
-      <li><a href="lez3_9.html">Lez3.9: Variabili d'ambiente e superglobali PHP</a></li>
-      <li><a href="lez3_10.html">Lez3.10: Funzioni in PHP: idee fondamentali</a></li>
-      <li><a href="lez3_11.html">Lez3.11: Funzioni in PHP: approfondimento</a></li>
-    </ul>
-  </div>
-  <!-- END MENU -->
-
-  <div class="slide">
-    <h1>Funzioni in PHP: idee fondamentali</h1>
-
-    <div class="nav-buttons" style="margin-bottom:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-
+<body class="lesson-page algebra-page">
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <details class="course-menu">
+    <summary class="menu-toggle">☰ Indice</summary>
+    <nav class="sidebar" aria-label="Indice della lezione 3">
+      <h2>Lezione 3 · Algebra relazionale</h2>
+      <ol>
+        <li><a href="lez3_1.html">Introduzione, scopo e storia</a></li>
+        <li><a href="lez3_2.html">Dati, terminologia e simboli</a></li>
+        <li><a href="lez3_3.html">Selezione σ</a></li>
+        <li><a href="lez3_4.html">Proiezione π</a></li>
+        <li><a href="lez3_5.html">Rinomina ρ e nomi degli attributi</a></li>
+        <li><a href="lez3_6.html">Prodotto cartesiano ×</a></li>
+        <li><a href="lez3_7.html">Unione ∪ e compatibilità</a></li>
+        <li><a href="lez3_8.html">Differenza − e intersezione derivata</a></li>
+        <li><a href="lez3_9.html">Inner, theta ed equi-join</a></li>
+        <li><a href="lez3_10.html" aria-current="page">Join naturale e suoi rischi</a></li>
+        <li><a href="lez3_11.html">Left, right e full outer join</a></li>
+        <li><a href="lez3_12.html">Metodo, composizione ed equivalenze</a></li>
+        <li><a href="lez3_13.html">Easy E1–E4</a></li>
+        <li><a href="lez3_14.html">Easy E5–E8</a></li>
+        <li><a href="lez3_15.html">Medium M1–M4</a></li>
+        <li><a href="lez3_16.html">Medium M5–M8</a></li>
+        <li><a href="lez3_17.html">Hard H1–H2</a></li>
+        <li><a href="lez3_18.html">Hard H3–H4</a></li>
+        <li><a href="lez3_19.html">Hard H5–H6</a></li>
+        <li><a href="lez3_20.html">Riepilogo, esercizi e riferimenti</a></li>
+      </ol>
+      <p><a href="../programma.html">← Programma del corso</a></p>
+    </nav>
+  </details>
+  <main class="slide" id="contenuto">
+    <header>
+      <p class="lesson-kicker">Lezione 3 · Algebra relazionale</p>
+      <h1>Join naturale: tutti gli attributi in comune</h1>
+      <p class="lesson-lead">Il join naturale costruisce automaticamente la condizione di uguaglianza sui nomi comuni e mantiene una sola copia di questi attributi.</p>
+      <div class="lesson-meta"><span>Pagina 10 di 20</span><progress value="10" max="20" aria-label="Pagina 10 di 20">10 di 20</progress><a href="lez3_2.html#istanze">Apri i dati guida</a></div>
+    </header>
+    <nav class="slide-navigation" aria-label="Navigazione superiore"><a class="nav-button" href="lez3_9.html">← Inner, theta ed equi-join</a><a class="nav-button next" href="lez3_11.html">Left, right e full outer join →</a></nav>
     <div class="content-box">
-      <div class="inner-box">
-        <p class="note">Le funzioni servono a riusare codice e organizzarlo. Nel nostro modulo diventano utili soprattutto per non ripetere validazioni, formattazioni e piccole operazioni sul database.</p>
-
-        <div class="box">
-          <h2>Sintassi essenziale</h2>
-          <p>Si definisce con la parola chiave <code>function</code> seguita dal nome e dalle parentesi. Il codice tra graffe viene eseguito quando la funzione è chiamata.</p>
-          <pre><code class="language-php">&lt;?php
-function saluta() {
-    echo "Ciao a tutti!";
-}
-
-saluta(); // stampa "Ciao a tutti!"
-?&gt;</code></pre>
-          <p class="note">PHP legge l'intero file prima di eseguirlo: puoi chiamare una funzione anche se è dichiarata più in basso.</p>
-        </div>
-
-        <div class="box">
-          <h2>Parametri e valori di ritorno</h2>
-          <ul>
-            <li>I parametri si scrivono tra parentesi. Se manca un valore obbligatorio, PHP genera un errore.</li>
-            <li>Con <code>return</code> restituisci un risultato a chi chiama la funzione.</li>
-            <li>I tipi sono dinamici: puoi passare numeri o stringhe senza specificarli.</li>
-          </ul>
-          <pre><code class="language-php">&lt;?php
-function somma($a, $b) {
-    return $a + $b;
-}
-
-$risultato = somma(4, 6); // 10
-?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>Primo esempio utile al modulo</h2>
-          <p>Una funzione puo ricevere un input gia validato e restituire un valore pronto da mostrare o usare:</p>
-          <pre><code class="language-php">&lt;?php
-function formattaStudente($nome, $classe) {
-    return "$nome - classe $classe";
-}
-
-echo formattaStudente("Ada", "5BIA");
-?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>Valori di default</h2>
-          <p>Puoi impostare un valore predefinito per rendere un parametro opzionale. I parametri con default vengono di solito alla fine della lista.</p>
-          <pre><code class="language-php">&lt;?php
-function salutaPersona($nome = "mondo") {
-    return "Ciao $nome";
-}
-
-echo salutaPersona();        // Ciao mondo
-echo salutaPersona("Luca"); // Ciao Luca
-?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>Scope delle variabili</h2>
-          <ul>
-            <li>Le variabili create dentro una funzione esistono solo lì dentro.</li>
-            <li>Per leggere o modificare una variabile definita fuori, usa <code>global</code> oppure il super-array <code>$GLOBALS</code>.</li>
-          </ul>
-          <pre><code class="language-php">&lt;?php
-$messaggio = "Ciao";
-
-function stampaMessaggio() {
-    global $messaggio;
-    echo $messaggio;
-}
-
-stampaMessaggio(); // usa la variabile definita fuori
-?&gt;</code></pre>
-          <p class="warn">Nel codice didattico e utile sapere che <code>global</code> esiste, ma quando puoi e meglio passare i dati come parametri: il codice risulta piu chiaro.</p>
-        </div>
-
-        <div class="box">
-          <h2>Esempio pratico</h2>
-          <p>Combinare parametri, ritorni e logica permette di costruire piccole utility riutilizzabili anche in pagine che leggono il database.</p>
-          <pre><code class="language-php">&lt;?php
-function calcolaMedia($lista) {
-    $totale = array_sum($lista);
-    $quantita = count($lista);
-    return $quantita > 0 ? $totale / $quantita : 0;
-}
-
-$numeri = [6, 8, 10];
-echo calcolaMedia($numeri); // 8
-?&gt;</code></pre>
-        </div>
-
-        <div class="box">
-          <h2>Esempio con PDO e query parametrizzata</h2>
-          <pre><code class="language-php">&lt;?php
-function caricaStudentiPerClasse(PDO $pdo, $classe) {
-    $stmt = $pdo->prepare(
-        "SELECT nome, classe
-         FROM studenti
-         WHERE classe = :classe"
-    );
-    $stmt->execute(['classe' => $classe]);
-    return $stmt->fetchAll();
-}
-?&gt;</code></pre>
-          <p class="ok">Qui la funzione non e un concetto astratto: diventa uno strumento concreto per non riscrivere ogni volta la stessa query.</p>
-        </div>
-      </div>
+<section class="lesson-section" aria-labelledby="definizione"><h2 id="definizione">Operatore derivato ⋈</h2><p><code>R ⋈ S</code> abbina tuple che coincidono su <strong>tutti</strong> gli attributi con lo stesso nome nei due schemi. I domini degli attributi comuni devono essere compatibili. Il risultato contiene l'unione degli schemi: gli attributi comuni compaiono una volta sola.</p><p>Si può ottenere da rinomina, prodotto, selezione delle uguaglianze e proiezione delle colonne richieste. È un inner join quando non è indicata una conservazione outer.</p></section><section class="lesson-section" aria-labelledby="esempio"><h2 id="esempio">Dalle tre relazioni a nomi e corsi</h2><pre class="ra-expression"><code class="nohighlight">STUDENTI ⋈ ISCRIZIONI ⋈ CORSI</code></pre><ol><li>STUDENTI e ISCRIZIONI condividono soltanto Sid: il primo join collega ogni iscrizione alla persona.</li><li>Il risultato e CORSI condividono soltanto Cid: il secondo join aggiunge corso e area.</li></ol><p>Lo schema risultante è <code>(Sid, Studente, Classe, Cid, Voto, Corso, Area)</code>, di grado 7. Nell'istanza guida contiene 13 tuple.</p><pre class="ra-expression"><code class="nohighlight">π[Sid, Studente, Corso](σ[Corso = &quot;SQL&quot;](STUDENTI ⋈ ISCRIZIONI ⋈ CORSI))</code></pre><div class="table-scroll"><table><caption>Risultato</caption><thead><tr><th scope="col">Sid</th><th scope="col">Studente</th><th scope="col">Corso</th></tr></thead><tbody><tr><td>1</td><td>Anna</td><td>SQL</td></tr><tr><td>2</td><td>Bruno</td><td>SQL</td></tr><tr><td>3</td><td>Carla</td><td>SQL</td></tr><tr><td>5</td><td>Elena</td><td>SQL</td></tr></tbody></table></div></section><section class="lesson-section" aria-labelledby="rischi"><h2 id="rischi">Quando il nome comune è un problema</h2><p>Supponi di chiamare <code>Nome</code> sia il nome dello studente sia il nome del corso. Un join naturale fra i risultati che contengono queste colonne imporrebbe anche <code>NomeStudente = NomeCorso</code>, un vincolo privo di senso.</p><p class="callout warning"><strong>Prima di usare ⋈:</strong> elenca gli attributi comuni e controlla che ogni uguaglianza sia voluta. Il join naturale non sceglie automaticamente le chiavi esterne.</p><p>Se non esistono attributi comuni, il join naturale coincide con il prodotto cartesiano. Se gli schemi coincidono, coincide con l'intersezione.</p></section>
     </div>
-
-    <div class="nav-buttons" style="margin-top:10px">
-      <button onclick="prevSlide()">&#8592; Indietro</button>
-      <button onclick="nextSlide()">Avanti &#8594;</button>
-    </div>
-  </div>
+    <nav class="slide-navigation bottom" aria-label="Navigazione inferiore"><a class="nav-button" href="lez3_9.html">← Inner, theta ed equi-join</a><a class="nav-button next" href="lez3_11.html">Left, right e full outer join →</a></nav>
+  </main>
 </body>
 </html>
